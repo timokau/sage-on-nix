@@ -1,0 +1,13 @@
+diff --git a/spkg-scripts/spkg-install b/spkg-scripts/spkg-install
+index 5a375e6..4a0bf4f 100755
+--- a/spkg-scripts/spkg-install
++++ b/spkg-scripts/spkg-install
+@@ -46,7 +46,7 @@ cp "$SAGE_ROOT"/config/config.* cnf
+ echo "Configuring GAP..."
+ ./configure \
+     --prefix="$SAGE_LOCAL" PREFIX="$SAGE_LOCAL" \
+-    --with-gmp="$SAGE_LOCAL" \
++    --with-gmp="system" \
+     CC="$CC" CXX="$CXX" CFLAGS="$CFLAGS" CXXFLAGS="$CXXFLAGS"
+ if [[ $? -ne 0 ]]; then
+     echo >&2 "Error configuring GAP."

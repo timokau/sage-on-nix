@@ -1,0 +1,13 @@
+diff --git a/configure b/configure
+index 218cd03..e28c623 100755
+--- a/configure
++++ b/configure
+@@ -18165,7 +18165,7 @@ else
+ fi
+ 
+ fi
+-if test -n "$PKG_CONFIG"; then
++if false; then
+ 	_pkg_min_version=0.9.0
+ 	{ $as_echo "$as_me:${as_lineno-$LINENO}: checking pkg-config is at least version $_pkg_min_version" >&5
+ $as_echo_n "checking pkg-config is at least version $_pkg_min_version... " >&6; }

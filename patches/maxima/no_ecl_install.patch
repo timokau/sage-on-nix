@@ -1,0 +1,19 @@
+diff --git a/spkg-scripts/spkg-install b/spkg-scripts/spkg-install
+index aa704c3..9c050f7 100755
+--- a/spkg-scripts/spkg-install
++++ b/spkg-scripts/spkg-install
+@@ -79,14 +79,6 @@ if [[ -f "$DOT_SAGE/maxima_commandlist_cache.sobj" ]]; then
+ fi
+ 
+ 
+-# Install Maxima into ECL's library directory:
+-ECLLIB=`ecl -eval "(princ (SI:GET-LIBRARY-PATHNAME))" -eval "(quit)"`
+-echo
+-echo "Now installing the Maxima library as '$ECLLIB/maxima.fas'..."
+-cp -f "$CUR/src/src/binary-ecl/maxima.fas" "$ECLLIB/maxima.fas"
+-check_error "Failed to install '$CUR/src/src/binary-ecl/maxima.fas' as '$ECLLIB/maxima.fas'."
+-
+-
+ if [[ "$SAGE_SPKG_INSTALL_DOCS" = yes ]] ; then
+     # Install a copy of the Maxima HTML documentation locally.
+     cd "${CUR}/src"

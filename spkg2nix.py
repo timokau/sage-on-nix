@@ -1,22 +1,38 @@
 #! /usr/bin/env python3
 
+import ast
+import urllib.request
+
 # TODO checkout need_to_install_spkg
 # TODO dependency on git and gcc
 
-# http://sagemath.org/mirror_list
-MIRROR='ftp://ftp.fu-berlin.de/unix/misc/sage/spkg/upstream'
+# TODO use all
+mirrorlist = ast.literal_eval(str(urllib.request.urlopen('http://www.sagemath.org/mirror_list').read()))
+MIRROR=mirrorlist[0]
 
 import os
 
 def additional_deps(name):
     if name == "curl":
         return ["openssl"]
+    elif name == "maxima":
+        return [ "python2" ]
+    elif name == "gcc": # TODO
+        return [ "glibc" ]
     return []
 
 def additional_patches(name):
     if name == "patch":
         return [ "disable_strict_version_check.patch" ]
-    return []
+    elif name == "gap":
+        return [ "gmp_location.patch" ]
+    elif name == "maxima":
+        # TODO make sure this doesn't break anything
+        return [ "no_ecl_install.patch" ]
+    elif name == "fflas_ffpack":
+        return [ "no_check_pkgconfig.patch" ]
+    else:
+        return []
 
 DEFAULT_DEPS = [
         'stdenv',
@@ -74,7 +90,7 @@ pkgs.stdenv.mkDerivation rec {{
   postUnpack = ''
     cd ..
     mv tmp/* src
-    rmdir tmp
+    rm -r tmp
 
     cp -r ${{sage-src}}/build/pkgs/{name} src/spkg-scripts
     chmod -R 777 src/spkg-scripts
@@ -84,6 +100,11 @@ pkgs.stdenv.mkDerivation rec {{
   buildPhase = ''
     mkdir -p $out/{{share,bin,include,lib}}
     mv src/spkg-scripts/* .
+    cp -r ${{sage-src}}/build/bin build-scripts
+    chmod -R 777 build-scripts
+    echo -n "python" > build-scripts/sage-python23
+    export PATH="$PWD/build-scripts":"$PATH"
+    chmod +x build-scripts/sage-python23
     rmdir src/spkg-scripts
     export MAKE=make
     export SAGE64=yes
@@ -111,7 +132,8 @@ def generate_derivation(name, filename, version, url, sha1, patches, spkg_deps):
     patchstr += "\n  "
     depstr = ""
     inputstr = ""
-    for dep in DEFAULT_DEPS + spkg_deps + additional_deps(name):
+    unpack_deps = [ "unzip" ] if filename[-3:] == 'zip' else []
+    for dep in DEFAULT_DEPS + spkg_deps + additional_deps(name) + unpack_deps:
         depstr = depstr + ", " + dep
         inputstr = inputstr + " " + dep
     with open("default.nix", 'w') as f:
