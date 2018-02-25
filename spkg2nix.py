@@ -8,7 +8,21 @@ MIRROR='ftp://ftp.fu-berlin.de/unix/misc/sage/spkg/upstream'
 
 import os
 
-derivation_template = """{{ pkgs, stdenv, fetchurl, fetchFromGitHub, perl, gfortran6, autoreconfHook, gettext, hevea, additionalPatch ? "", which{spkg_deps} }}:
+def additional_deps(name):
+    if name == "curl":
+        return ["openssl"]
+    return []
+
+DEFAULT_DEPS = [
+        'stdenv',
+        'perl',
+        'gfortran6',
+        'autoreconfHook',
+        'gettext',
+        'hevea'
+]
+
+derivation_template = """{{pkgs, fetchFromGitHub, fetchurl{spkg_deps} }}:
 pkgs.stdenv.mkDerivation rec {{
   version = "{version}";
   name = "{name}-${{version}}";
@@ -27,21 +41,13 @@ pkgs.stdenv.mkDerivation rec {{
 
   patches = [{patches}];
 
-  propagatedBuildInputs = [ stdenv perl gfortran6 autoreconfHook gettext hevea which {buildinputs}];
-  buildInputs = [ stdenv perl gfortran6 autoreconfHook gettext hevea which {buildinputs}];
-  # TODO figure out why this is necessary (for openblas and gfortran)
-  nativeBuildInputs = [ stdenv perl gfortran6 autoreconfHook gettext hevea which {buildinputs}];
-
-  additional = ../patches;
+  buildInputs = [{build_inputs} ];
+  propagatedBuildInputs = buildInputs;
+  nativeBuildInputs = buildInputs; # TODO figure out why this is necessary (for openblas and gfortran)
 
   postPatch = ''
     cd ..
-    #echo "Looking for {name}.sh"
-    #if [[ -f ${{additional}}/{name}.sh ]]; then
-    #  echo "Sourcing additional patches..."
-    #  source ${{additional}}/{name}.sh;
-    #fi
-  '' + "${{additionalPatch}}";
+  '';
 
   configurePhase = ''
   # NOOP
@@ -71,7 +77,13 @@ pkgs.stdenv.mkDerivation rec {{
 
   buildPhase = ''
     mkdir -p $out/{{share,bin,include,lib}}
-    MAKE=make SAGE64=yes SAGE_ROOT=${{sage-src}} SAGE_SHARE=$out/share SAGE_LOCAL=$out ${{stdenv.shell}} ./spkg-install
+    export MAKE=make
+    export SAGE64=yes
+    export SAGE_ROOT=${{sage-src}}
+    export SAGE_SHARE=$out/share
+    export SAGE_LOCAL=$out
+    source ${{sage-src}}/src/bin/sage-dist-helpers
+    ${{stdenv.shell}} ./spkg-install
   '';
 
   installPhase = ''
@@ -87,12 +99,10 @@ def generate_derivation(name, filename, version, url, sha1, patches, spkg_deps):
         patchstr = patchstr + '\n    "${{sage-src}}/build/pkgs/{name}/patches/{patch}"'.format(name = name, patch = patch)
     patchstr += "\n  "
     depstr = ""
-    for dep in spkg_deps:
-        depstr = depstr + ", " + dep
     inputstr = ""
-    for dep in spkg_deps: # TODO abstract
-        inputstr = inputstr + '\n    {dep}'.format(dep = dep)
-    inputstr += "\n  "
+    for dep in DEFAULT_DEPS + spkg_deps + additional_deps(name):
+        depstr = depstr + ", " + dep
+        inputstr = inputstr + " " + dep
     with open("default.nix", 'w') as f:
         return derivation_template.format(
                 name = name,
@@ -101,7 +111,7 @@ def generate_derivation(name, filename, version, url, sha1, patches, spkg_deps):
                 sha1 = sha1,
                 patches = patchstr,
                 spkg_deps = depstr,
-                buildinputs = inputstr,
+                build_inputs = inputstr,
                 download_url = "{}/{}/{}".format(MIRROR, name, filename),
         );
 
