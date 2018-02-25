@@ -8,7 +8,7 @@ let pkgs = import <nixpkgs> {};
           ;
         });
     callPackage = pkgs.newScope (self
-      // { inherit (pkgs) fetchurl stdenv unzip perl python gfortran autoreconfHook gettext hevea which; }
+      // { inherit (pkgs) fetchurl stdenv unzip perl python gfortran6 autoreconfHook gettext hevea which; }
       // { inherit texlive; }
       );
     self = {  alabaster = callPackage ./spkgs/alabaster.nix {};

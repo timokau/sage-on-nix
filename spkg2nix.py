@@ -8,7 +8,7 @@ MIRROR='ftp://ftp.fu-berlin.de/unix/misc/sage/spkg/upstream'
 
 import os
 
-derivation_template = """{{ pkgs, stdenv, fetchurl, fetchFromGitHub, perl, gfortran, autoreconfHook, gettext, hevea, additionalPatch ? "", which{spkg_deps} }}:
+derivation_template = """{{ pkgs, stdenv, fetchurl, fetchFromGitHub, perl, gfortran6, autoreconfHook, gettext, hevea, additionalPatch ? "", which{spkg_deps} }}:
 pkgs.stdenv.mkDerivation rec {{
   version = "{version}";
   name = "{name}-${{version}}";
@@ -27,8 +27,10 @@ pkgs.stdenv.mkDerivation rec {{
 
   patches = [{patches}];
 
-  propagatedBuildInputs = [ stdenv perl gfortran autoreconfHook gettext hevea which {buildinputs}];
-  buildInputs = [ stdenv perl gfortran autoreconfHook gettext hevea which {buildinputs}];
+  propagatedBuildInputs = [ stdenv perl gfortran6 autoreconfHook gettext hevea which {buildinputs}];
+  buildInputs = [ stdenv perl gfortran6 autoreconfHook gettext hevea which {buildinputs}];
+  # TODO figure out why this is necessary (for openblas and gfortran)
+  nativeBuildInputs = [ stdenv perl gfortran6 autoreconfHook gettext hevea which {buildinputs}];
 
   additional = ../patches;
 
@@ -199,7 +201,7 @@ def parse_spkgs(spkgs_path):
           ;
         });
     callPackage = pkgs.newScope (self
-      // { inherit (pkgs) fetchurl stdenv unzip perl python gfortran autoreconfHook gettext hevea which; }
+      // { inherit (pkgs) fetchurl stdenv unzip perl python gfortran6 autoreconfHook gettext hevea which; }
       // { inherit texlive; }
       );
     self = {""")
