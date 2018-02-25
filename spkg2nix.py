@@ -13,6 +13,11 @@ def additional_deps(name):
         return ["openssl"]
     return []
 
+def additional_patches(name):
+    if name == "patch":
+        return [ "disable_strict_version_check.patch" ]
+    return []
+
 DEFAULT_DEPS = [
         'stdenv',
         'perl',
@@ -71,12 +76,15 @@ pkgs.stdenv.mkDerivation rec {{
     mv tmp/* src
     rmdir tmp
 
-    cp -r ${{sage-src}}/build/pkgs/{name}/* .
+    cp -r ${{sage-src}}/build/pkgs/{name} src/spkg-scripts
+    chmod -R 777 src/spkg-scripts
     cd src
   '';
 
   buildPhase = ''
     mkdir -p $out/{{share,bin,include,lib}}
+    mv src/spkg-scripts/* .
+    rmdir src/spkg-scripts
     export MAKE=make
     export SAGE64=yes
     export SAGE_ROOT=${{sage-src}}
@@ -97,6 +105,9 @@ def generate_derivation(name, filename, version, url, sha1, patches, spkg_deps):
     patchstr = ""
     for patch in patches:
         patchstr = patchstr + '\n    "${{sage-src}}/build/pkgs/{name}/patches/{patch}"'.format(name = name, patch = patch)
+    for patch in additional_patches(name):
+        # patchstr = patchstr + '\n    "../patches/{name}/{patch}"'.format(name = name, patch = patch)
+        patchstr = patchstr + '\n    ../patches/{name}/{patch}'.format(name = name, patch = patch)
     patchstr += "\n  "
     depstr = ""
     inputstr = ""
