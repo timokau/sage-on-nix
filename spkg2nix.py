@@ -4,28 +4,31 @@
 # TODO dependency on git and gcc
 
 # http://sagemath.org/mirror_list
+MIRROR='ftp://ftp.fu-berlin.de/unix/misc/sage/spkg/upstream'
 
 import os
 
-derivation_template = """{{ pkgs, fetchspkg, unpacked_sage, stdenv, perl, gfortran, autoreconfHook, gettext, hevea, additionalPatch ? "", which{spkg_deps} }}:
+derivation_template = """{{ pkgs, stdenv, fetchurl, fetchFromGitHub, perl, gfortran, autoreconfHook, gettext, hevea, additionalPatch ? "", which{spkg_deps} }}:
 pkgs.stdenv.mkDerivation rec {{
   version = "{version}";
   name = "{name}-${{version}}";
 
-  src = fetchspkg {{
-    spkg_name = "{name}";
-    spkg_version = "{version}";
-    filename = "{filename}";
+  src = fetchurl {{
+    url = "{download_url}";
+    sha1 = "{sha1}";
+  }};
+
+  sage-src = fetchFromGitHub {{
+    owner = "sagemath";
+    repo = "sage";
+    rev = "8.1";
+    sha256 = "035qvag43bmcwr9yq4qywx7pphzldlb6a0bwldr01qbgv3ny5j40";
   }};
 
   patches = [{patches}];
 
   propagatedBuildInputs = [ stdenv perl gfortran autoreconfHook gettext hevea which {buildinputs}];
   buildInputs = [ stdenv perl gfortran autoreconfHook gettext hevea which {buildinputs}];
-
-  prePatch = ''
-    cd src
-  '';
 
   additional = ../patches;
 
@@ -48,9 +51,25 @@ pkgs.stdenv.mkDerivation rec {{
 
   hardeningDisable = [ "format" ]; # TODO palp
 
+  sourceRoot = ".";
+
+  preUnpack = ''
+      mkdir tmp
+      cd tmp
+  '';
+
+  postUnpack = ''
+    cd ..
+    mv tmp/* src
+    rmdir tmp
+
+    cp -r ${{sage-src}}/build/pkgs/{name}/* .
+    cd src
+  '';
+
   buildPhase = ''
     mkdir -p $out/{{share,bin,include,lib}}
-    MAKE=make SAGE64=yes SAGE_ROOT=${{unpacked_sage}} SAGE_SHARE=$out/share SAGE_LOCAL=$out ./spkg-install
+    MAKE=make SAGE64=yes SAGE_ROOT=${{sage-src}} SAGE_SHARE=$out/share SAGE_LOCAL=$out ${{stdenv.shell}} ./spkg-install
   '';
 
   installPhase = ''
@@ -63,7 +82,7 @@ pkgs.stdenv.mkDerivation rec {{
 def generate_derivation(name, filename, version, url, sha1, patches, spkg_deps):
     patchstr = ""
     for patch in patches:
-        patchstr = patchstr + '\n    "${{src}}/patches/{patch}"'.format(patch = patch)
+        patchstr = patchstr + '\n    "${{sage-src}}/build/pkgs/{name}/patches/{patch}"'.format(name = name, patch = patch)
     patchstr += "\n  "
     depstr = ""
     for dep in spkg_deps:
@@ -73,7 +92,16 @@ def generate_derivation(name, filename, version, url, sha1, patches, spkg_deps):
         inputstr = inputstr + '\n    {dep}'.format(dep = dep)
     inputstr += "\n  "
     with open("default.nix", 'w') as f:
-        return derivation_template.format(name = name, version=version, url = url, sha1 = sha1, patches = patchstr, spkg_deps = depstr, filename = filename, buildinputs = inputstr);
+        return derivation_template.format(
+                name = name,
+                version = version,
+                url = url,
+                sha1 = sha1,
+                patches = patchstr,
+                spkg_deps = depstr,
+                buildinputs = inputstr,
+                download_url = "{}/{}/{}".format(MIRROR, name, filename),
+        );
 
 def read_version(spkg_dir):
     version_string = open("{}/package-version.txt".format(spkg_dir), 'r').readline().rstrip()
@@ -174,10 +202,7 @@ def parse_spkgs(spkgs_path):
       // { inherit (pkgs) fetchurl stdenv unzip perl python gfortran autoreconfHook gettext hevea which; }
       // { inherit texlive; }
       );
-    self = {
-      unpacked_sage = callPackage ./unpacked_sage.nix {};
-      fetchspkg = callPackage ./fetchspkg.nix {};
-    """)
+    self = {""")
         for spkg in os.listdir(spkgs_path):
             path = "{}/{}".format(spkgs_path, spkg)
             if read_type(path) == 'standard':

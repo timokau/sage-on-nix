@@ -11,10 +11,7 @@ let pkgs = import <nixpkgs> {};
       // { inherit (pkgs) fetchurl stdenv unzip perl python gfortran autoreconfHook gettext hevea which; }
       // { inherit texlive; }
       );
-    self = {
-      unpacked_sage = callPackage ./unpacked_sage.nix {};
-      fetchspkg = callPackage ./fetchspkg.nix {};
-      alabaster = callPackage ./spkgs/alabaster.nix {};
+    self = {  alabaster = callPackage ./spkgs/alabaster.nix {};
   appnope = callPackage ./spkgs/appnope.nix {};
   arb = callPackage ./spkgs/arb.nix {};
   babel = callPackage ./spkgs/babel.nix {};
