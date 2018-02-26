@@ -1,0 +1,12 @@
+diff --git a/spkg-scripts/spkg-install b/spkg-scripts/spkg-install
+index 7cb3a01..7b54b3b 100755
+--- a/spkg-scripts/spkg-install
++++ b/spkg-scripts/spkg-install
+@@ -24,7 +24,6 @@ PYNACDIR=${WORKDIR}
+ build_pynac()
+ {
+     cd ${PYNACDIR}
+-    PKG_CONFIG_PATH=${SAGE_LOCAL}/lib/pkgconfig; export PKG_CONFIG_PATH
+     ./configure --disable-static --prefix=${SAGE_LOCAL} --with-giac=no --libdir="$SAGE_LOCAL/lib" PYTHON=sage-python23
+     $MAKE
+     if [ $? -ne 0 ]; then

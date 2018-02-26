@@ -167,30 +167,16 @@ def read_spkg(name, path):
     return generate_derivation(name, filename, version, "URL", sha1, patches, runtime + buildtime)
 
 def parse_spkgs(spkgs_path):
+    all_template = open('all-template.nix').read()
+    spkgs = ''
+    for spkg in os.listdir(spkgs_path):
+        path = "{}/{}".format(spkgs_path, spkg)
+        if read_type(path) == 'standard':
+            with open("spkgs/{}.nix".format(spkg), 'w') as f:
+                f.write(read_spkg(spkg, path))
+                spkgs += "    {spkg} = callPackage ./spkgs/{spkg}.nix {{}};\n".format(spkg = spkg)
     with open("all.nix", 'w') as a:
-        a.write("""let pkgs = import <nixpkgs> {};
-    texlive = (pkgs.texlive.combine { inherit (pkgs.texlive)
-          scheme-basic
-          collection
-          times
-          stmaryrd
-          babel
-          ;
-        });
-    callPackage = pkgs.newScope (self
-      // { inherit (pkgs) fetchurl stdenv unzip perl python gfortran6 autoreconfHook gettext hevea which; }
-      // { inherit texlive; }
-      );
-    self = {""")
-        for spkg in os.listdir(spkgs_path):
-            path = "{}/{}".format(spkgs_path, spkg)
-            if read_type(path) == 'standard':
-                with open("spkgs/{}.nix".format(spkg), 'w') as f:
-                    f.write(read_spkg(spkg, path))
-                    a.write("  {spkg} = callPackage ./spkgs/{spkg}.nix {{}};\n".format(spkg = spkg))
-        a.write("""};
-    in
-    self""")
+        a.write(all_template.format(spkgs = spkgs))
 
 parse_spkgs("/home/timo/sage-8.1/build/pkgs")
 
