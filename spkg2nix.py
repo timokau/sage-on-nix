@@ -2,15 +2,15 @@
 
 import ast
 import urllib.request
+import os
 
 # TODO checkout need_to_install_spkg
 # TODO dependency on git and gcc
 
 # TODO use all
-mirrorlist = ast.literal_eval(str(urllib.request.urlopen('http://www.sagemath.org/mirror_list').read()))
-MIRROR=mirrorlist[0]
+mirrorlist = ast.literal_eval(urllib.request.urlopen('http://www.sagemath.org/mirror_list').read().decode('utf-8'))
+MIRROR=mirrorlist[0] + '/spkg/upstream'
 
-import os
 
 def additional_deps(name):
     if name == "curl":
@@ -19,20 +19,29 @@ def additional_deps(name):
         return [ "python2" ]
     elif name == "gcc": # TODO
         return [ "glibc" ]
+    elif name == "libgd":
+        return [ "zlib" ]
     return []
 
 def additional_patches(name):
-    if name == "patch":
-        return [ "disable_strict_version_check.patch" ]
-    elif name == "gap":
-        return [ "gmp_location.patch" ]
-    elif name == "maxima":
-        # TODO make sure this doesn't break anything
-        return [ "no_ecl_install.patch" ]
-    elif name == "fflas_ffpack":
-        return [ "no_check_pkgconfig.patch" ]
-    else:
-        return []
+    path='patches/{}'.format(name)
+    patches = []
+    if os.path.isdir(path):
+        for f in os.listdir(path):
+            (root, ext) = os.path.splitext(f)
+            if ext == '.patch':
+                patches += [ f ]
+    return patches
+
+def additional_patch_script(name):
+    path='patches/{}/'.format(name)
+    script = ''
+    if os.path.isdir(path):
+        for f in os.listdir(path):
+            (root, ext) = os.path.splitext(f)
+            if ext == '.sh':
+                script += '\n' + open(path + f).read()
+    return script
 
 DEFAULT_DEPS = [
         'stdenv',
@@ -43,83 +52,7 @@ DEFAULT_DEPS = [
         'hevea'
 ]
 
-derivation_template = """{{pkgs, fetchFromGitHub, fetchurl{spkg_deps} }}:
-pkgs.stdenv.mkDerivation rec {{
-  version = "{version}";
-  name = "{name}-${{version}}";
-
-  src = fetchurl {{
-    url = "{download_url}";
-    sha1 = "{sha1}";
-  }};
-
-  sage-src = fetchFromGitHub {{
-    owner = "sagemath";
-    repo = "sage";
-    rev = "8.1";
-    sha256 = "035qvag43bmcwr9yq4qywx7pphzldlb6a0bwldr01qbgv3ny5j40";
-  }};
-
-  patches = [{patches}];
-
-  buildInputs = [{build_inputs} ];
-  propagatedBuildInputs = buildInputs;
-  nativeBuildInputs = buildInputs; # TODO figure out why this is necessary (for openblas and gfortran)
-
-  postPatch = ''
-    cd ..
-  '';
-
-  configurePhase = ''
-  # NOOP
-  '';
-
-  autoreconfPhase = ''
-  # NOOP
-  '';
-
-  hardeningDisable = [ "format" ]; # TODO palp
-
-  sourceRoot = ".";
-
-  preUnpack = ''
-      mkdir tmp
-      cd tmp
-  '';
-
-  postUnpack = ''
-    cd ..
-    mv tmp/* src
-    rm -r tmp
-
-    cp -r ${{sage-src}}/build/pkgs/{name} src/spkg-scripts
-    chmod -R 777 src/spkg-scripts
-    cd src
-  '';
-
-  buildPhase = ''
-    mkdir -p $out/{{share,bin,include,lib}}
-    mv src/spkg-scripts/* .
-    cp -r ${{sage-src}}/build/bin build-scripts
-    chmod -R 777 build-scripts
-    echo -n "python" > build-scripts/sage-python23
-    export PATH="$PWD/build-scripts":"$PATH"
-    chmod +x build-scripts/sage-python23
-    rmdir src/spkg-scripts
-    export MAKE=make
-    export SAGE64=yes
-    export SAGE_ROOT=${{sage-src}}
-    export SAGE_SHARE=$out/share
-    export SAGE_LOCAL=$out
-    source ${{sage-src}}/src/bin/sage-dist-helpers
-    ${{stdenv.shell}} ./spkg-install
-  '';
-
-  installPhase = ''
-  # NOOP
-  '';
-}}"""
-
+derivation_template = open('spkg-template.nix').read()
 
 # TODO fetch spkg_install and patches and upstream? from SAGE_VERSION repo
 def generate_derivation(name, filename, version, url, sha1, patches, spkg_deps):
@@ -145,6 +78,7 @@ def generate_derivation(name, filename, version, url, sha1, patches, spkg_deps):
                 patches = patchstr,
                 spkg_deps = depstr,
                 build_inputs = inputstr,
+                postPatch = additional_patch_script(name),
                 download_url = "{}/{}/{}".format(MIRROR, name, filename),
         );
 
