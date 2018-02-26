@@ -43,7 +43,7 @@ pkgs.stdenv.mkDerivation rec {{
     echo -n 'python "$@"' > build-scripts/sage-python23
     substituteInPlace build-scripts/sage-pip-install \
         --replace 'out=$(' 'break #' \
-        --replace '$PIP-lock SHARED install' 'echo $PIP install --prefix="$out" --no-cache' \
+        --replace '$PIP-lock SHARED install' '$PIP install --prefix="$out" --no-cache' \
         --replace '[[ "$out" != *"not installed" ]]' 'false'
 
     cp -r ${{sage-src}}/src/bin src-scripts

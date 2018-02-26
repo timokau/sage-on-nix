@@ -1,0 +1,20 @@
+diff --git a/src/module_list.py b/src/module_list.py
+index ee5370b..b71a057 100644
+--- a/src/module_list.py
++++ b/src/module_list.py
+@@ -11,6 +11,15 @@ SAGE_INC = os.path.join(SAGE_LOCAL, 'include')
+ 
+ import pkgconfig
+ 
++_pkgconfig_parse = pkgconfig.parse
++def parse_lists(name):
++    result = _pkgconfig_parse(name)
++    newresult = dict()
++    for k, v in result.iteritems():
++        newresult[k] = list(v)
++    return newresult
++pkgconfig.parse = parse_lists
++
+ # CBLAS can be one of multiple implementations
+ cblas_pc = pkgconfig.parse('cblas')
+ cblas_libs = cblas_pc['libraries']
