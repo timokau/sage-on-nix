@@ -41,7 +41,14 @@ pkgs.stdenv.mkDerivation rec {{
     cp -r ${{sage-src}}/build/bin build-scripts
     chmod -R 777 build-scripts
     echo -n 'python "$@"' > build-scripts/sage-python23
-    export PATH="$PWD/build-scripts":"$PATH"
+    substituteInPlace build-scripts/sage-pip-install \
+        --replace 'out=$(' 'break #' \
+        --replace '$PIP-lock SHARED install' 'echo $PIP install --prefix="$out" --no-cache' \
+        --replace '[[ "$out" != *"not installed" ]]' 'false'
+
+    cp -r ${{sage-src}}/src/bin src-scripts
+
+    export PATH="$PWD/build-scripts":"$PWD/src-scripts":"$PATH"
 
     cd src
   '';
@@ -66,6 +73,7 @@ pkgs.stdenv.mkDerivation rec {{
   SAGE_ROOT = sage-src;
   SAGE_LOCAL = placeholder "out"; # TODO build somewhere else
   SAGE_SHARE = SAGE_LOCAL + "/share";
+  PKG_NAME = "{name}";
   MAKE = "make";
 
   #TODO write_script_wrapper

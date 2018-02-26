@@ -21,6 +21,8 @@ def additional_deps(name):
         return [ "glibc" ]
     elif name == "libgd":
         return [ "zlib" ]
+    elif name == "brial":
+        return [ "libgd" ]
     return []
 
 def additional_patches(name):
