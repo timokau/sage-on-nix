@@ -6,9 +6,9 @@ let
     gcc = nixpkgs.gcc;
     gfortarn = nixpkgs.gfortran6;
     pkgconf = nixpkgs.pkgconfig;
-    pkgconfig = nixpkgs.pkgconfig;
+    pkgconfig = nixpkgs.python2Packages.pkgconfig;
     python3 = nixpkgs.python3;
-    setuptools = nixpkgs.python3Packages.setuptools;
+    setuptools = nixpkgs.python2Packages.setuptools;
     pip = nixpkgs.python2Packages.pip;
   };
 in

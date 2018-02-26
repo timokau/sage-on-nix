@@ -1,0 +1,31 @@
+diff --git a/spkg-scripts/spkg-install b/spkg-scripts/spkg-install
+index b160e6f..11ae354 100755
+--- a/spkg-scripts/spkg-install
++++ b/spkg-scripts/spkg-install
+@@ -34,6 +34,7 @@ else
+     export LDFLAGS="${LDFLAGS} -shared"
+ fi
+ 
++export UNAME="$(uname)"
+ sage-python23 ../lapack_conf.py
+ 
+ # Make sure that the fortran objects are compiled with -fPIC
+@@ -49,17 +50,7 @@ rm -rf "$SAGE_LOCAL/lib/python*/site-packages/numpy"
+ sage-python23 setup.py \
+         --no-user-cfg \
+        install \
++       --prefix $out \
+        --single-version-externally-managed \
+        --record /dev/null \
+        ${NUMPY_FCONFIG}
+-
+-# Touch all includes such that dependency checking works properly:
+-# the timestamp of the includes should be *now*, not the time when
+-# the numpy package was created.
+-sage-python23 <<EOF
+-import os
+-os.chdir(os.environ["SAGE_ROOT"])  # Import numpy from safe location
+-import numpy
+-os.chdir(numpy.get_include())
+-os.system("touch numpy/*")
+-EOF
