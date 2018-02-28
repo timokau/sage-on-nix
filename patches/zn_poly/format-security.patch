@@ -1,0 +1,22 @@
+diff --git a/tune/tune.c b/tune/tune.c
+index 3881a2a..19ff042 100644
+--- a/tune/tune.c
++++ b/tune/tune.c
+@@ -104,7 +104,7 @@ main (int argc, char* argv[])
+    size_t x;
+ 
+    // generate tuning.c file
+-   printf (header);
++   printf ("%s", header);
+ 
+    x = ZNP_mpn_smp_kara_thresh;
+    printf ("size_t ZNP_mpn_smp_kara_thresh = ");
+@@ -171,7 +171,7 @@ main (int argc, char* argv[])
+       printf ("   },\n");
+    }
+    
+-   printf (footer);
++   printf ("%s", footer);
+    
+    gmp_randclear (randstate);
+    
