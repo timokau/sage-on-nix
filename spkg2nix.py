@@ -22,7 +22,21 @@ def additional_deps(name):
     elif name == "libgd":
         return [ "zlib" ]
     elif name == "brial":
-        return [ "libgd" ]
+        return [ "libgd", "zlib" ]
+    elif name == "giac":
+        return [ "zlib" ]
+    elif name == "libgap":
+        return [ "gmp" ]
+    elif name == "eclib":
+        return [ "gmp", "mpfr" ]
+    elif name == "cypari":
+        return [ "gmp" ]
+    elif name == "linbox":
+        return [ "pkgconfig" ]
+    elif name == "lcalc":
+        return [ "gmp" ]
+    elif name == "pynac":
+        return [ "mpfr" ] # TODO flint propagates mpfr
     return []
 
 def additional_patches(name):
@@ -143,7 +157,7 @@ def read_deps(spkg_dir):
             elif dep == "$(BLAS)":
                 deps[i] = "openblas"
             elif dep == "$(PYTHON)":
-                deps[i] = "python"
+                deps[i] = "python2"
             elif dep[0:7] == "$(inst_":
                 deps[i] = dep[7:-1]
             elif dep == "$(MP_LIBRARY)":

@@ -18,7 +18,9 @@
 , openblas
 , psutil
 , future
-, libgd
+, singular
+, sympy
+, mpmath # TODO propagated by sympy
 }:
 pkgs.stdenv.mkDerivation rec {
   version = "8.1"; # TODO
@@ -50,7 +52,9 @@ pkgs.stdenv.mkDerivation rec {
     openblas
     psutil
     future
-    libgd
+    singular
+    sympy
+    mpmath
   ];
 
   configurePhase = ''
@@ -66,8 +70,13 @@ pkgs.stdenv.mkDerivation rec {
     #NOOP
   '';
 
+  autoreconfPhase = ''
+    #NOOP
+  ''; # TODO
+
   installPhase = ''
     mkdir -p $out
+    mkdir -p $out/var/lib/sage/installed # TODO
     cp -r src/bin $out/bin
     mv $out/bin/sage-env{,-orig}
     echo """
@@ -77,7 +86,9 @@ pkgs.stdenv.mkDerivation rec {
     export SAGE_SHARE=${SAGE_SHARE}
     export SAGE_SCRIPTS_DIR=${SAGE_SHARE}/src/bin
     export PATH="$out/bin:$PATH"
-    . \$0-env-orig
+    . "\$\(dirname "\$0"\)"/sage-env-orig
+    export SINGULARPATH="${singular}/share/singular"
+    export SINGULAR_EXECUTABLE="${singular}/bin/Singular"
     """ >> $out/bin/sage-env
     substituteInPlace $out/bin/sage-env-orig \
         --replace '[ ! -f "$SAGE_SCRIPTS_DIR/sage-env-config" ]' 'false' \

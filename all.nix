@@ -3,7 +3,7 @@ let
   callPackage = (import <nixpkgs> {}).newScope (self);
 in
   {
-    sagelib = callPackage ./sagelib.nix {};
+    callPackage = callPackage;
     alabaster = callPackage ./spkgs/alabaster.nix {};
     appnope = callPackage ./spkgs/appnope.nix {};
     arb = callPackage ./spkgs/arb.nix {};

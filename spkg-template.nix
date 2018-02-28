@@ -18,10 +18,7 @@ pkgs.stdenv.mkDerivation rec {{
   patches = [{patches}];
 
   buildInputs = [{build_inputs} ];
-  propagatedBuildInputs = buildInputs;
   nativeBuildInputs = buildInputs; # TODO figure out why this is necessary (for openblas and gfortran)
-
-  hardeningDisable = [ "format" ]; # TODO palp
 
   sourceRoot = "."; # don't cd into the directory after unpack
 
