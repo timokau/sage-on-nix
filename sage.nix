@@ -21,6 +21,17 @@
 , singular
 , sympy
 , mpmath # TODO propagated by sympy
+, fpylll
+, libgap
+, gap
+, matplotlib
+, scipy
+, pyparsing
+, cycler
+, networkx
+, dateutil # TODO propagated by matplotlib
+, conway_polynomials
+, maxima
 }:
 pkgs.stdenv.mkDerivation rec {
   version = "8.1"; # TODO
@@ -55,7 +66,20 @@ pkgs.stdenv.mkDerivation rec {
     singular
     sympy
     mpmath
+    fpylll
+    libgap
+    gap
+    matplotlib
+    scipy
+    pyparsing
+    cycler
+    networkx
+    dateutil
+    conway_polynomials
+    maxima
   ];
+
+  nativeBuildInputs = buildInputs; # TODO
 
   configurePhase = ''
     # NOOP
@@ -79,16 +103,25 @@ pkgs.stdenv.mkDerivation rec {
     mkdir -p $out/var/lib/sage/installed # TODO
     cp -r src/bin $out/bin
     mv $out/bin/sage-env{,-orig}
+    touch $out/bin/sage-arch-env
     echo """
     export PYTHONPATH="$PYTHONPATH"
     export SAGE_ROOT=${SAGE_ROOT}
     export SAGE_LOCAL=${SAGE_LOCAL}
     export SAGE_SHARE=${SAGE_SHARE}
-    export SAGE_SCRIPTS_DIR=${SAGE_SHARE}/src/bin
+    export SAGE_SCRIPTS_DIR=${placeholder "out"}/bin
     export PATH="$out/bin:$PATH"
     . "\$\(dirname "\$0"\)"/sage-env-orig
     export SINGULARPATH="${singular}/share/singular"
     export SINGULAR_EXECUTABLE="${singular}/bin/Singular"
+    export CONWAY_POLYNOMIALS_DATA_DIR="${conway_polynomials}/share/conway_polynomials"
+    export GRAPHS_DATA_DIR="$\{graphs}/share/graphs"
+    export ELLCURVE_DATA_DIR="$\{ellcurves}/share/ellcurves"
+    export POLYTOPE_DATA_DIR="$\{reflexive_polytopes}/share/reflexive_polytopes"
+    export GAP_ROOT_DIR="${gap}/gap/latest"
+    export GAP_DIR="${gap}/gap/latest"
+    export THEBE_DIR="$\{thebe}/share/thebe"
+
     """ >> $out/bin/sage-env
     substituteInPlace $out/bin/sage-env-orig \
         --replace '[ ! -f "$SAGE_SCRIPTS_DIR/sage-env-config" ]' 'false' \

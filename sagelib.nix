@@ -52,9 +52,14 @@
 , gmp
 , boost_cropped
 , gc
+, elliptic_curves # TODO could be dependency of sage instead
 }:
+# TODO autoreconf -vi
+# TODO configure --prefix=...
+# TODO export JUPYTER_PATH
+# TODO --optimize
 pkgs.stdenv.mkDerivation rec {
-  version = "1.2.3.47"; # TODO
+  version = "8.1"; # TODO
   name = "sagelib-${version}";
 
   src = fetchFromGitHub {
@@ -123,6 +128,7 @@ pkgs.stdenv.mkDerivation rec {
     gmp
     boost_cropped
     gc
+    elliptic_curves
 ];
   propagatedBuildInputs = buildInputs;
   nativeBuildInputs = buildInputs; # TODO figure out why this is necessary (for openblas and gfortran)
@@ -152,12 +158,9 @@ pkgs.stdenv.mkDerivation rec {
 
     export PATH="$PWD/build/bin":"$PWD/src/bin":"$PATH"
 
-    cat <( echo '# distutils: libraries = gd' ) src/sage/matrix/matrix_mod2_dense.pxd > src/sage/matrix/matrix_mod2_dense.pdx
-
     cd src
 
-    export DISTUTILS_DEBUG=1
-    export SAGE_NUM_THREADS=4 # TODO
+    export SAGE_NUM_THREADS="$NIX_BUILD_CORES"
     mkdir -p $out/{share,bin,include,lib}
     mkdir -p $out/var/lib/sage/installed
     source bin/sage-dist-helpers
@@ -169,6 +172,18 @@ pkgs.stdenv.mkDerivation rec {
   postPatch = ''
     substituteInPlace src/sage/env.py \
         --replace 'SINGULAR_SO = SAGE_LOCAL+"/lib/libSingular."+extension' 'SINGULAR_SO = "${singular}/lib/libSingular.so"'
+
+    substituteInPlace src/sage/all.py \
+        --replace 'sage: os.path.isfile(started_file)' 'True' \
+        --replace 'sage: interacts' 'True' \
+        --replace "<module 'sage.interacts.all' from '...'>" 'True'
+
+    substituteInPlace src/sage/interfaces/gap.py \
+        --replace 'from sage.env import SAGE_LOCAL, SAGE_EXTCODE' 'from sage.env import SAGE_LOCAL, SAGE_EXTCODE, GAP_ROOT_DIR' \
+        --replace "GAP_BINARY = os.path.join(SAGE_LOCAL, 'bin', 'gap')" 'GAP_BINARY = os.path.join(GAP_ROOT_DIR, "..", "..", "gap")'
+
+    substituteInPlace src/sage/databases/cremona.py \
+        --replace "db_path = os.path.join(SAGE_SHARE,'cremona'" 'os.path.join("${elliptic_curves}/share/cremona"'
   '';
 
   installPhase = ''

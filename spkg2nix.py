@@ -6,6 +6,7 @@ import os
 
 # TODO checkout need_to_install_spkg
 # TODO dependency on git and gcc
+# TODO indicate spkg- in name?
 
 # TODO use all
 mirrorlist = ast.literal_eval(urllib.request.urlopen('http://www.sagemath.org/mirror_list').read().decode('utf-8'))
@@ -16,7 +17,7 @@ def additional_deps(name):
     if name == "curl":
         return ["openssl"]
     elif name == "maxima":
-        return [ "python2" ]
+        return [ "python2", "gmp", "gc" ]
     elif name == "gcc": # TODO
         return [ "glibc" ]
     elif name == "libgd":
@@ -37,6 +38,12 @@ def additional_deps(name):
         return [ "gmp" ]
     elif name == "pynac":
         return [ "mpfr" ] # TODO flint propagates mpfr
+    elif name == "fpylll":
+        return [ "pkgconfig", "pip", "gmp", "mpfr", "pari" ]
+    elif name == "matplotlib":
+        return [ "pkgconfig" ]
+    elif name == "ipykernel":
+        return [ "traitlets", "enum34", "six", "ipython_genutils", "decorator",  "pygments", "pexpect", "ptyprocess", "backports_shutil_get_terminal_size", "pathlib2", "pickleshare", "prompt_toolkit", "wcwidth", "simplegeneric", "pyzmq", "jupyter_core", "dateutil" ]
     return []
 
 def additional_patches(name):

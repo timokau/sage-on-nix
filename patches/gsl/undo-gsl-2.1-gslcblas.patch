@@ -1,0 +1,12 @@
+reverted:
+--- b/gsl.pc.in
++++ a/gsl.pc.in
+@@ -2,7 +2,7 @@
+ exec_prefix=@exec_prefix@
+ libdir=@libdir@
+ includedir=@includedir@
++GSL_CBLAS_LIB=-lgslcblas
+-GSL_CBLAS_LIB=
+ 
+ Name: GSL
+ Description: GNU Scientific Library
