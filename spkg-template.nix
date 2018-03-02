@@ -20,41 +20,38 @@ pkgs.stdenv.mkDerivation rec {{
   buildInputs = [{build_inputs} ];
   nativeBuildInputs = buildInputs; # TODO figure out why this is necessary (for openblas and gfortran)
 
-  sourceRoot = "."; # don't cd into the directory after unpack
-
   preUnpack = ''
-      mkdir tmp
-      cd tmp
+    mkdir src # make sure there is at least one subdirectory, in case unpackPhase doesn't produce one
+    cd src
   '';
 
   postUnpack = ''
-    cd ..
-    mv tmp/* src
-    rm -r tmp
+    # Fetch spkgs-scripts and make them writeable
+    cp -r ${{sage-src}}/build/pkgs/{name} spkg-scripts
+    chmod -R 755 spkg-scripts
+    mv spkg-scripts/* .
+    rmdir spkg-scripts
 
-    cp -r ${{sage-src}}/build/pkgs/{name} src/spkg-scripts
-    chmod -R 777 src/spkg-scripts
-
+    # Fetch and modify build scripts
     cp -r ${{sage-src}}/build/bin build-scripts
-    chmod -R 777 build-scripts
+    chmod 755 build-scripts/*
     echo -n 'python "$@"' > build-scripts/sage-python23
     substituteInPlace build-scripts/sage-pip-install \
         --replace 'out=$(' 'break #' \
         --replace '$PIP-lock SHARED install' '$PIP install --prefix="$out" --no-cache' \
         --replace '[[ "$out" != *"not installed" ]]' 'false'
 
-    cp -r ${{sage-src}}/src/bin src-scripts
-
-    export PATH="$PWD/build-scripts":"$PWD/src-scripts":"$PATH"
-
-    cd src
+    export PATH="$PWD/build-scripts":"$PWD/${{sage-src}}/src/bin":"$PATH"
   '';
 
 
   postPatch = ''
+    # Make sure the sources are in a subdir called src, as expected by spkg-install
+    dir="$(basename "$PWD")"
     cd ..
-    mv src/spkg-scripts/* .
-    rmdir src/spkg-scripts{postPatch}
+    if [ "$dir" != "src" ]; then 
+        mv "$dir" src{postPatch}
+    fi
   '';
 
   configurePhase = ''
@@ -68,7 +65,7 @@ pkgs.stdenv.mkDerivation rec {{
 
   # environment variables for the build
   SAGE_ROOT = sage-src;
-  SAGE_LOCAL = placeholder "out"; # TODO build somewhere else
+  SAGE_LOCAL = placeholder "out";
   SAGE_SHARE = SAGE_LOCAL + "/share";
   PKG_NAME = "{name}";
   MAKE = "make";

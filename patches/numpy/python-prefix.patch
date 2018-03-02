@@ -1,7 +1,7 @@
-diff --git a/spkg-scripts/spkg-install b/spkg-scripts/spkg-install
+diff --git a/spkg-install b/spkg-install
 index b160e6f..11ae354 100755
---- a/spkg-scripts/spkg-install
-+++ b/spkg-scripts/spkg-install
+--- a/spkg-install
++++ b/spkg-install
 @@ -34,6 +34,7 @@ else
      export LDFLAGS="${LDFLAGS} -shared"
  fi

@@ -1,7 +1,7 @@
-diff --git a/spkg-scripts/spkg-install b/spkg-scripts/spkg-install
+diff --git a/spkg-install b/spkg-install
 index 5a375e6..4a0bf4f 100755
---- a/spkg-scripts/spkg-install
-+++ b/spkg-scripts/spkg-install
+--- a/spkg-install
++++ b/spkg-install
 @@ -46,7 +46,7 @@ cp "$SAGE_ROOT"/config/config.* cnf
  echo "Configuring GAP..."
  ./configure \
