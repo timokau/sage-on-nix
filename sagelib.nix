@@ -53,6 +53,7 @@
 , boost_cropped
 , gc
 , elliptic_curves # TODO could be dependency of sage instead
+, maxima # TODO could be dependency of sage instead
 }:
 # TODO autoreconf -vi
 # TODO configure --prefix=...
@@ -72,6 +73,11 @@ pkgs.stdenv.mkDerivation rec {
   patches = [
     ./pkgconfig-set.patch
     ./no-jupyter-kernel.patch
+    # ./no-notebook-test.patch
+    ./ecl-debug.patch # TODO
+    ./graphs-data-dir.patch
+    ./singularpath.patch
+    ./combinatorial-designs-path.patch
   ];
 
   buildInputs = [ stdenv perl gfortran6 autoreconfHook gettext hevea
@@ -129,18 +135,19 @@ pkgs.stdenv.mkDerivation rec {
     boost_cropped
     gc
     elliptic_curves
+    maxima
 ];
   propagatedBuildInputs = buildInputs;
   nativeBuildInputs = buildInputs; # TODO figure out why this is necessary (for openblas and gfortran)
 
-  configurePhase = ''
-  # NOOP
-  '';
+  # configurePhase = ''
+  # # NOOP
+  # '';
 
-  # TODO
-  autoreconfPhase = ''
-  # NOOP
-  '';
+  # # TODO
+  # autoreconfPhase = ''
+  # # NOOP
+  # '';
 
   # environment variables for the build
   SAGE_ROOT = src;
@@ -174,8 +181,8 @@ pkgs.stdenv.mkDerivation rec {
         --replace 'SINGULAR_SO = SAGE_LOCAL+"/lib/libSingular."+extension' 'SINGULAR_SO = "${singular}/lib/libSingular.so"'
 
     substituteInPlace src/sage/all.py \
-        --replace 'sage: os.path.isfile(started_file)' 'True' \
-        --replace 'sage: interacts' 'True' \
+        --replace 'sage: os.path.isfile(started_file)' 'sage: print(True)' \
+        --replace 'sage: interacts' 'sage: print(True)' \
         --replace "<module 'sage.interacts.all' from '...'>" 'True'
 
     substituteInPlace src/sage/interfaces/gap.py \
@@ -183,7 +190,10 @@ pkgs.stdenv.mkDerivation rec {
         --replace "GAP_BINARY = os.path.join(SAGE_LOCAL, 'bin', 'gap')" 'GAP_BINARY = os.path.join(GAP_ROOT_DIR, "..", "..", "gap")'
 
     substituteInPlace src/sage/databases/cremona.py \
-        --replace "db_path = os.path.join(SAGE_SHARE,'cremona'" 'os.path.join("${elliptic_curves}/share/cremona"'
+        --replace "db_path = os.path.join(SAGE_SHARE, 'cremona'," 'db_path = os.path.join("${elliptic_curves}/share/cremona",'
+
+    substituteInPlace src/sage/interfaces/maxima_lib.py \
+        --replace "ecl_eval(\"(require 'maxima)\")" "ecl_eval(\"(require 'maxima \\\"${maxima}/lib/maxima/${maxima.version}/binary-ecl/maxima.fas\\\")\")"
   '';
 
   installPhase = ''

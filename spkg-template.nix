@@ -1,7 +1,7 @@
 {{pkgs, fetchFromGitHub, fetchurl{spkg_deps} }}:
 pkgs.stdenv.mkDerivation rec {{
   version = "{version}";
-  name = "{name}-${{version}}";
+  name = "spkg-{name}-${{version}}";
 
   src = fetchurl {{
     url = "{download_url}";

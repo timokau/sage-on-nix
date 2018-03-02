@@ -6,7 +6,6 @@ import os
 
 # TODO checkout need_to_install_spkg
 # TODO dependency on git and gcc
-# TODO indicate spkg- in name?
 
 # TODO use all
 mirrorlist = ast.literal_eval(urllib.request.urlopen('http://www.sagemath.org/mirror_list').read().decode('utf-8'))
@@ -44,6 +43,47 @@ def additional_deps(name):
         return [ "pkgconfig" ]
     elif name == "ipykernel":
         return [ "traitlets", "enum34", "six", "ipython_genutils", "decorator",  "pygments", "pexpect", "ptyprocess", "backports_shutil_get_terminal_size", "pathlib2", "pickleshare", "prompt_toolkit", "wcwidth", "simplegeneric", "pyzmq", "jupyter_core", "dateutil" ]
+    elif name == "r":
+        return [ "zlib" ]
+    elif name == "rpy2":
+        return [ "pkgconfig", "readline", "pcre", "bzip2", "xz", "zlib", "icu" ]
+    elif name == "widgetsnbextension":
+        return [ "traitlets", # TODO propagated by jupyter-core
+                 "enum34", # TODO propagated by traitlets
+                 "decorator", # TODO propagated by traitlets
+                 "six", # TODO propagated by traitlets
+                 "ipython_genutils", # TODO propagated by traitlets
+                 "terminado", # TODO propagated by notebook
+                 "ipykernel", # TODO propagated by notebook
+                 "nbconvert", # TODO propagated by notebook
+                 "nbformat", # TODO propagated by notebook, nbconvert
+                 "jupyter_client", # TODO propagated by notebook, ipykernel
+                 "tornado", # TODO propagated by notebook, terminado
+                 "jinja2", # TODO propagated by notebook, nbconvert
+                 "ptyprocess", # TODO propagated by terminado
+                 "ipython", # TODO propagated by ipykernel
+                 "entrypoints", # TODO propagated by nbconvert
+                 "pygments", # TODO propagated by ipython, nbconvert
+                 "mistune", # TODO propagated by nbconvert
+                 "jsonschema", # TODO propagated by nbconvert (?)
+                 "dateutil", # TODO propagated by jupyter-client
+                 "pyzmq", # TODO propagated by jupyter-client
+                 "backports_abc", # TODO propagated by tornado
+                 "certifi", # TODO propagated by tornado
+                 "singledispatch", # TODO propagated by tornado
+                 "backports_ssl_match_hostname", # TODO propagated by tornado (?)
+                 "markupsafe", # TODO propagated by jinja2
+                 "pexpect", # TODO propagated by ipython
+                 "pathlib2", # TODO propagated by ipython
+                 "backports_shutil_get_terminal_size", # TODO propagated by ipython
+                 "prompt_toolkit", # TODO propagated by ipython
+                 "simplegeneric", # TODO propagated by ipython
+                 "pickleshare", # TODO propagated by ipython
+                 "functools32", # TODO propagated by ipython
+                 "wcwidth" # TODO propagated by prompt-toolkit
+               ]
+    elif name == "cvxopt":
+        return [ "gmp", "zlib" ]
     return []
 
 def additional_patches(name):

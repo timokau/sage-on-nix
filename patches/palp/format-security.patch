@@ -1,0 +1,48 @@
+diff --git a/Subadd.c b/Subadd.c
+index 7403bb5..df584d1 100644
+--- a/Subadd.c
++++ b/Subadd.c
+@@ -95,7 +95,7 @@ void Init_New_List(NF_List *S)
+ NF_List *AuxNFLptr=NULL;		/* dirty trick for Xmin Xmax Xdif */
+ void Init_NF_List(NF_List *L)
+ {    
+-     L->TIME= L->SAVE= time(NULL); printf(ctime(&L->TIME)); L->CLOCK= clock();
++     L->TIME= L->SAVE= time(NULL); printf("%s", ctime(&L->TIME)); L->CLOCK= clock();
+      L->IP_Time = L->NF_Time = 0;  L->d = L->nNF = L->nIP = L->nSLNF = 0;
+      
+      Init_FInfoList(&L->In);	if(*L->iname) Read_In_File(L);	
+diff --git a/Subdb.c b/Subdb.c
+index ed70646..f7eefd7 100644
+--- a/Subdb.c
++++ b/Subdb.c
+@@ -1750,7 +1750,7 @@ void V_Sublat_Polys(char mr,char *dbin,char *polyi,char *polyo,
+ 	}
+      }	if(*dbin) Close_DB(DB);
+      printf("max_order=%d\n", max_order); Write_List_2_File(polyo,_L); 
+-     _L->TIME=time(NULL); printf(ctime(&_L->TIME));
++     _L->TIME=time(NULL); printf("%s", ctime(&_L->TIME));
+      free(_L);
+ }
+ void VPHM_Sublat_Polys(char sFlag,char mr,char *dbin,char *polyi,char *polyo, 
+diff --git a/Subpoly.c b/Subpoly.c
+index 0198ddb..741e3d7 100644
+--- a/Subpoly.c
++++ b/Subpoly.c
+@@ -866,7 +866,7 @@ void Do_the_Classification(CWS *W, PolyPointList *P, /* char *fn, */
+ 
+   if(rFlag==0) Write_List_2_File(polyo,_NFL); 
+   _NFL->TIME=time(NULL); 
+-  printf(ctime(&_NFL->TIME));
++  printf("%s", ctime(&_NFL->TIME));
+   free(_NFL);
+ }
+ 
+@@ -1189,7 +1189,7 @@ void Find_Sublat_Polys(char mFlag, char *dbin, char *polyi, char *polyo,
+     
+   printf("max_order=%d\n", max_order);
+   Write_List_2_File(polyo,_NFL); 
+-  _NFL->TIME=time(NULL); printf(ctime(&_NFL->TIME));
++  _NFL->TIME=time(NULL); printf("%s", ctime(&_NFL->TIME));
+   free(_NFL);
+ }
+ 

@@ -31,7 +31,41 @@
 , networkx
 , dateutil # TODO propagated by matplotlib
 , conway_polynomials
-, maxima
+# , maxima
+, graphs
+, ecl
+, pillow
+, twisted
+, cvxopt
+, ipykernel
+, ipywidgets
+, rpy2
+, sphinx
+, sagenb
+, docutils
+, jupyter_client
+, flask
+, werkzeug # for notebook
+, typing
+, pyzmq
+, zope_interface # for twisted
+, itsdangerous # flask
+, babel # sphinx
+, flask_babel
+, pytz
+, speaklater # sagenb
+, tornado
+, imagesize
+, requests
+, gcc
+, palp
+, R
+, giac
+, polytopes_db
+, combinatorial_designs
+, alabaster
+, flask_oldsessions
+# , threejs
 }:
 pkgs.stdenv.mkDerivation rec {
   version = "8.1"; # TODO
@@ -76,7 +110,38 @@ pkgs.stdenv.mkDerivation rec {
     networkx
     dateutil
     conway_polynomials
-    maxima
+    # maxima
+    graphs
+    ecl
+    pillow
+    twisted
+    cvxopt
+    ipykernel
+    ipywidgets
+    rpy2
+    sphinx
+    sagenb
+    docutils
+    jupyter_client
+    flask
+    werkzeug
+    typing
+    pyzmq
+    zope_interface
+    itsdangerous # flask
+    babel
+    flask_babel
+    pytz # babel
+    speaklater # babel
+    tornado # ipykernel
+    imagesize # sphinx
+    requests # sphinx
+    palp
+    R
+    giac
+    alabaster
+    flask_oldsessions
+    # threejs
   ];
 
   nativeBuildInputs = buildInputs; # TODO
@@ -105,24 +170,34 @@ pkgs.stdenv.mkDerivation rec {
     mv $out/bin/sage-env{,-orig}
     touch $out/bin/sage-arch-env
     echo """
-    export PYTHONPATH="$PYTHONPATH"
-    export SAGE_ROOT=${SAGE_ROOT}
-    export SAGE_LOCAL=${SAGE_LOCAL}
-    export SAGE_SHARE=${SAGE_SHARE}
-    export SAGE_SCRIPTS_DIR=${placeholder "out"}/bin
-    export PATH="$out/bin:$PATH"
-    . "\$\(dirname "\$0"\)"/sage-env-orig
-    export SINGULARPATH="${singular}/share/singular"
-    export SINGULAR_EXECUTABLE="${singular}/bin/Singular"
-    export CONWAY_POLYNOMIALS_DATA_DIR="${conway_polynomials}/share/conway_polynomials"
-    export GRAPHS_DATA_DIR="$\{graphs}/share/graphs"
-    export ELLCURVE_DATA_DIR="$\{ellcurves}/share/ellcurves"
-    export POLYTOPE_DATA_DIR="$\{reflexive_polytopes}/share/reflexive_polytopes"
-    export GAP_ROOT_DIR="${gap}/gap/latest"
-    export GAP_DIR="${gap}/gap/latest"
-    export THEBE_DIR="$\{thebe}/share/thebe"
+      export PYTHONPATH='$PYTHONPATH'
+      export SAGE_ROOT='${SAGE_ROOT}'
+      export SAGE_LOCAL='${SAGE_LOCAL}'
+      export SAGE_SHARE='${SAGE_SHARE}'
+      export SAGE_SCRIPTS_DIR='${placeholder "out"}/bin'
+      export PATH='$out/bin:$PATH'
+      . "\$\(dirname "\$0"\)"/sage-env-orig
+      export SINGULARPATH='${singular}/share/singular'
+      export SINGULAR_EXECUTABLE='${singular}/bin/Singular'
+      export CONWAY_POLYNOMIALS_DATA_DIR='${conway_polynomials}/share/conway_polynomials'
+      export GRAPHS_DATA_DIR='${graphs}/share/graphs'
+      export ELLCURVE_DATA_DIR='$\{ellcurves}/share/ellcurves'
+      export POLYTOPE_DATA_DIR='${polytopes_db}/share/reflexive_polytopes'
+      export GAP_ROOT_DIR='${gap}/gap/latest'
+      export GAP_DIR='${gap}/gap/latest'
+      export THEBE_DIR='$\{thebe}/share/thebe'
 
+      export ECLDIR='${ecl}/lib/ecl/' # TODO necessary?
+      # needed for cython
+      export CC='${gcc}/bin/gcc'
+      export LDFLAGS='$NIX_TARGET_LDFLAGS'
+
+      export SAGE_EXTCODE='${src}/src/ext'
+
+      # own extensions
+      export COMBINATORIAL_DESIGN_DIR="${combinatorial_designs}/share"
     """ >> $out/bin/sage-env
+
     substituteInPlace $out/bin/sage-env-orig \
         --replace '[ ! -f "$SAGE_SCRIPTS_DIR/sage-env-config" ]' 'false' \
         --replace '. "$SAGE_SCRIPTS_DIR/sage-env-config"' '# Nothing'

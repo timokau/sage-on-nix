@@ -1,0 +1,20 @@
+diff --git a/src/sage/doctest/control.py b/src/sage/doctest/control.py
+index d67b556..dc6acff 100644
+--- a/src/sage/doctest/control.py
++++ b/src/sage/doctest/control.py
+@@ -634,15 +634,6 @@ class DocTestController(SageObject):
+             sage: DC = DocTestController(DD, [])
+             sage: DC.add_files()
+             Doctesting ...
+-
+-        ::
+-
+-            sage: DD = DocTestDefaults(sagenb = True)
+-            sage: DC = DocTestController(DD, [])
+-            sage: DC.add_files()
+-            Doctesting the Sage notebook.
+-            sage: DC.files[0][-6:]
+-            'sagenb'
+         """
+         opj = os.path.join
+         from sage.env import SAGE_SRC, SAGE_DOC_SRC, SAGE_ROOT

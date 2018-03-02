@@ -1,0 +1,15 @@
+diff --git a/src/sage/combinat/designs/latin_squares.py b/src/sage/combinat/designs/latin_squares.py
+index ffaccfc..84c9114 100644
+--- a/src/sage/combinat/designs/latin_squares.py
++++ b/src/sage/combinat/designs/latin_squares.py
+@@ -546,8 +546,8 @@ def MOLS_table(start,stop=None,compare=False,width=None):
+         return
+ 
+     if compare:
+-        from sage.env import SAGE_SHARE
+-        handbook_file = open(SAGE_SHARE+"/combinatorial_designs/MOLS_table.txt",'r')
++        import os
++        handbook_file = open(os.environ['COMBINATORIAL_DESIGN_DIR']+"/combinatorial_designs/MOLS_table.txt",'r')
+         hb = [int(_) for _ in handbook_file.readlines()[9].split(',')]
+         handbook_file.close()
+ 

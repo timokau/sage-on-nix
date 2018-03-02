@@ -1,0 +1,110 @@
+diff --git a/src/sage/interfaces/maxima_lib.py b/src/sage/interfaces/maxima_lib.py
+index 8f2b47a..5358caa 100644
+--- a/src/sage/interfaces/maxima_lib.py
++++ b/src/sage/interfaces/maxima_lib.py
+@@ -97,20 +97,24 @@ from .maxima_abstract import (MaximaAbstract, MaximaAbstractFunction,
+     MaximaAbstractElementFunction)
+ from sage.docs.instancedoc import instancedoc
+ 
++def print_ecl_eval(b):
++    print("{}".format(b))
++    ecl_eval(b)
++
+ 
+ ## We begin here by initializing Maxima in library mode
+ ## i.e. loading it into ECL
+-ecl_eval("(setf *load-verbose* NIL)")
+-ecl_eval("(require 'maxima)")
+-ecl_eval("(in-package :maxima)")
+-ecl_eval("(setq $nolabels t))")
+-ecl_eval("(defvar *MAXIMA-LANG-SUBDIR* NIL)")
+-ecl_eval("(set-locale-subdir)")
+-ecl_eval("(set-pathnames)")
+-ecl_eval("(defun add-lineinfo (x) x)")
+-ecl_eval('(defun principal nil (cond ($noprincipal (diverg)) ((not pcprntd) (merror "Divergent Integral"))))')
+-ecl_eval("(remprop 'mfactorial 'grind)") # don't use ! for factorials (#11539)
+-ecl_eval("(setf $errormsg nil)")
++print_ecl_eval("(setf *load-verbose* NIL)")
++print_ecl_eval("(require 'maxima)")
++print_ecl_eval("(in-package :maxima)")
++print_ecl_eval("(setq $nolabels t))")
++print_ecl_eval("(defvar *MAXIMA-LANG-SUBDIR* NIL)")
++print_ecl_eval("(set-locale-subdir)")
++print_ecl_eval("(set-pathnames)")
++print_ecl_eval("(defun add-lineinfo (x) x)")
++print_ecl_eval('(defun principal nil (cond ($noprincipal (diverg)) ((not pcprntd) (merror "Divergent Integral"))))')
++print_ecl_eval("(remprop 'mfactorial 'grind)") # don't use ! for factorials (#11539)
++print_ecl_eval("(setf $errormsg nil)")
+ 
+ # the following is a direct adaptation of the definition of "retrieve"
+ # in the Maxima file macsys.lisp. This routine is normally responsible
+@@ -118,7 +122,7 @@ ecl_eval("(setf $errormsg nil)")
+ # throw an error in which the text of the question is included. We do
+ # this by running exactly the same code as in the original definition
+ # of "retrieve", but with *standard-output* redirected to a string.
+-ecl_eval(r"""
++print_ecl_eval(r"""
+ (defun retrieve (msg flag &aux (print? nil))
+   (declare (special msg flag print?))
+   (or (eq flag 'noprint) (setq print? t))
+@@ -154,11 +158,11 @@ ecl_eval(r"""
+ """)
+ 
+ ## Redirection of ECL and Maxima stdout to /dev/null
+-ecl_eval(r"""(defparameter *dev-null* (make-two-way-stream
++print_ecl_eval(r"""(defparameter *dev-null* (make-two-way-stream
+               (make-concatenated-stream) (make-broadcast-stream)))""")
+-ecl_eval("(setf original-standard-output *standard-output*)")
+-ecl_eval("(setf *standard-output* *dev-null*)")
+-#ecl_eval("(setf *error-output* *dev-null*)")
++print_ecl_eval("(setf original-standard-output *standard-output*)")
++print_ecl_eval("(setf *standard-output* *dev-null*)")
++#print_ecl_eval("(setf *error-output* *dev-null*)")
+ 
+ ## Default options set in Maxima
+ # display2d -- no ascii art output
+@@ -177,14 +181,14 @@ init_code = ['besselexpand : true', 'display2d : false', 'domain : complex', 'ke
+ # See trac # 6818.
+ init_code.append('nolabels : true')
+ for l in init_code:
+-    ecl_eval("#$%s$"%l)
++    print_ecl_eval("#$%s$"%l)
+ ## To get more debug information uncomment the next line
+ ## should allow to do this through a method
+-#ecl_eval("(setf *standard-output* original-standard-output)")
++#print_ecl_eval("(setf *standard-output* original-standard-output)")
+ 
+ ## This is the main function (ECL object) used for evaluation
+ # This returns an EclObject
+-maxima_eval=ecl_eval("""
++maxima_eval=print_ecl_eval("""
+ (defun maxima-eval( form )
+     (let ((result (catch 'macsyma-quit (cons 'maxima_eval (meval form)))))
+         ;(princ (list "result=" result))
+@@ -265,7 +269,7 @@ def stdout_to_string(s):
+         sage: stdout_to_string('disp(1+1)')
+         '2\n\n'
+     """
+-    return ecl_eval(r"""(with-output-to-string (*standard-output*)
++    return print_ecl_eval(r"""(with-output-to-string (*standard-output*)
+                           (maxima-eval #$%s$))"""%s).python()[1:-1]
+ 
+ def max_to_string(s):
+@@ -287,7 +291,7 @@ def max_to_string(s):
+     """
+     return maxprint(s).python()[1:-1]
+ 
+-my_mread=ecl_eval("""
++my_mread=print_ecl_eval("""
+ (defun my-mread (cmd)
+   (caddr (mread (make-string-input-stream cmd))))
+ """)
+@@ -484,7 +488,7 @@ class MaximaLib(MaximaAbstract):
+             sage: maxima_lib.lisp("(+ 2 17)")
+             <ECL: 19>
+         """
+-        return ecl_eval(cmd)
++        return print_ecl_eval(cmd)
+ 
+     def set(self, var, value):
+         """
