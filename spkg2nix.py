@@ -11,6 +11,15 @@ import os
 mirrorlist = ast.literal_eval(urllib.request.urlopen('http://www.sagemath.org/mirror_list').read().decode('utf-8'))
 MIRROR=mirrorlist[0] + '/spkg/upstream'
 
+def path_fixes(deps):
+    if len(deps) == 0:
+        return ""
+    substr = '    substituteInPlace spkg-install'
+    # fix configure arguments in spkg-install
+    for dep in deps:
+        substr += ' \\\n        --replace \'--with-{dep}="$SAGE_LOCAL"\' \'--with-{dep}="${{{dep}}}"\''.format(dep = dep)
+    return substr
+
 
 def additional_deps(name):
     if name == "curl":
@@ -129,7 +138,8 @@ def generate_derivation(name, filename, version, url, sha1, patches, spkg_deps):
     depstr = ""
     inputstr = ""
     unpack_deps = [ "unzip" ] if filename[-3:] == 'zip' else []
-    for dep in DEFAULT_DEPS + spkg_deps + additional_deps(name) + unpack_deps:
+    all_spkg_deps = spkg_deps + additional_deps(name)
+    for dep in DEFAULT_DEPS + all_spkg_deps + unpack_deps:
         depstr = depstr + ", " + dep
         inputstr = inputstr + " " + dep
     with open("default.nix", 'w') as f:
@@ -141,7 +151,7 @@ def generate_derivation(name, filename, version, url, sha1, patches, spkg_deps):
                 patches = patchstr,
                 spkg_deps = depstr,
                 build_inputs = inputstr,
-                postPatch = additional_patch_script(name),
+                postPatch = path_fixes(all_spkg_deps) + additional_patch_script(name),
                 download_url = "{}/{}/{}".format(MIRROR, name, filename),
         );
 

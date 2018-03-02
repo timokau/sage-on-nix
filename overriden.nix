@@ -13,6 +13,8 @@ let
     libgd = nixpkgs.gd; # TODO check why sages gd doesn't provide Png functionality
     pillow = nixpkgs.python2Packages.pillow;
     r = nixpkgs.R;
+    ecl = nixpkgs.ecl;
+    ecm = nixpkgs.ecm;
     # maxima = nixpkgs.maxima;
     # ecl = nixpkgs.ecl;
 

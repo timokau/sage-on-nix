@@ -46,12 +46,7 @@ pkgs.stdenv.mkDerivation rec {{
 
 
   postPatch = ''
-    # Make sure the sources are in a subdir called src, as expected by spkg-install
-    dir="$(basename "$PWD")"
-    cd ..
-    if [ "$dir" != "src" ]; then 
-        mv "$dir" src{postPatch}
-    fi
+{postPatch}
   '';
 
   configurePhase = ''
