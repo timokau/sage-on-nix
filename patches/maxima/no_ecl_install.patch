@@ -1,7 +1,7 @@
-diff --git a/spkg-install b/spkg-install
+diff --git a/spkg-scripts/spkg-install b/spkg-scripts/spkg-install
 index aa704c3..eef8412 100755
---- a/spkg-install
-+++ b/spkg-install
+--- a/spkg-scripts/spkg-install
++++ b/spkg-scripts/spkg-install
 @@ -79,12 +79,7 @@ if [[ -f "$DOT_SAGE/maxima_commandlist_cache.sobj" ]]; then
  fi
  

@@ -1,7 +1,7 @@
-diff --git a/spkg-install b/spkg-install
+diff --git a/spkg-scripts/spkg-install b/spkg-scripts/spkg-install
 index 7cb3a01..7b54b3b 100755
---- a/spkg-install
-+++ b/spkg-install
+--- a/spkg-scripts/spkg-install
++++ b/spkg-scripts/spkg-install
 @@ -24,7 +24,6 @@ PYNACDIR=${WORKDIR}
  build_pynac()
  {

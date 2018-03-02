@@ -1,7 +1,7 @@
-diff --git a/patches/pkg-config.in b/patches/pkg-config.in
+diff --git a/spkg-scripts/patches/pkg-config.in b/spkg-scripts/patches/pkg-config.in
 index a53c6c6..292c3f7 100755
---- a/patches/pkg-config.in
-+++ b/patches/pkg-config.in
+--- a/spkg-scripts/patches/pkg-config.in
++++ b/spkg-scripts/patches/pkg-config.in
 @@ -11,8 +11,4 @@ else
      export PKG_CONFIG_PATH="$SAGE_LOCAL/lib/pkgconfig:$SAGE_LOCAL/share/pkgconfig:$PKG_CONFIG_PATH"
  fi

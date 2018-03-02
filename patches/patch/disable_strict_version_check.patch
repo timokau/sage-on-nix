@@ -1,7 +1,7 @@
-diff --git a/spkg-install b/spkg-install
+diff --git a/spkg-scripts/spkg-install b/spkg-scripts/spkg-install
 index f5d5a6e..e538b59 100644
---- a/spkg-install
-+++ b/spkg-install
+--- a/spkg-scripts/spkg-install
++++ b/spkg-scripts/spkg-install
 @@ -33,10 +33,3 @@ sdh_make_install
  if [ "$UNAME" = "CYGWIN" ] ; then
      cp ../patch.exe.manifest "$SAGE_LOCAL/bin/"
