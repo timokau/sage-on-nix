@@ -65,7 +65,10 @@
 , combinatorial_designs
 , alabaster
 , flask_oldsessions
-# , threejs
+, threejs
+, tachyon
+, jmol
+, jdk
 }:
 pkgs.stdenv.mkDerivation rec {
   version = "8.1"; # TODO
@@ -141,7 +144,10 @@ pkgs.stdenv.mkDerivation rec {
     giac
     alabaster
     flask_oldsessions
-    # threejs
+    threejs
+    tachyon
+    jmol
+    jdk
   ];
 
   nativeBuildInputs = buildInputs; # TODO

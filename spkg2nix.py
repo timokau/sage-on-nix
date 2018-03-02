@@ -93,6 +93,8 @@ def additional_deps(name):
                ]
     elif name == "cvxopt":
         return [ "gmp", "zlib" ]
+    elif name == "tachyon":
+        return [ "zlib" ]
     return []
 
 def additional_patches(name):

@@ -29,7 +29,7 @@ pkgs.stdenv.mkDerivation rec {{
 
   postUnpack = ''
     cd ..
-    mv tmp/* src
+    mv tmp/* src || mv tmp src # in case unpack hasn't craeted a subdir
     rm -r tmp
 
     cp -r ${{sage-src}}/build/pkgs/{name} src/spkg-scripts
@@ -46,6 +46,7 @@ pkgs.stdenv.mkDerivation rec {{
     cp -r ${{sage-src}}/src/bin src-scripts
 
     export PATH="$PWD/build-scripts":"$PWD/src-scripts":"$PATH"
+    export UNAME="$(uname)"
 
     cd src
   '';
