@@ -71,13 +71,12 @@ pkgs.stdenv.mkDerivation rec {
   };
 
   patches = [
-    ./pkgconfig-set.patch
-    ./no-jupyter-kernel.patch
-    # ./no-notebook-test.patch
-    ./ecl-debug.patch # TODO
-    ./graphs-data-dir.patch
-    ./singularpath.patch
-    ./combinatorial-designs-path.patch
+    ./patches/sagelib/pkgconfig-set.patch
+    ./patches/sagelib/no-jupyter-kernel.patch
+    ./patches/sagelib/ecl-debug.patch # TODO
+    ./patches/sagelib/graphs-data-dir.patch
+    ./patches/sagelib/singularpath.patch
+    ./patches/sagelib/combinatorial-designs-path.patch
   ];
 
   buildInputs = [ stdenv perl gfortran6 autoreconfHook gettext hevea
