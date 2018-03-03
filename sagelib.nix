@@ -52,7 +52,6 @@
 , gmp
 , boost_cropped
 , gc
-, elliptic_curves # TODO could be dependency of sage instead
 , maxima # TODO could be dependency of sage instead
 }:
 # TODO autoreconf -vi
@@ -77,6 +76,7 @@ pkgs.stdenv.mkDerivation rec {
     ./patches/sagelib/graphs-data-dir.patch
     ./patches/sagelib/singularpath.patch
     ./patches/sagelib/combinatorial-designs-path.patch
+    ./patches/sagelib/spkg-paths.patch
   ];
 
   buildInputs = [ stdenv perl gfortran6 autoreconfHook gettext hevea
@@ -133,7 +133,6 @@ pkgs.stdenv.mkDerivation rec {
     gmp
     boost_cropped
     gc
-    elliptic_curves
     maxima
 ];
   propagatedBuildInputs = buildInputs;
@@ -179,17 +178,9 @@ pkgs.stdenv.mkDerivation rec {
     substituteInPlace src/sage/env.py \
         --replace 'SINGULAR_SO = SAGE_LOCAL+"/lib/libSingular."+extension' 'SINGULAR_SO = "${singular}/lib/libSingular.so"'
 
-    substituteInPlace src/sage/all.py \
-        --replace 'sage: os.path.isfile(started_file)' 'sage: print(True)' \
-        --replace 'sage: interacts' 'sage: print(True)' \
-        --replace "<module 'sage.interacts.all' from '...'>" 'True'
-
     substituteInPlace src/sage/interfaces/gap.py \
         --replace 'from sage.env import SAGE_LOCAL, SAGE_EXTCODE' 'from sage.env import SAGE_LOCAL, SAGE_EXTCODE, GAP_ROOT_DIR' \
         --replace "GAP_BINARY = os.path.join(SAGE_LOCAL, 'bin', 'gap')" 'GAP_BINARY = os.path.join(GAP_ROOT_DIR, "..", "..", "gap")'
-
-    substituteInPlace src/sage/databases/cremona.py \
-        --replace "db_path = os.path.join(SAGE_SHARE, 'cremona'," 'db_path = os.path.join("${elliptic_curves}/share/cremona",'
 
     substituteInPlace src/sage/interfaces/maxima_lib.py \
         --replace "ecl_eval(\"(require 'maxima)\")" "ecl_eval(\"(require 'maxima \\\"${maxima}/lib/maxima/${maxima.version}/binary-ecl/maxima.fas\\\")\")"

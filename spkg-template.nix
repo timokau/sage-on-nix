@@ -30,7 +30,7 @@ pkgs.stdenv.mkDerivation rec {{
   postUnpack = ''
     cd ..
     mv tmp/* src || mv tmp src # in case unpack hasn't craeted a subdir
-    rm -r tmp
+    rm -rf tmp
 
     cp -r ${{sage-src}}/build/pkgs/{name} src/spkg-scripts
     chmod -R 777 src/spkg-scripts
