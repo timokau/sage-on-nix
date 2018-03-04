@@ -1,0 +1,14 @@
+diff --git a/src/sage/interfaces/maxima_lib.py b/src/sage/interfaces/maxima_lib.py
+index 763b17f..17c35ea 100644
+--- a/src/sage/interfaces/maxima_lib.py
++++ b/src/sage/interfaces/maxima_lib.py
+@@ -101,7 +101,8 @@ from sage.docs.instancedoc import instancedoc
+ ## We begin here by initializing Maxima in library mode
+ ## i.e. loading it into ECL
+ ecl_eval("(setf *load-verbose* NIL)")
+-ecl_eval("(require 'maxima)")
++import os
++ecl_eval("(require 'maxima \"{}\")".format(os.environ.get('MAXIMA_FAS', '')))
+ ecl_eval("(in-package :maxima)")
+ ecl_eval("(setq $nolabels t))")
+ ecl_eval("(defvar *MAXIMA-LANG-SUBDIR* NIL)")

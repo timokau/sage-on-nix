@@ -70,13 +70,14 @@ pkgs.stdenv.mkDerivation rec {
   };
 
   patches = [
+    # Make pkgconfig return lists instead of sets
     ./patches/sagelib/pkgconfig-set.patch
-    ./patches/sagelib/no-jupyter-kernel.patch
-    ./patches/sagelib/ecl-debug.patch # TODO
-    ./patches/sagelib/graphs-data-dir.patch
-    ./patches/sagelib/singularpath.patch
-    ./patches/sagelib/combinatorial-designs-path.patch
     ./patches/sagelib/spkg-paths.patch
+    # FIXME
+    ./patches/sagelib/no-jupyter-kernel.patch
+    ./patches/sagelib/maxima-absolute-paths.patch
+    # Tests in nix unnecessary behaviour
+    ./patches/sagelib/disable-refusing-doctests-test.patch
   ];
 
   buildInputs = [ stdenv perl gfortran6 autoreconfHook gettext hevea
@@ -172,18 +173,6 @@ pkgs.stdenv.mkDerivation rec {
 
 
     sage-python23 -u setup.py --no-user-cfg build
-  '';
-
-  postPatch = ''
-    substituteInPlace src/sage/env.py \
-        --replace 'SINGULAR_SO = SAGE_LOCAL+"/lib/libSingular."+extension' 'SINGULAR_SO = "${singular}/lib/libSingular.so"'
-
-    substituteInPlace src/sage/interfaces/gap.py \
-        --replace 'from sage.env import SAGE_LOCAL, SAGE_EXTCODE' 'from sage.env import SAGE_LOCAL, SAGE_EXTCODE, GAP_ROOT_DIR' \
-        --replace "GAP_BINARY = os.path.join(SAGE_LOCAL, 'bin', 'gap')" 'GAP_BINARY = os.path.join(GAP_ROOT_DIR, "..", "..", "gap")'
-
-    substituteInPlace src/sage/interfaces/maxima_lib.py \
-        --replace "ecl_eval(\"(require 'maxima)\")" "ecl_eval(\"(require 'maxima \\\"${maxima}/lib/maxima/${maxima.version}/binary-ecl/maxima.fas\\\")\")"
   '';
 
   installPhase = ''

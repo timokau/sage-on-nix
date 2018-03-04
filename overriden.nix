@@ -19,6 +19,7 @@ let
 
     sagelib = newpkgs.callPackage ./sagelib.nix {};
     sage = newpkgs.callPackage ./sage.nix {};
+    pari_data = newpkgs.callPackage ./pari_data.nix {};
     # experiments
     # singular = nixpkgs.singular;
     # openblas = nixpkgs.openblas;

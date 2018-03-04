@@ -1,5 +1,5 @@
 diff --git a/src/module_list.py b/src/module_list.py
-index b71a057..ea79bf7 100644
+index ee5370b..3d79151 100644
 --- a/src/module_list.py
 +++ b/src/module_list.py
 @@ -1,9 +1,6 @@
@@ -12,7 +12,7 @@ index b71a057..ea79bf7 100644
  
  #########################################################
  ### pkg-config setup
-@@ -465,7 +462,7 @@ ext_modules = [
+@@ -456,7 +453,7 @@ ext_modules = [
  
      OptionalExtension('sage.libs.coxeter3.coxeter',
                sources = ['sage/libs/coxeter3/coxeter.pyx'],
@@ -21,7 +21,7 @@ index b71a057..ea79bf7 100644
                language="c++",
                libraries = ['coxeter3'],
                package = 'coxeter3'),
-@@ -798,14 +795,14 @@ ext_modules = [
+@@ -789,14 +786,14 @@ ext_modules = [
                library_dirs = m4ri_library_dirs + gd_library_dirs + png_library_dirs + zlib_library_dirs,
                include_dirs = m4ri_include_dirs + gd_include_dirs + png_include_dirs + zlib_include_dirs,
                extra_compile_args = m4ri_extra_compile_args,
@@ -38,7 +38,7 @@ index b71a057..ea79bf7 100644
                extra_compile_args = m4ri_extra_compile_args),
  
      Extension('sage.matrix.matrix_modn_dense_float',
-@@ -838,7 +835,7 @@ ext_modules = [
+@@ -829,7 +826,7 @@ ext_modules = [
                libraries = ['iml', 'ntl', 'm'] + cblas_libs,
                library_dirs = cblas_library_dirs,
                include_dirs = cblas_include_dirs,
@@ -47,7 +47,7 @@ index b71a057..ea79bf7 100644
  
      Extension('sage.matrix.matrix_rational_sparse',
                sources = ['sage/matrix/matrix_rational_sparse.pyx']),
-@@ -976,7 +973,7 @@ ext_modules = [
+@@ -967,7 +964,7 @@ ext_modules = [
                library_dirs = m4ri_library_dirs + gd_library_dirs + png_library_dirs,
                include_dirs = m4ri_include_dirs + gd_include_dirs + png_include_dirs,
                extra_compile_args = m4ri_extra_compile_args,
@@ -56,7 +56,7 @@ index b71a057..ea79bf7 100644
  
      Extension('sage.modules.vector_rational_dense',
                sources = ['sage/modules/vector_rational_dense.pyx']),
-@@ -1039,14 +1036,14 @@ ext_modules = [
+@@ -1030,14 +1027,14 @@ ext_modules = [
      OptionalExtension("sage.numerical.backends.gurobi_backend",
                ["sage/numerical/backends/gurobi_backend.pyx"],
                libraries = ["gurobi"],
@@ -75,7 +75,7 @@ index b71a057..ea79bf7 100644
  
      OptionalExtension("sage.numerical.backends.coin_backend",
                ["sage/numerical/backends/coin_backend.pyx"],
-@@ -1479,8 +1476,8 @@ ext_modules = [
+@@ -1470,8 +1467,8 @@ ext_modules = [
                libraries=['brial', 'brial_groebner'] + m4ri_libs + png_libs,
                library_dirs = m4ri_library_dirs + png_library_dirs,
                include_dirs = m4ri_include_dirs + png_include_dirs,
@@ -87,7 +87,7 @@ index b71a057..ea79bf7 100644
  
      Extension('sage.rings.polynomial.polynomial_real_mpfr_dense',
 diff --git a/src/sage/combinat/cluster_algebra_quiver/mutation_type.py b/src/sage/combinat/cluster_algebra_quiver/mutation_type.py
-index 759ca74..f3c65a7 100644
+index 759ca74..b8cb91f 100644
 --- a/src/sage/combinat/cluster_algebra_quiver/mutation_type.py
 +++ b/src/sage/combinat/cluster_algebra_quiver/mutation_type.py
 @@ -1248,9 +1248,8 @@ def load_data(n):
@@ -118,8 +118,23 @@ index 759ca74..f3c65a7 100644
          if os.path.isfile(filename):
              f = open(filename,'r')
              data_new = cPickle.load(f)
+diff --git a/src/sage/combinat/designs/latin_squares.py b/src/sage/combinat/designs/latin_squares.py
+index ffaccfc..84c9114 100644
+--- a/src/sage/combinat/designs/latin_squares.py
++++ b/src/sage/combinat/designs/latin_squares.py
+@@ -546,8 +546,8 @@ def MOLS_table(start,stop=None,compare=False,width=None):
+         return
+ 
+     if compare:
+-        from sage.env import SAGE_SHARE
+-        handbook_file = open(SAGE_SHARE+"/combinatorial_designs/MOLS_table.txt",'r')
++        import os
++        handbook_file = open(os.environ['COMBINATORIAL_DESIGN_DIR']+"/combinatorial_designs/MOLS_table.txt",'r')
+         hb = [int(_) for _ in handbook_file.readlines()[9].split(',')]
+         handbook_file.close()
+ 
 diff --git a/src/sage/databases/cremona.py b/src/sage/databases/cremona.py
-index f651e19..3eb9bcd 100644
+index f651e19..340c8f6 100644
 --- a/src/sage/databases/cremona.py
 +++ b/src/sage/databases/cremona.py
 @@ -117,7 +117,7 @@ def build(name, data_tgz, largest_conductor=0, mini=False, decompress=True):
@@ -127,7 +142,7 @@ index f651e19..3eb9bcd 100644
          sage: d = sage.databases.cremona.build('cremona','ecdata.tgz')   # not tested
      """
 -    db_path = os.path.join(SAGE_SHARE,'cremona',name.replace(' ','_')+'.db')
-+    db_path = os.path.join(os.environ.get('ELLIPTIC_CURVES_DIR', ''),'/share/cremona',name.replace(' ','_')+'.db')
++    db_path = os.path.join(os.environ.get('ELLIPTIC_CURVES_DIR', ''),'share','cremona',name.replace(' ','_')+'.db')
      if os.path.exists(db_path):
          raise RuntimeError('Please (re)move %s before building '%db_path \
                  + 'database')
@@ -136,7 +151,7 @@ index f651e19..3eb9bcd 100644
          self.name = name
          name = name.replace(' ','_')
 -        db_path = os.path.join(SAGE_SHARE, 'cremona', name+'.db')
-+        db_path = os.path.join("/nix/store/3aimdbzqi2gj6l03kayladx8gfq14dsb-spkg-elliptic_curves-0.8/share/cremona", name+'.db')
++        db_path = os.path.join(os.environ.get('ELLIPTIC_CURVES_DIR', ''), 'share', 'cremona', name+'.db')
          if build:
              if name is None:
                  raise RuntimeError('The database must have a name.')
@@ -145,12 +160,12 @@ index f651e19..3eb9bcd 100644
          self.name = name
          name = name.replace(' ','_')
 -        db_path = os.path.join(SAGE_SHARE, 'cremona', name+'.db')
-+        db_path = os.path.join("/nix/store/3aimdbzqi2gj6l03kayladx8gfq14dsb-spkg-elliptic_curves-0.8/share/cremona", name+'.db')
++        db_path = os.path.join(os.environ.get('CREMONA_ELLCURVE_DIR', ''), 'share', 'cremona', name+'.db')
          if build:
              if name is None:
                  raise RuntimeError('The database must have a name.')
 diff --git a/src/sage/databases/cunningham_tables.py b/src/sage/databases/cunningham_tables.py
-index b17b887..61f1f41 100644
+index b17b887..8a09863 100644
 --- a/src/sage/databases/cunningham_tables.py
 +++ b/src/sage/databases/cunningham_tables.py
 @@ -6,7 +6,6 @@ import os
@@ -171,7 +186,7 @@ index b17b887..61f1f41 100644
          return [Integer(_) for _ in load(file)]
      else:
 diff --git a/src/sage/databases/db_modular_polynomials.py b/src/sage/databases/db_modular_polynomials.py
-index b75b38b..329aec5 100644
+index b75b38b..0e0c790 100644
 --- a/src/sage/databases/db_modular_polynomials.py
 +++ b/src/sage/databases/db_modular_polynomials.py
 @@ -31,8 +31,7 @@ def _dbz_to_string(name):
@@ -185,7 +200,7 @@ index b75b38b..329aec5 100644
  
      try:
 diff --git a/src/sage/databases/jones.py b/src/sage/databases/jones.py
-index ebe4abf..bca33bc 100644
+index ebe4abf..9b11a42 100644
 --- a/src/sage/databases/jones.py
 +++ b/src/sage/databases/jones.py
 @@ -70,13 +70,12 @@ import os
@@ -204,7 +219,7 @@ index ebe4abf..bca33bc 100644
  
  def sortkey(K):
 diff --git a/src/sage/databases/odlyzko.py b/src/sage/databases/odlyzko.py
-index 489cd67..143b822 100644
+index 489cd67..e5a92cd 100644
 --- a/src/sage/databases/odlyzko.py
 +++ b/src/sage/databases/odlyzko.py
 @@ -23,7 +23,6 @@ AUTHORS:
@@ -224,7 +239,7 @@ index 489cd67..143b822 100644
      verbose("Loading Odlyzko database from " + sobj)
      return load(sobj)
 diff --git a/src/sage/databases/sloane.py b/src/sage/databases/sloane.py
-index d536858..90ddef0 100644
+index d536858..2d6ad94 100644
 --- a/src/sage/databases/sloane.py
 +++ b/src/sage/databases/sloane.py
 @@ -90,7 +90,6 @@ import re
@@ -245,7 +260,7 @@ index d536858..90ddef0 100644
          self.__file_names__ = os.path.join(self.__path__, 'sloane-names.bz2')
          self.__loaded__ = False
 diff --git a/src/sage/databases/stein_watkins.py b/src/sage/databases/stein_watkins.py
-index 3bf373a..2a7bb8d 100644
+index 3bf373a..6cd9594 100644
 --- a/src/sage/databases/stein_watkins.py
 +++ b/src/sage/databases/stein_watkins.py
 @@ -139,8 +139,6 @@ from six.moves import range
@@ -276,7 +291,7 @@ index 3bf373a..2a7bb8d 100644
  
      def __repr__(self):
 diff --git a/src/sage/databases/symbolic_data.py b/src/sage/databases/symbolic_data.py
-index 2acd792..9707110 100644
+index 2acd792..ca9bd2c 100644
 --- a/src/sage/databases/symbolic_data.py
 +++ b/src/sage/databases/symbolic_data.py
 @@ -76,8 +76,7 @@ class SymbolicData:
@@ -289,8 +304,24 @@ index 2acd792..9707110 100644
          self.__intpath = path + "/Data/XMLResources/INTPS/"
          self.__genpath = path + "/Data/XMLResources/GenPS/"
  
+diff --git a/src/sage/env.py b/src/sage/env.py
+index d713536..c3f9a1e 100644
+--- a/src/sage/env.py
++++ b/src/sage/env.py
+@@ -180,11 +180,6 @@ else:
+ 
+ _add_variable_or_fallback('SINGULAR_SO', SINGULAR_SO)
+ 
+-if not SINGULAR_SO or not os.path.exists(SINGULAR_SO):
+-    raise RuntimeError(
+-        "libSingular not found--a working Singular install in $SAGE_LOCAL "
+-        "is required for Sage to work")
+-
+ # post process
+ if ' ' in DOT_SAGE:
+     if UNAME[:6] == 'CYGWIN':
 diff --git a/src/sage/graphs/graph_plot_js.py b/src/sage/graphs/graph_plot_js.py
-index 4c22f7a..922ae52 100644
+index 4c22f7a..2cdfb0c 100644
 --- a/src/sage/graphs/graph_plot_js.py
 +++ b/src/sage/graphs/graph_plot_js.py
 @@ -302,7 +302,7 @@ def gen_html_code(G,
@@ -303,7 +334,7 @@ index 4c22f7a..922ae52 100644
          with open(d3js_filepath, 'r') as d3js_code_file:
              d3js_script = '<script>' + d3js_code_file.read() + '</script>'
 diff --git a/src/sage/graphs/lovasz_theta.py b/src/sage/graphs/lovasz_theta.py
-index f150dca..534c0cf 100644
+index f150dca..c0029d4 100644
 --- a/src/sage/graphs/lovasz_theta.py
 +++ b/src/sage/graphs/lovasz_theta.py
 @@ -64,7 +64,6 @@ def lovasz_theta(graph):
@@ -321,8 +352,45 @@ index f150dca..534c0cf 100644
 -    lines = subprocess.check_output([os.path.join(SAGE_LOCAL, 'bin', 'theta'), tf_name])
 +    lines = subprocess.check_output([os.path.join(os.environ.get('CSDP_DIR', ''), 'bin', 'theta'), tf_name])
      return float(lines.split()[-1])
+diff --git a/src/sage/graphs/strongly_regular_db.pyx b/src/sage/graphs/strongly_regular_db.pyx
+index 19aa6e2..817cf55 100644
+--- a/src/sage/graphs/strongly_regular_db.pyx
++++ b/src/sage/graphs/strongly_regular_db.pyx
+@@ -3213,8 +3213,8 @@ cdef load_brouwer_database():
+         return
+     import json
+ 
+-    from sage.env import SAGE_SHARE
+-    with open(SAGE_SHARE+"/graphs/brouwer_srg_database.json",'r') as datafile:
++    from sage.env import GRAPHS_DATA_DIR
++    with open(GRAPHS_DATA_DIR+"/brouwer_srg_database.json",'r') as datafile:
+         _brouwer_database = {(v,k,l,mu):{'status':status,'comments':comments}
+                              for (v,k,l,mu,status,comments) in json.load(datafile)}
+ 
+diff --git a/src/sage/interfaces/gap.py b/src/sage/interfaces/gap.py
+index aa17d85..a9dc43b 100644
+--- a/src/sage/interfaces/gap.py
++++ b/src/sage/interfaces/gap.py
+@@ -179,7 +179,7 @@ from six import string_types
+ 
+ from .expect import Expect, ExpectElement, FunctionElement, ExpectFunction
+ from .gap_workspace import gap_workspace_file, prepare_workspace_dir
+-from sage.env import SAGE_LOCAL, SAGE_EXTCODE
++from sage.env import SAGE_LOCAL, SAGE_EXTCODE, GAP_ROOT_DIR
+ from sage.misc.misc import is_in_string
+ from sage.misc.superseded import deprecation
+ from sage.misc.cachefunc import cached_method
+@@ -196,7 +196,7 @@ import string
+ 
+ WORKSPACE = gap_workspace_file()
+ 
+-GAP_BINARY = os.path.join(SAGE_LOCAL, 'bin', 'gap')
++GAP_BINARY = os.path.join(GAP_ROOT_DIR, "..", "..", "gap")
+ 
+ first_try = True
+ 
 diff --git a/src/sage/interfaces/jmoldata.py b/src/sage/interfaces/jmoldata.py
-index 10277cc..522c98b 100644
+index 10277cc..8f16c0a 100644
 --- a/src/sage/interfaces/jmoldata.py
 +++ b/src/sage/interfaces/jmoldata.py
 @@ -22,7 +22,6 @@ from __future__ import print_function
@@ -343,7 +411,7 @@ index 10277cc..522c98b 100644
          import sys
          if sys.platform == 'cygwin':
 diff --git a/src/sage/interfaces/lie.py b/src/sage/interfaces/lie.py
-index 179aead..dcbd3b9 100644
+index 179aead..5f87bdd 100644
 --- a/src/sage/interfaces/lie.py
 +++ b/src/sage/interfaces/lie.py
 @@ -290,7 +290,7 @@ from __future__ import absolute_import
@@ -382,8 +450,30 @@ index 179aead..dcbd3b9 100644
      lines = f.readlines()
      f.close()
      i = lines.index('@version()\n')
+diff --git a/src/sage/interfaces/singular.py b/src/sage/interfaces/singular.py
+index 5c5ca52..e9d1639 100644
+--- a/src/sage/interfaces/singular.py
++++ b/src/sage/interfaces/singular.py
+@@ -2279,7 +2279,6 @@ def generate_docstring_dictionary():
+         sage: from sage.interfaces.singular import generate_docstring_dictionary
+         sage: generate_docstring_dictionary()
+     """
+-    from sage.env import SAGE_LOCAL
+ 
+     global nodes
+     global node_names
+@@ -2287,7 +2286,8 @@ def generate_docstring_dictionary():
+     nodes.clear()
+     node_names.clear()
+ 
+-    singular_docdir = SAGE_LOCAL+"/share/info/"
++    import os
++    singular_docdir = os.environ['SINGULARPATH']+"/../info/"
+ 
+     new_node = re.compile("File: singular\.hlp,  Node: ([^,]*),.*")
+     new_lookup = re.compile("\* ([^:]*):*([^.]*)\..*")
 diff --git a/src/sage/repl/ipython_kernel/install.py b/src/sage/repl/ipython_kernel/install.py
-index 3912b8c..23c74f6 100644
+index 3912b8c..326c8d8 100644
 --- a/src/sage/repl/ipython_kernel/install.py
 +++ b/src/sage/repl/ipython_kernel/install.py
 @@ -109,7 +109,7 @@ class SageKernelSpec(object):
@@ -414,7 +504,7 @@ index 3912b8c..23c74f6 100644
          self.symlink(src, dst)
  
 diff --git a/src/sage/repl/rich_output/backend_ipython.py b/src/sage/repl/rich_output/backend_ipython.py
-index 5085c3d..7206ee4 100644
+index 5085c3d..98fe5e9 100644
 --- a/src/sage/repl/rich_output/backend_ipython.py
 +++ b/src/sage/repl/rich_output/backend_ipython.py
 @@ -368,8 +368,7 @@ class BackendIPythonCommandline(BackendIPython):
@@ -428,7 +518,7 @@ index 5085c3d..7206ee4 100644
              os.system('{0} {1} 2>/dev/null 1>/dev/null &'
                        .format(jmol_cmd, launch_script))
 diff --git a/src/sage/structure/graphics_file.py b/src/sage/structure/graphics_file.py
-index 2645888..55363bf 100644
+index 2645888..fec28c2 100644
 --- a/src/sage/structure/graphics_file.py
 +++ b/src/sage/structure/graphics_file.py
 @@ -190,8 +190,7 @@ class GraphicsFile(SageObject):
@@ -441,3 +531,19 @@ index 2645888..55363bf 100644
          os.system('{0} {1} 2>/dev/null 1>/dev/null &'
                    .format(JMOL, launch_script))
  
+diff --git a/src/sage/interfaces/gp.py b/src/sage/interfaces/gp.py
+index ad5bf3d..244b915 100644
+--- a/src/sage/interfaces/gp.py
++++ b/src/sage/interfaces/gp.py
+@@ -250,9 +250,9 @@ class Gp(ExtraTabCompletion, Expect):
+         # list of directories where gp will look for scripts (only current working directory)
+         self._eval_line('default(path,".");')
+         # location of elldata, seadata, galdata
+-        self._eval_line('default(datadir, "$SAGE_LOCAL/share/pari");')
++        self._eval_line('default(datadir, "$PARI_DATA_DIR/share/pari");')
+         # executable for gp ?? help
+-        self._eval_line('default(help, "$SAGE_LOCAL/bin/gphelp -detex");')
++        self._eval_line('default(help, "gphelp -detex");')
+         # logfile disabled since Expect already logs
+         self._eval_line('default(log,0);')
+         # set random seed
