@@ -1,6 +1,9 @@
 { pkgs
-, fetchFromGitHub
+, stdenv
+, makeWrapper
+, sage-src
 , sagelib
+, sagedoc
 , pygments
 , ipython
 , traitlets
@@ -16,6 +19,7 @@
 , wcwidth
 , simplegeneric
 , openblas
+, pkgconfig
 , psutil
 , future
 , singular
@@ -31,7 +35,6 @@
 , networkx
 , dateutil # TODO propagated by matplotlib
 , conway_polynomials
-# , maxima
 , graphs
 , ecl
 , pillow
@@ -45,13 +48,17 @@
 , docutils
 , jupyter_client
 , flask
+, flask_babel
+, flask_oldsessions
+, flask_autoindex
+, flask_openid
+, flask_silk
 , werkzeug # for notebook
 , typing
 , pyzmq
 , zope_interface # for twisted
 , itsdangerous # flask
 , babel # sphinx
-, flask_babel
 , pytz
 , speaklater # sagenb
 , tornado
@@ -64,7 +71,6 @@
 , polytopes_db
 , combinatorial_designs
 , alabaster
-, flask_oldsessions
 , threejs
 , tachyon
 , jmol
@@ -80,20 +86,23 @@
 , gfan
 , sqlite
 , python3
+, python2
+, rubiks
+, snowballstemmer
+, nauty
+, less
+, ppl
+, python_openid
 }:
-pkgs.stdenv.mkDerivation rec {
+stdenv.mkDerivation rec {
   version = "8.1"; # TODO
   name = "sage-${version}";
 
-  src = fetchFromGitHub {
-    owner = "sagemath";
-    repo = "sage";
-    rev = "8.1";
-    sha256 = "035qvag43bmcwr9yq4qywx7pphzldlb6a0bwldr01qbgv3ny5j40";
-  };
+  src = sage-src;
 
-  buildInputs = [
+  buildInputsWithoutPython = [
     sagelib
+    makeWrapper
     pygments
     ipython
     traitlets
@@ -109,6 +118,7 @@ pkgs.stdenv.mkDerivation rec {
     wcwidth
     simplegeneric
     openblas
+    pkgconfig
     psutil
     future
     singular
@@ -144,6 +154,9 @@ pkgs.stdenv.mkDerivation rec {
     itsdangerous # flask
     babel
     flask_babel
+    flask_autoindex
+    flask_openid
+    flask_silk
     pytz # babel
     speaklater # babel
     tornado # ipykernel
@@ -165,19 +178,34 @@ pkgs.stdenv.mkDerivation rec {
     sympow
     gfan
     sqlite
-    python3
+    maxima
+    rubiks
+    snowballstemmer # needed for doc build
+    nauty
+    less
+    python_openid
+  ];
+
+  buildInputs = buildInputsWithoutPython ++ [
+    (python3.withPackages (ps: with ps; buildInputsWithoutPython ))
+    # (python2.withPackages (ps: with ps; buildInputsWithoutPython ))
+    python2
   ];
 
   nativeBuildInputs = buildInputs; # TODO
+
+  installed_packages = stdenv.lib.concatStringsSep " " (map (pkg: pkg.sage-namestring or pkg.name) (buildInputs ++ sagelib.buildInputs));
 
   configurePhase = ''
     # NOOP
   '';
 
   # environment variables for the build
-  SAGE_ROOT = src;
+  SAGE_ROOT = src; # TODO
   SAGE_LOCAL = placeholder "out";
   SAGE_SHARE = sagelib + "/share";
+  SAGE_DOC = sagedoc + "/share/doc/sage";
+  SAGE_DOC_SRC = sagedoc + "/docsrc";
 
   buildPhase = ''
     #NOOP
@@ -188,13 +216,21 @@ pkgs.stdenv.mkDerivation rec {
   ''; # TODO
 
   installPhase = ''
-    mkdir -p $out
-    mkdir -p $out/var/lib/sage/installed # TODO
+    mkdir -p $out/var/lib/sage/installed
+
+    for pkg in $installed_packages; do
+      touch "$out/var/lib/sage/installed/$pkg"
+    done
+
     cp -r src/bin $out/bin
+    # TODO ugly hack to have python2 and python3 mix
+    # Better to use python.withPackages instead
+    makeWrapper "${python3}/bin/python3" "$out/bin/python3" --set PYTHONPATH ""
     mv $out/bin/sage-env{,-orig}
     touch $out/bin/sage-arch-env
     echo """
       export PYTHONPATH='$PYTHONPATH'
+      export PKG_CONFIG_PATH='$PKG_CONFIG_PATH' # TODO needed for tests, truly needed at runtime?
       export SAGE_ROOT='${SAGE_ROOT}'
       export SAGE_LOCAL='${SAGE_LOCAL}'
       export SAGE_SHARE='${SAGE_SHARE}'
@@ -202,8 +238,11 @@ pkgs.stdenv.mkDerivation rec {
       export PATH='$out/bin:$PATH'
       . "\$\(dirname "\$0"\)"/sage-env-orig
       export SAGE_LOGS="$TMP/sage-logs"
+      export SAGE_DOC='${SAGE_DOC}'
+      export SAGE_DOC_SRC='${SAGE_DOC_SRC}'
 
       export GP_DATA_DIR="${pari_data}/share/pari"
+      export PARI_DATA_DIR="${pari_data}" # TODO
       export GPHELP="${pari}/bin/gphelp"
       export GPDOCDIR="${pari}/share/pari/doc"
 
@@ -223,7 +262,8 @@ pkgs.stdenv.mkDerivation rec {
       export ECLDIR='${ecl}/lib/ecl/' # TODO necessary?
       # needed for cython
       export CC='${gcc}/bin/gcc'
-      export LDFLAGS='$NIX_TARGET_LDFLAGS'
+      export LDFLAGS='$NIX_TARGET_LDFLAGS -L${SAGE_LOCAL}/lib -L${SAGE_LOCAL}/lib -Wl,-rpath,${SAGE_LOCAL}/lib'
+
       export CFLAGS='$NIX_CFLAGS_COMPILE'
 
       export SAGE_EXTCODE='${src}/src/ext'
@@ -254,7 +294,8 @@ pkgs.stdenv.mkDerivation rec {
       export STEIN_WATKINS_DIR="$\{stein_watkins}"
       export SYMBOLIC_DATA_DIR="$\{symbolic_data}"
       export THREEJS_DIR="$\{threejs}"
-      export PARI_DATA_DIR="${pari_data}/share/pari"
+
+      export hardeningDisable
     """ >> $out/bin/sage-env
 
     substituteInPlace $out/bin/sage-env-orig \

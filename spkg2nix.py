@@ -9,7 +9,7 @@ import os
 
 # TODO use all
 mirrorlist = ast.literal_eval(urllib.request.urlopen('http://www.sagemath.org/mirror_list').read().decode('utf-8'))
-MIRROR=mirrorlist[0] + '/spkg/upstream'
+MIRROR=mirrorlist[0] + 'spkg/upstream'
 
 def path_fixes(deps):
     if len(deps) == 0:
@@ -129,12 +129,11 @@ DEFAULT_DEPS = [
 derivation_template = open('spkg-template.nix').read()
 
 # TODO fetch spkg_install and patches and upstream? from SAGE_VERSION repo
-def generate_derivation(name, filename, version, url, sha1, patches, spkg_deps):
+def generate_derivation(name, filename, version, patch_version, url, sha1, patches, spkg_deps):
     patchstr = ""
     for patch in patches:
         patchstr = patchstr + '\n    "${{sage-src}}/build/pkgs/{name}/patches/{patch}"'.format(name = name, patch = patch)
     for patch in additional_patches(name):
-        # patchstr = patchstr + '\n    "../patches/{name}/{patch}"'.format(name = name, patch = patch)
         patchstr = patchstr + '\n    ../patches/{name}/{patch}'.format(name = name, patch = patch)
     patchstr += "\n  "
     depstr = ""
@@ -148,6 +147,7 @@ def generate_derivation(name, filename, version, url, sha1, patches, spkg_deps):
         return derivation_template.format(
                 name = name,
                 version = version,
+                patch_version = patch_version,
                 url = url,
                 sha1 = sha1,
                 patches = patchstr,
@@ -162,9 +162,9 @@ def read_version(spkg_dir):
     # patch
     patch_part = version_string.split('.')[-1]
     if (patch_part[0] == 'p'):
-        return (version_string[:-(len(patch_part) + 1)], patch_part[1:])
+        return (version_string[:-(len(patch_part) + 1)], patch_part)
     else:
-        return (version_string, '0')
+        return (version_string, '')
 
 # determines the type of the given spkg
 # type is one of
@@ -182,7 +182,8 @@ def read_patches(spkg_dir):
     patches = []
     if os.path.isdir(path):
         for patch in os.listdir(path):
-            if patch[-6:] == '.patch': # TODO investingate
+            (root, ext) = os.path.splitext(patch)
+            if ext == '.patch':
                 patches += [ patch ]
     return patches
 
@@ -226,20 +227,19 @@ def read_deps(spkg_dir):
             elif dep == "$(SAGERUNTIME)":
                 deps[i] = "" # TODO
         # normal (run), order-only (build)
+        # TODO
         return (deps[0:split], deps[split + 1:])
 
 
 # TODO maybe read description from SPKG.txt
 
 def read_spkg(name, path):
-    # print(generate_derivation("zlib", "myurl", "mysha", ["patch1", "patch2"]))
-    # print("\n======{}=======".format(name))
     (version, patch) = read_version(path)
     (filename, sha1) = read_tarball(path)
     filename = filename.replace('VERSION', version)
     (runtime, buildtime) = read_deps(path)
     patches = read_patches(path)
-    return generate_derivation(name, filename, version, "URL", sha1, patches, runtime + buildtime)
+    return generate_derivation(name, filename, version, patch, "URL", sha1, patches, runtime + buildtime)
 
 def parse_spkgs(spkgs_path):
     all_template = open('all-template.nix').read()
@@ -253,9 +253,5 @@ def parse_spkgs(spkgs_path):
     with open("all.nix", 'w') as a:
         a.write(all_template.format(spkgs = spkgs))
 
+# TODO don't hardcode
 parse_spkgs("/home/timo/sage-8.1/build/pkgs")
-
-# read_spkg("zlib") # no deps
-# read_spkg("tides") # only normal deps
-# read_spkg("werkzeug") # both deps
-# TODO checks

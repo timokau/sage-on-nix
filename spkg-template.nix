@@ -1,18 +1,15 @@
-{{pkgs, fetchFromGitHub, fetchurl{spkg_deps} }}:
+{{pkgs, sage-src, fetchurl{spkg_deps} }}:
 pkgs.stdenv.mkDerivation rec {{
   version = "{version}";
-  name = "spkg-{name}-${{version}}";
+  name = "spkg-${{name-orig}}-${{version}}";
+  # used by sage to detect which packages are installed
+  name-orig = "{name}";
+  patch-version = "{patch_version}";
+  sage-namestring = "${{name-orig}}-${{version}}${{patch-version}}";
 
   src = fetchurl {{
     url = "{download_url}";
     sha1 = "{sha1}";
-  }};
-
-  sage-src = fetchFromGitHub {{
-    owner = "sagemath";
-    repo = "sage";
-    rev = "8.1";
-    sha256 = "035qvag43bmcwr9yq4qywx7pphzldlb6a0bwldr01qbgv3ny5j40";
   }};
 
   patches = [{patches}];
@@ -35,18 +32,11 @@ pkgs.stdenv.mkDerivation rec {{
     cp -r ${{sage-src}}/build/pkgs/{name} src/spkg-scripts
     chmod -R 777 src/spkg-scripts
 
-    cp -r ${{sage-src}}/build/bin build-scripts
-    chmod -R 777 build-scripts
-    echo -n 'python "$@"' > build-scripts/sage-python23
-    substituteInPlace build-scripts/sage-pip-install \
-        --replace 'out=$(' 'break #' \
-        --replace '$PIP-lock SHARED install' '$PIP install --prefix="$out" --no-cache' \
-        --replace '[[ "$out" != *"not installed" ]]' 'false'
-
     cp -r ${{sage-src}}/src/bin src-scripts
 
-    export PATH="$PWD/build-scripts":"$PWD/src-scripts":"$PATH"
+    export PATH="${{sage-src}}/build/bin":"$PWD/src-scripts":"$PATH"
     export UNAME="$(uname)"
+    export SAGE_FAT_BINARY=yes
 
     cd src
   '';
@@ -93,6 +83,8 @@ pkgs.stdenv.mkDerivation rec {{
     rm -f "$SAGE_LOCAL"/lib/*.la
   '';
 
+  # TODO
+  # doCheck = true;
   checkPhase = ''
     [ -f spkg-check ] && ./spkg-check
   '';
