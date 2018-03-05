@@ -5,7 +5,7 @@ pkgs.stdenv.mkDerivation rec {{
   # used by sage to detect which packages are installed
   name-orig = "{name}";
   patch-version = "{patch_version}";
-  sage-namestring = "${{name-orig}}-${{version}}${{patch-version}}";
+  sage-namestring = "${{name-orig}}-${{version}}.${{patch-version}}";
 
   src = fetchurl {{
     url = "{download_url}";

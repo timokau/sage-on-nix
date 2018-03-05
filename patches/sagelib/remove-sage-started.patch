@@ -1,0 +1,36 @@
+diff --git a/src/sage/all.py b/src/sage/all.py
+index 300f519..2ea52ba 100644
+--- a/src/sage/all.py
++++ b/src/sage/all.py
+@@ -282,30 +282,7 @@ sage.misc.lazy_import.save_cache_file()
+ # Write a file indicating that Sage was started up successfully.
+ # This is called by the sage-starts script.
+ def _write_started_file():
+-    """
+-    Write a ``sage-started.txt`` file if it does not exist.  The
+-    contents of this file do not matter, only its existence.
+-
+-    The non-existence of this file will be used as a trigger to run
+-    ``sage-starts`` during the Sage build.
+-
+-    TESTS:
+-
+-    Check that the file exists when Sage is running::
+-
+-        sage: started_file = os.path.join(SAGE_LOCAL, 'etc', 'sage-started.txt')
+-        sage: os.path.isfile(started_file)
+-        True
+-    """
+-    started_file = os.path.join(SAGE_LOCAL, 'etc', 'sage-started.txt')
+-
+-    # Current time with a resolution of 1 second
+-    import datetime
+-    t = datetime.datetime.now().replace(microsecond=0)
+-
+-    O = open(started_file, 'w')
+-    O.write("Sage {} was started at {}\n".format(sage.version.version, t))
+-    O.close()
++    pass
+ 
+ 
+ import warnings

@@ -1,0 +1,13 @@
+diff --git a/src/sage/interfaces/qepcad.py b/src/sage/interfaces/qepcad.py
+index f920633..39dcbbf 100644
+--- a/src/sage/interfaces/qepcad.py
++++ b/src/sage/interfaces/qepcad.py
+@@ -530,7 +530,7 @@ TESTS:
+ 
+ Check the qepcad configuration file::
+ 
+-    sage: open('%s/default.qepcadrc'%SAGE_LOCAL).readlines()[-1]
++    sage: open('%s/default.qepcadrc'%SAGE_LOCAL).readlines()[-1]   # optional - qepcad
+     'SINGULAR .../bin\n'
+ 
+ Tests related to the not tested examples (nondeterministic order of atoms)::

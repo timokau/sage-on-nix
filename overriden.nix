@@ -13,7 +13,11 @@ let
     pip = nixpkgs.python2Packages.pip;
     libgd = nixpkgs.gd; # TODO check why sages gd doesn't provide Png functionality
     pillow = nixpkgs.python2Packages.pillow;
-    distutils = nixpkgs.python2Packages.distutils; # Fixes https://bugs.python.org/issue1222585, upstream sage fixes that by patching python (TODO change that upstream?)
+
+    # Fixes https://bugs.python.org/issue1222585, upstream sage fixes that by patching python (TODO change that upstream?)
+    distutils = nixpkgs.python2Packages.distutils; 
+    cython = nixpkgs.python2Packages.cython;
+
     r = nixpkgs.rWrapper.override {
       packages = with nixpkgs.rPackages; [ # TODO add standard collection to nixpkgs (https://stat.ethz.ch/R-manual/R-devel/doc/html/packages.html)
         boot

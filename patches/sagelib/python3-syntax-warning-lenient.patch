@@ -1,0 +1,13 @@
+diff --git a/src/sage/tests/py3_syntax.py b/src/sage/tests/py3_syntax.py
+index e564860..db5e60b 100644
+--- a/src/sage/tests/py3_syntax.py
++++ b/src/sage/tests/py3_syntax.py
+@@ -182,7 +182,7 @@ class Python3SyntaxTest(SortedDirectoryWalkerABC):
+               File "...py", line 1
+                 print "invalid print statement"
+                                               ^
+-            SyntaxError: Missing parentheses in call to 'print'
++            SyntaxError: Missing parentheses in call to 'print'...
+             sage: os.unlink(src.name)
+         """
+         cmd = [

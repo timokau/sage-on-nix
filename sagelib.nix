@@ -55,7 +55,6 @@
 }:
 # TODO autoreconf -vi
 # TODO configure --prefix=...
-# TODO export JUPYTER_PATH
 # TODO --optimize
 pkgs.stdenv.mkDerivation rec {
   version = "8.1"; # TODO
@@ -130,6 +129,7 @@ pkgs.stdenv.mkDerivation rec {
   SAGE_ROOT = src;
   SAGE_LOCAL = placeholder "out"; # TODO build somewhere else
   SAGE_SHARE = SAGE_LOCAL + "/share";
+  JUPYTER_PATH = SAGE_LOCAL + "/jupyter";
   MAKE = "make";
 
   buildPhase = ''

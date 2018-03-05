@@ -66,7 +66,7 @@
 , requests
 , gcc
 , palp
-, R
+, r
 , giac
 , polytopes_db
 , combinatorial_designs
@@ -93,6 +93,7 @@
 , less
 , ppl
 , python_openid
+, flintqs
 }:
 stdenv.mkDerivation rec {
   version = "8.1"; # TODO
@@ -163,7 +164,7 @@ stdenv.mkDerivation rec {
     imagesize # sphinx
     requests # sphinx
     palp
-    R
+    r
     giac
     alabaster
     flask_oldsessions
@@ -184,6 +185,7 @@ stdenv.mkDerivation rec {
     nauty
     less
     python_openid
+    flintqs
   ];
 
   buildInputs = buildInputsWithoutPython ++ [
@@ -207,7 +209,7 @@ stdenv.mkDerivation rec {
   SAGE_DOC = sagedoc + "/share/doc/sage";
   SAGE_DOC_SRC = sagedoc + "/docsrc";
 
-  buildPhase = ''
+  installPhase = ''
     #NOOP
   '';
 
@@ -215,7 +217,7 @@ stdenv.mkDerivation rec {
     #NOOP
   ''; # TODO
 
-  installPhase = ''
+  buildPhase = ''
     mkdir -p $out/var/lib/sage/installed
 
     for pkg in $installed_packages; do
@@ -236,10 +238,14 @@ stdenv.mkDerivation rec {
       export SAGE_SHARE='${SAGE_SHARE}'
       export SAGE_SCRIPTS_DIR='${placeholder "out"}/bin'
       export PATH='$out/bin:$PATH'
-      . "\$\(dirname "\$0"\)"/sage-env-orig
+
+      . "$out/bin/sage-env-orig"
+
       export SAGE_LOGS="$TMP/sage-logs"
       export SAGE_DOC='${SAGE_DOC}'
       export SAGE_DOC_SRC='${SAGE_DOC_SRC}'
+
+      export JUPYTER_PATH='${sagelib}/jupyter'
 
       export GP_DATA_DIR="${pari_data}/share/pari"
       export PARI_DATA_DIR="${pari_data}" # TODO
@@ -262,7 +268,7 @@ stdenv.mkDerivation rec {
       export ECLDIR='${ecl}/lib/ecl/' # TODO necessary?
       # needed for cython
       export CC='${gcc}/bin/gcc'
-      export LDFLAGS='$NIX_TARGET_LDFLAGS -L${SAGE_LOCAL}/lib -L${SAGE_LOCAL}/lib -Wl,-rpath,${SAGE_LOCAL}/lib'
+      export LDFLAGS='$NIX_TARGET_LDFLAGS -L${sagelib}/lib -L${sagelib}/lib -Wl,-rpath,${sagelib}/lib'
 
       export CFLAGS='$NIX_CFLAGS_COMPILE'
 
@@ -295,7 +301,7 @@ stdenv.mkDerivation rec {
       export SYMBOLIC_DATA_DIR="$\{symbolic_data}"
       export THREEJS_DIR="$\{threejs}"
 
-      export hardeningDisable
+      export DYLD_LIBRARY_PATH="${singular}/lib" # make ctype's find_library work
     """ >> $out/bin/sage-env
 
     substituteInPlace $out/bin/sage-env-orig \
@@ -303,8 +309,13 @@ stdenv.mkDerivation rec {
         --replace '. "$SAGE_SCRIPTS_DIR/sage-env-config"' '# Nothing'
   '';
 
+  doCheck = true;
   # TODO -p
   checkPhase = ''
-    DOT_SATE=/tmp/dot_sage $out/bin/sage -t -p --all
+    #export DOT_SAGE=/tmp/dot_sage
+    #echo "sourcing $out/bin/sage-env"
+    #bash "$out/bin/sage-env"
+    #sage-starts
+    #"sage" -t -p --all
   '';
 }
