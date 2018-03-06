@@ -7,8 +7,10 @@ let
     gfortarn = nixpkgs.gfortran6;
     pkgconf = nixpkgs.pkgconfig;
     pkgconfig = nixpkgs.python2Packages.pkgconfig;
+    python = nixpkgs.python2;
     python2 = nixpkgs.python2;
     python3 = nixpkgs.python3;
+    flint = nixpkgs.flint;
     setuptools = nixpkgs.python2Packages.setuptools;
     pip = nixpkgs.python2Packages.pip;
     libgd = nixpkgs.gd; # TODO check why sages gd doesn't provide Png functionality

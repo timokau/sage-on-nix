@@ -87,6 +87,7 @@
 , python2
 , rubiks
 , snowballstemmer
+, flint
 }:
 stdenv.mkDerivation rec {
   version = "8.1"; # TODO
@@ -175,6 +176,7 @@ stdenv.mkDerivation rec {
     maxima
     rubiks
     snowballstemmer # needed for doc build
+    flint
   ];
 
   buildInputs = buildInputsWithoutPython ++ [
@@ -210,9 +212,22 @@ stdenv.mkDerivation rec {
   JMOL_DIR="${jmol}";
   PARI_DATA_DIR="${pari_data}/share/pari";
 
+  ECLDIR="${ecl}/lib/ecl/"; # TODO necessary?
+
   unpackPhase = "true";
 
   buildPhase = ''
+    export LD_LIBRARY_PATH="${flint}/lib"
+    export DYLD_LIBRARY_PATH="${flint}/lib" # FIXME
+    # needed for cython
+    export CC='${gcc}/bin/gcc'
+    export LDFLAGS='$NIX_TARGET_LDFLAGS -L${sagelib}/lib -L${sagelib}/lib -Wl,-rpath,${sagelib}/lib' # TODO sage paths neeed?
+
+    export CFLAGS='$NIX_CFLAGS_COMPILE'
+    export SITE_PACKAGES='${sagelib}/lib/python2.7/site-packages'
+
+    export SAGE_EXTCODE='${src}/src/ext'
+
     mkdir -p "${SAGE_DOC}"
     cp -r "${src}/src/doc" "${SAGE_DOC_SRC}"
     chmod -R 755 "${SAGE_DOC_SRC}"

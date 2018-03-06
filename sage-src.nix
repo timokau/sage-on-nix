@@ -1,4 +1,8 @@
-{pkgs, fetchFromGitHub, stdenv }:
+{ pkgs
+, fetchFromGitHub
+, stdenv
+, python # TODO perl, bash (or patchShebangs individually for spkgs)
+}:
 pkgs.stdenv.mkDerivation rec {
   version = "8.1"; # TODO
   name = "sage-src-${version}";
@@ -27,7 +31,9 @@ pkgs.stdenv.mkDerivation rec {
     ./patches/sagelib/respect-jupyter-path.patch
   ];
 
-  buildInputs = [];
+  buildInputs = [
+    python # for shebang patching
+  ];
 
   configurePhase = "true";
 
