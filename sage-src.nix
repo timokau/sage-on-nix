@@ -15,7 +15,7 @@ pkgs.stdenv.mkDerivation rec {
     ./patches/sagelib/pkgconfig-set.patch
     ./patches/sagelib/spkg-paths.patch
     # FIXME
-    # ./patches/sagelib/no-jupyter-kernel.patch
+    ./patches/sagelib/no-jupyter-kernel.patch
     ./patches/sagelib/maxima-absolute-paths.patch
     # Tests in nix unnecessary behaviour
     ./patches/sagelib/disable-refusing-doctests-test.patch
@@ -24,7 +24,7 @@ pkgs.stdenv.mkDerivation rec {
     ./patches/sagelib/python3-syntax-warning-lenient.patch
     ./patches/sagelib/remove-sage-started.patch
     ./patches/sagelib/qepcad-config-optional.patch
-    ./patches/sagelib/fix-ecm-output-parsing.patch
+    ./patches/sagelib/respect-jupyter-path.patch
   ];
 
   buildInputs = [];

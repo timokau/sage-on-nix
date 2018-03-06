@@ -40,6 +40,9 @@ let
     # ecl = nixpkgs.ecl;
     ecm = nixpkgs.ecm;
     # maxima = nixpkgs.maxima-ecl;
+    jupyter_client = nixpkgs.python2Packages.jupyter_client;
+    jupyter_core = nixpkgs.python2Packages.jupyter_core;
+    twisted = nixpkgs.python2Packages.twisted; # with service-identity
 
     sagelib = newpkgs.callPackage ./sagelib.nix {};
     sagedoc = newpkgs.callPackage ./sagedoc.nix {};
