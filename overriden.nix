@@ -46,6 +46,8 @@ let
     jupyter_core = nixpkgs.python2Packages.jupyter_core;
     twisted = nixpkgs.python2Packages.twisted; # with service-identity
     service-identity = nixpkgs.python2Packages.service-identity;
+    pexpect = nixpkgs.python2Packages.pexpect;
+    ptyprocess = nixpkgs.python2Packages.ptyprocess;
 
     sagelib = newpkgs.callPackage ./sagelib.nix {};
     sagedoc = newpkgs.callPackage ./sagedoc.nix {};
