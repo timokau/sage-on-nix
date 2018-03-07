@@ -39,6 +39,7 @@
 , ecl
 , pillow
 , twisted
+, service-identity # for twisted
 , cvxopt
 , ipykernel
 , ipywidgets
@@ -139,6 +140,7 @@ stdenv.mkDerivation rec {
     ecl
     pillow
     twisted
+    service-identity
     cvxopt
     ipykernel
     ipywidgets
@@ -271,7 +273,7 @@ stdenv.mkDerivation rec {
       export LDFLAGS='$NIX_TARGET_LDFLAGS -L${sagelib}/lib -L${sagelib}/lib -Wl,-rpath,${sagelib}/lib' # TODO sage paths neede?
 
       export CFLAGS='$NIX_CFLAGS_COMPILE'
-      export SITE_PACKAGES='${sagelib}/lib/python2.7/site-packages'
+      export SAGE_LIB='${sagelib}/lib/python2.7/site-packages'
 
       export SAGE_EXTCODE='${src}/src/ext'
 
