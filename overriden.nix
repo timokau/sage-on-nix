@@ -15,6 +15,8 @@ let
     pip = nixpkgs.python2Packages.pip;
     libgd = nixpkgs.gd; # TODO check why sages gd doesn't provide Png functionality
     pillow = nixpkgs.python2Packages.pillow;
+    ntl = nixpkgs.ntl;
+    iml = nixpkgs.iml;
 
     # Fixes https://bugs.python.org/issue1222585, upstream sage fixes that by patching python (TODO change that upstream?)
     distutils = nixpkgs.python2Packages.distutils; 

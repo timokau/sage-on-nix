@@ -1,0 +1,12 @@
+diff --git a/src/makefile b/src/makefile
+index e5ec1a8..ae25288 100644
+--- a/src/makefile
++++ b/src/makefile
+@@ -404,6 +404,8 @@ check:
+ 
+ 
+ install:
++	echo $(CURDIR)
++	echo "${PWD}"
+ 	mkdir -p -m 755 $(DESTDIR)$(INCLUDEDIR)
+ 	rm -rf $(DESTDIR)$(INCLUDEDIR)/NTL
