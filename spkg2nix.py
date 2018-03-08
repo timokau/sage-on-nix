@@ -143,19 +143,19 @@ def generate_derivation(name, filename, version, patch_version, url, sha1, patch
     for dep in DEFAULT_DEPS + all_spkg_deps + unpack_deps:
         depstr = depstr + ", " + dep
         inputstr = inputstr + " " + dep
-    with open("default.nix", 'w') as f:
-        return derivation_template.format(
-                name = name,
-                version = version,
-                patch_version = patch_version,
-                url = url,
-                sha1 = sha1,
-                patches = patchstr,
-                spkg_deps = depstr,
-                build_inputs = inputstr,
-                postPatch = path_fixes(all_spkg_deps) + additional_patch_script(name),
-                download_url = "{}/{}/{}".format(MIRROR, name, filename),
-        );
+
+    return derivation_template.format(
+            name = name,
+            version = version,
+            patch_version = patch_version,
+            url = url,
+            sha1 = sha1,
+            patches = patchstr,
+            spkg_deps = depstr,
+            build_inputs = inputstr,
+            postPatch = path_fixes(all_spkg_deps) + additional_patch_script(name),
+            download_url = "{}/{}/{}".format(MIRROR, name, filename),
+    );
 
 def read_version(spkg_dir):
     version_string = open("{}/package-version.txt".format(spkg_dir), 'r').readline().rstrip()
