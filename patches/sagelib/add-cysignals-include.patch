@@ -1,0 +1,14 @@
+diff --git a/src/sage/env.py b/src/sage/env.py
+index c3f9a1e..641fb75 100644
+--- a/src/sage/env.py
++++ b/src/sage/env.py
+@@ -251,7 +251,8 @@ def sage_include_directories(use_sources=False):
+ 
+     include_directories = [SAGE_INC,
+                            distutils.sysconfig.get_python_inc(),
+-                           numpy.get_include()]
++                           numpy.get_include(),
++                           os.environ.get('CYSIGNALS_INCLUDE', '')]
+ 
+     if use_sources :
+         include_directories.extend([SAGE_SRC,

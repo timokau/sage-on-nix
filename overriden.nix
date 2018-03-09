@@ -49,7 +49,6 @@ let
     pexpect = nixpkgs.python2Packages.pexpect;
     ptyprocess = nixpkgs.python2Packages.ptyprocess;
 
-    cysignals = newpkgs.callPackage ./cysignals.nix {};
     sagelib = newpkgs.callPackage ./sagelib.nix {};
     sagedoc = newpkgs.callPackage ./sagedoc.nix {};
     sage = newpkgs.callPackage ./sage.nix {};

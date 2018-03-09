@@ -95,6 +95,7 @@
 , ppl
 , python_openid
 , flintqs
+, cysignals
 }:
 stdenv.mkDerivation rec {
   version = "8.1"; # TODO
@@ -188,6 +189,7 @@ stdenv.mkDerivation rec {
     less
     python_openid
     flintqs
+    cysignals
   ];
 
   buildInputs = buildInputsWithoutPython ++ [
@@ -303,6 +305,7 @@ stdenv.mkDerivation rec {
       export STEIN_WATKINS_DIR="$\{stein_watkins}"
       export SYMBOLIC_DATA_DIR="$\{symbolic_data}"
       export THREEJS_DIR="$\{threejs}"
+      export CYSIGNALS_INCLUDE="${cysignals}/lib/python2.7/site-packages"
 
       export DYLD_LIBRARY_PATH="${singular}/lib" # make ctype's find_library work
     """ >> $out/bin/sage-env

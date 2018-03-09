@@ -30,6 +30,7 @@ pkgs.stdenv.mkDerivation rec {
     ./patches/sagelib/qepcad-config-optional.patch
     ./patches/sagelib/respect-jupyter-path.patch
     ./patches/sagelib/python-5755-hotpatch.patch
+    ./patches/sagelib/add-cysignals-include.patch
   ];
 
   buildInputs = [
