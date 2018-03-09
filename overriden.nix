@@ -18,7 +18,6 @@ let
     ntl = nixpkgs.ntl;
     iml = nixpkgs.iml;
 
-    # Fixes https://bugs.python.org/issue1222585, upstream sage fixes that by patching python (TODO change that upstream?)
     distutils = nixpkgs.python2Packages.distutils; 
     cython = nixpkgs.python2Packages.cython;
 
@@ -50,6 +49,7 @@ let
     pexpect = nixpkgs.python2Packages.pexpect;
     ptyprocess = nixpkgs.python2Packages.ptyprocess;
 
+    cysignals = newpkgs.callPackage ./cysignals.nix {};
     sagelib = newpkgs.callPackage ./sagelib.nix {};
     sagedoc = newpkgs.callPackage ./sagedoc.nix {};
     sage = newpkgs.callPackage ./sage.nix {};

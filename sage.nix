@@ -270,7 +270,7 @@ stdenv.mkDerivation rec {
       export ECLDIR='${ecl}/lib/ecl/' # TODO necessary?
       # needed for cython
       export CC='${gcc}/bin/gcc'
-      export LDFLAGS='$NIX_TARGET_LDFLAGS -L${sagelib}/lib -L${sagelib}/lib -Wl,-rpath,${sagelib}/lib' # TODO sage paths neede?
+      export LDFLAGS='$NIX_TARGET_LDFLAGS -L${sagelib}/lib -L${sagelib}/lib -Wl,-rpath,${sagelib}/lib' # TODO sage paths needed?
 
       export CFLAGS='$NIX_CFLAGS_COMPILE'
       export SAGE_LIB='${sagelib}/lib/python2.7/site-packages'

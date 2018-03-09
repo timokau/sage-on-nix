@@ -29,6 +29,7 @@ pkgs.stdenv.mkDerivation rec {
     ./patches/sagelib/remove-sage-started.patch
     ./patches/sagelib/qepcad-config-optional.patch
     ./patches/sagelib/respect-jupyter-path.patch
+    ./patches/sagelib/python-5755-hotpatch.patch
   ];
 
   buildInputs = [
