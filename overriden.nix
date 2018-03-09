@@ -45,7 +45,6 @@ let
     ecm = nixpkgs.ecm;
     # maxima = nixpkgs.maxima-ecl;
     jupyter_client = nixpkgs.python2Packages.jupyter_client;
-    jupyter_core = nixpkgs.python2Packages.jupyter_core;
     twisted = nixpkgs.python2Packages.twisted; # with service-identity
     service-identity = nixpkgs.python2Packages.service-identity;
     pexpect = nixpkgs.python2Packages.pexpect;
