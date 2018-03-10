@@ -249,7 +249,8 @@ stdenv.mkDerivation rec {
       export SAGE_DOC='${SAGE_DOC}'
       export SAGE_DOC_SRC='${SAGE_DOC_SRC}'
 
-      export JUPYTER_PATH='${sagelib}/jupyter'
+      export JUPYTER_PATH="\$DOT_SAGE/jupyter"
+      mkdir -p "\$JUPYTER_PATH"
 
       export GP_DATA_DIR="${pari_data}/share/pari"
       export PARI_DATA_DIR="${pari_data}" # TODO
