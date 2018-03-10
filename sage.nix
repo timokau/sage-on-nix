@@ -96,6 +96,7 @@
 , python_openid
 , flintqs
 , cysignals
+, mathjax
 }:
 stdenv.mkDerivation rec {
   version = "8.1"; # TODO
@@ -293,11 +294,11 @@ stdenv.mkDerivation rec {
       export GUROBI_DIR="$\{gubori}"
       export JMOL_DIR="${jmol}"
       export JONES_DIR="$\{jones}"
-      export JSMOL_DIR="$\{jsmol}"
+      export JSMOL_DIR="${jmol}" # TODO duplicate
       export KHOEL_DIR="$\{khoel}"
       export LIE_DIR="$\{lie}"
       export M4RI_DIR="$\{m4ri}"
-      export MATHJAX_DIR="$\{mathjax}"
+      export MATHJAX_DIR="${mathjax}"
       export MATRIX_GF2E_DENSE_DIR="$\{matrix_gf2e_dense}"
       export MATRIX_MOD2_DENSE_DIR="$\{matrix_mod2_dense}"
       export ODLYZKO_DIR="$\{odlyzko}"
@@ -305,7 +306,7 @@ stdenv.mkDerivation rec {
       export SLOANE_DIR="$\{sloane}"
       export STEIN_WATKINS_DIR="$\{stein_watkins}"
       export SYMBOLIC_DATA_DIR="$\{symbolic_data}"
-      export THREEJS_DIR="$\{threejs}"
+      export THREEJS_DIR="${threejs}"
       export CYSIGNALS_INCLUDE="${cysignals}/lib/python2.7/site-packages"
 
       export DYLD_LIBRARY_PATH="${singular}/lib" # make ctype's find_library work
