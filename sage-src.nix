@@ -32,6 +32,7 @@ pkgs.stdenv.mkDerivation rec {
     ./patches/sagelib/python-5755-hotpatch.patch
     ./patches/sagelib/add-cysignals-include.patch
     ./patches/sagelib/find_library.patch
+    ./patches/sagelib/no-python3-syntax-test.patch
   ];
 
   buildInputs = [

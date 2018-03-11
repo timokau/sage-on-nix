@@ -1,0 +1,22 @@
+diff --git a/src/sage/tests/py3_syntax.py b/src/sage/tests/py3_syntax.py
+index db5e60b..c4e8381 100644
+--- a/src/sage/tests/py3_syntax.py
++++ b/src/sage/tests/py3_syntax.py
+@@ -14,7 +14,7 @@ EXAMPLES::
+ 
+     sage: from sage.tests.py3_syntax import Python3SyntaxTest
+     sage: py3_syntax = Python3SyntaxTest('sage', 'sage_setup')
+-    sage: py3_syntax.run_tests('.py')   # long time
++    sage: py3_syntax.run_tests('.py')   # not tested (needs write access to SAGE_SRC, syntax can't be broken by bad packaging)
+ """
+ #*****************************************************************************
+ #       Copyright (C) 2017 Volker Braun <vbraun.name@gmail.com>
+@@ -157,7 +157,7 @@ class Python3SyntaxTest(SortedDirectoryWalkerABC):
+ 
+         sage: from sage.tests.py3_syntax import Python3SyntaxTest
+         sage: walker = Python3SyntaxTest('sage/tests')
+-        sage: walker.run_tests('.py')   # long time
++        sage: walker.run_tests('.py')   # not tested (needs write access to SAGE_SRC, syntax can't be broken by bad packaging)
+ 
+     """
+     def test(self, *filenames):
