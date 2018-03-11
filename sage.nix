@@ -320,8 +320,10 @@ stdenv.mkDerivation rec {
 
   doCheck = true;
   checkPhase = ''
-    export SAGE_NUM_THREADS="$NIX_BUILD_CORES"
-    export DOT_SAGE=/tmp/dot_sage
-    "$out/bin/sage" -t -p"$SAGE_NUM_THREADS" --all --long
+    export HOME="$TMP/sage_home"
+    mkdir "$HOME"
+
+    unset NIX_TARGET_LDFLAGS # otherwise gcc fails because the list gets too long
+    "$out/bin/sage" -t --nthreads "$NIX_BUILD_CORES" --all --long --exitfirst
   '';
 }
