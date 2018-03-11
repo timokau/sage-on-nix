@@ -319,12 +319,9 @@ stdenv.mkDerivation rec {
   '';
 
   doCheck = true;
-  # TODO -p
   checkPhase = ''
-    #export DOT_SAGE=/tmp/dot_sage
-    #echo "sourcing $out/bin/sage-env"
-    #bash "$out/bin/sage-env"
-    #sage-starts
-    #"sage" -t -p --all
+    export SAGE_NUM_THREADS="$NIX_BUILD_CORES"
+    export DOT_SAGE=/tmp/dot_sage
+    "$out/bin/sage" -t -p"$SAGE_NUM_THREADS" --all --long
   '';
 }
