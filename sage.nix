@@ -309,7 +309,8 @@ stdenv.mkDerivation rec {
       export THREEJS_DIR="${threejs}"
       export CYSIGNALS_INCLUDE="${cysignals}/lib/python2.7/site-packages"
 
-      export DYLD_LIBRARY_PATH="${singular}/lib" # make ctype's find_library work
+      # for find_library
+      export DYLD_LIBRARY_PATH="${stdenv.lib.makeLibraryPath [stdenv.cc.libc singular]}:\$DYLD_LIBRARY_PATH"
     """ >> $out/bin/sage-env
 
     substituteInPlace $out/bin/sage-env-orig \

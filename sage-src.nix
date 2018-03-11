@@ -31,6 +31,7 @@ pkgs.stdenv.mkDerivation rec {
     ./patches/sagelib/respect-jupyter-path.patch
     ./patches/sagelib/python-5755-hotpatch.patch
     ./patches/sagelib/add-cysignals-include.patch
+    ./patches/sagelib/find_library.patch
   ];
 
   buildInputs = [
