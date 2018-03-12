@@ -320,10 +320,12 @@ stdenv.mkDerivation rec {
 
   doCheck = true;
   checkPhase = ''
-    export HOME="$TMP/sage_home"
-    mkdir "$HOME"
+    sagehome="$TMP/sage-home"
+    mkdir -p "$sagehome"
 
-    unset NIX_TARGET_LDFLAGS # otherwise gcc fails because the list gets too long
-    "$out/bin/sage" -t --nthreads "$NIX_BUILD_CORES" --all --long --exitfirst
+    # `env -i` because otherwise gcc gets overwhelmed by long LDFLAG lists etc.
+    env -i \
+      HOME="$sagehome" \
+      "$out/bin/sage" -t --nthreads "$NIX_BUILD_CORES" --all --long --exitfirst
   '';
 }
