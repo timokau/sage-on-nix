@@ -51,7 +51,7 @@ let
 
     sagelib = newpkgs.callPackage ./sagelib.nix {};
     sagedoc = newpkgs.callPackage ./sagedoc.nix {};
-    sage = newpkgs.callPackage ./sage.nix {};
+    sage = newpkgs.callPackage ./sage.nix { buildDoc = false; };
     pari_data = newpkgs.callPackage ./pari_data.nix {};
     sage-src = newpkgs.callPackage ./sage-src.nix {};
     # experiments

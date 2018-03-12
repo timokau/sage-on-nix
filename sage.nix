@@ -97,6 +97,7 @@
 , flintqs
 , cysignals
 , mathjax
+, buildDoc ? true
 }:
 stdenv.mkDerivation rec {
   version = "8.1"; # TODO
@@ -211,8 +212,8 @@ stdenv.mkDerivation rec {
   SAGE_ROOT = src; # TODO
   SAGE_LOCAL = placeholder "out";
   SAGE_SHARE = sagelib + "/share";
-  SAGE_DOC = sagedoc + "/share/doc/sage";
-  SAGE_DOC_SRC = sagedoc + "/docsrc";
+  SAGE_DOC = if buildDoc then (sagedoc + "/share/doc/sage") else (SAGE_SHARE + "/doc/sage");
+  SAGE_DOC_SRC = if buildDoc then (sagedoc + "/docsrc") else (src + "/src/doc");
 
   installPhase = ''
     #NOOP
