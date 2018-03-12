@@ -326,6 +326,7 @@ stdenv.mkDerivation rec {
     # `env -i` because otherwise gcc gets overwhelmed by long LDFLAG lists etc.
     env -i \
       HOME="$sagehome" \
-      "$out/bin/sage" -t --nthreads "$NIX_BUILD_CORES" --all --long --exitfirst
+      SHELL="${stdenv.shell}" \
+      "$out/bin/sage" -t --nthreads "$NIX_BUILD_CORES" --exitfirst --long --all
   '';
 }
