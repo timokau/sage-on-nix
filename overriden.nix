@@ -4,7 +4,7 @@ let
   nixpkgs = import <nixpkgs> {};
   overrides = {
     gcc = nixpkgs.gcc;
-    gfortarn = nixpkgs.gfortran6;
+    gfortran = nixpkgs.gfortran6;
     pkgconf = nixpkgs.pkgconfig;
     pkgconfig = nixpkgs.python2Packages.pkgconfig;
     python = nixpkgs.python2;

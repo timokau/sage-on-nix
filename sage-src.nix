@@ -33,6 +33,9 @@ pkgs.stdenv.mkDerivation rec {
     ./patches/sagelib/add-cysignals-include.patch
     ./patches/sagelib/find_library.patch
     ./patches/sagelib/no-python3-syntax-test.patch
+    # FIXME this is a *temporary* fix for the timeout which is caused by PYTHONPATH being slow
+    # and adding *significant* (~2s) overhead to python startup
+    ./patches/sagelib/increase_timeout.patch
   ];
 
   buildInputs = [

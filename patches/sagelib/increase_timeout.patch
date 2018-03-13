@@ -1,0 +1,28 @@
+diff --git a/src/sage/interfaces/process.pyx b/src/sage/interfaces/process.pyx
+index beb926c..d1ea7bd 100644
+--- a/src/sage/interfaces/process.pyx
++++ b/src/sage/interfaces/process.pyx
+@@ -232,19 +232,19 @@ def terminate(sp, interval=1, signals=[signal.SIGTERM, signal.SIGKILL]):
+         sage: cmd = [sys.executable, '-c', 'from time import sleep; sleep(0.5)']
+         sage: t0 = walltime()
+         sage: sp = Popen(cmd)
+-        sage: with terminate(sp, interval=5.0):
++        sage: with terminate(sp, interval=50.0):
+         ....:     pass
+         sage: t = walltime() - t0
+-        sage: t <= 4.0 or t
++        sage: t <= 40.0 or t
+         True
+ 
+     If the process is already dead, nothing happens::
+ 
+         sage: t0 = walltime()
+-        sage: with terminate(sp, interval=5.0):
++        sage: with terminate(sp, interval=50.0):
+         ....:     raise Exception("just testing")
+         sage: t = walltime() - t0
+-        sage: t <= 4.0 or t
++        sage: t <= 40.0 or t
+         True
+ 
+     """
