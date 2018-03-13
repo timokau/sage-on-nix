@@ -36,6 +36,7 @@ pkgs.stdenv.mkDerivation rec {
     # FIXME this is a *temporary* fix for the timeout which is caused by PYTHONPATH being slow
     # and adding *significant* (~2s) overhead to python startup
     ./patches/sagelib/increase_timeout.patch
+    ./patches/sagelib/doctests_optional.patch
   ];
 
   buildInputs = [
