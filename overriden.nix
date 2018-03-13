@@ -19,6 +19,8 @@ let
     iml = nixpkgs.iml;
     mpfi = nixpkgs.mpfi;
     zlib = nixpkgs.zlib;
+    docutils = nixpkgs.python2Packages.docutils;
+    simplegeneric = nixpkgs.python2Packages.simplegeneric;
 
     distutils = nixpkgs.python2Packages.distutils; 
     cython = nixpkgs.python2Packages.cython;

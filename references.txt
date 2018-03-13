@@ -14,7 +14,6 @@
 /nix/store/1mcq8wvk78kbwm1b7sklcjsxkhb1mz1c-spkg-linbox-1.4.2
 /nix/store/299zg55kw8gbys6g7xfd65afa1why742-spkg-cliquer-1.21
 /nix/store/2bjzh32qnkfcnqnx1f2pw72bxnhp3j7d-spkg-imagesize-0.7.1
-/nix/store/2h1p0zziipdfq6b0v1pszcklx20aq4dn-spkg-docutils-0.13.1
 /nix/store/2h5wsxa48k0vkr3zrszhwfa9rdzl0s79-spkg-simplegeneric-0.8.1
 /nix/store/2jfrwbmsvrwjy285cj6vck64m0dfsgbv-spkg-ipykernel-4.6.1
 /nix/store/2vxli8gxfyrgs6k5b0xydanab14lqnxr-spkg-dateutil-2.5.3
