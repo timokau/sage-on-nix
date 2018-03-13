@@ -1,0 +1,34 @@
+From 49fbcd8f736f847d3f9667f9f7d5567ef4550ecb Mon Sep 17 00:00:00 2001
+From: Dima Pasechnik <dimpase@gmail.com>
+Date: Tue, 1 Aug 2017 14:59:23 +0100
+Subject: [PATCH] adding FLINT_MAJOR for symlinkining libflint.so.$FLINT_MAJOR
+
+---
+ Makefile.in | 1 +
+ configure   | 1 +
+ 2 files changed, 2 insertions(+)
+
+diff --git a/Makefile.in b/Makefile.in
+index 599a058dc..b5546a4b3 100644
+--- a/Makefile.in
++++ b/Makefile.in
+@@ -119,6 +119,7 @@ $(FLINT_LIB): $(LOBJS) $(LIB_SOURCES) $(EXT_SOURCES) $(HEADERS) $(EXT_HEADERS) |
+ 		$(LDCONFIG) -n "$(CURDIR)"; \
+ 	fi
+ 	ln -sf "$(FLINT_LIB)" "$(FLINT_LIBNAME)"; \
++	ln -sf "$(FLINT_LIB)" "$(FLINT_LIBNAME).$(FLINT_MAJOR)"; \
+ 
+ libflint.a: $(OBJS) $(LIB_SOURCES) $(EXT_SOURCES) $(HEADERS) $(EXT_HEADERS) | build build/interfaces
+ 	$(AT)$(foreach ext, $(EXTENSIONS), $(foreach dir, $(filter-out %templates, $(patsubst $(ext)/%.h, %, $(wildcard $(ext)/*.h))), mkdir -p build/$(dir); BUILD_DIR=$(CURDIR)/build/$(dir); export BUILD_DIR; MOD_DIR=$(dir); export MOD_DIR; $(MAKE) -f $(CURDIR)/Makefile.subdirs -C $(ext)/$(dir) static || exit $$?;))
+diff --git a/configure b/configure
+index 3a1735801..5b617162a 100755
+--- a/configure
++++ b/configure
+@@ -779,6 +779,7 @@ echo "FLINT_SHARED=$SHARED" >> Makefile
+ echo "FLINT_LIB=$FLINT_LIB" >> Makefile
+ echo "FLINT_LIBNAME=$FLINT_LIBNAME" >> Makefile
+ echo "FLINT_SOLIB=$FLINT_SOLIB" >> Makefile
++echo "FLINT_MAJOR=$FLINT_MAJOR" >> Makefile
+ echo "EXEEXT=$EXEEXT" >> Makefile
+ echo "PREFIX=$PREFIX" >> Makefile
+ echo "" >> Makefile
