@@ -1,3 +1,5 @@
+/nix/store/05lxnykxcgcnqna9adfz9wbjkzyhnnbi-spkg-gc-7.2f
+/nix/store/0fvbyb6iy7yvdbxdklndjsfrfbm2vxb4-spkg-ipython_genutils-0.2.0
 /nix/store/0g3qf9zl8zsqpn17681qr804rl5vnygl-spkg-pickleshare-0.7.2
 /nix/store/0lzk85hwy3gcbgsby7ggji48hbrysqaw-spkg-rubiks-20070912
 /nix/store/0rbj42av14higqfmyjkzi46aa9qx6sw4-spkg-givaro-4.0.2

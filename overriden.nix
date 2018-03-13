@@ -69,8 +69,6 @@ let
     # linbox = nixpkgs.linbox;
     giac = nixpkgs.giac;
     pynac = nixpkgs.python2Packages.pynac;
-    gc = nixpkgs.boehmgc;
-    ipython_genutils = nixpkgs.python2Packages.ipython_genutils;
     ########
     # pynac = nixpkgs.python2Packages.pynac;
     # fflas_ffpack = nixpkgs.fflas-ffpack;
