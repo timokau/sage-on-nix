@@ -17,6 +17,8 @@ let
     pillow = nixpkgs.python2Packages.pillow;
     ntl = nixpkgs.ntl;
     iml = nixpkgs.iml;
+    mpfi = nixpkgs.mpfi;
+    zlib = nixpkgs.zlib;
 
     distutils = nixpkgs.python2Packages.distutils; 
     cython = nixpkgs.python2Packages.cython;
