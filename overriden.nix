@@ -67,7 +67,8 @@ let
     # fflas_ffpack = nixpkgs.fflas-ffpack;
     # givaro = nixpkgs.givaro;
     # linbox = nixpkgs.linbox;
-    # giac = nixpkgs.giac;
+    giac = nixpkgs.giac;
+    pynac = nixpkgs.python2Packages.pynac;
     ########
     # pynac = nixpkgs.python2Packages.pynac;
     # fflas_ffpack = nixpkgs.fflas-ffpack;
