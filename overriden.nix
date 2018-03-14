@@ -71,7 +71,7 @@ let
     #fflas_ffpack = nixpkgs.fflas-ffpack;
     #linbox = nixpkgs.linbox;
     #imagesize = nixpkgs.python2Packages.imagesize;
-    #ipykernel = nixpkgs.python2Packages.ipykernel;
+    ipykernel = nixpkgs.python2Packages.ipykernel;
     #dateutil = nixpkgs.python2Packages.dateutil;
     #ecl = nixpkgs.ecl;
     #wcwidth = nixpkgs.python2Packages.wcwidth;
