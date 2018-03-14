@@ -65,7 +65,7 @@ let
     pari_data = newpkgs.callPackage ./pari_data.nix {};
     sage-src = newpkgs.callPackage ./sage-src.nix {};
 
-    #pickleshare = nixpkgs.python2Packages.pickleshare;
+    pickleshare = nixpkgs.python2Packages.pickleshare;
     #givaro = nixpkgs.givaro;
     #six = nixpkgs.python2Packages.six;
     #fflas_ffpack = nixpkgs.fflas-ffpack;
