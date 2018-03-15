@@ -95,8 +95,8 @@ let
     #cddlib = nixpkgs.cddlib;
     #singular = nixpkgs.singular;
     #ratpoints = nixpkgs.ratpoints;
-    #alabaster = nixpkgs.python2Packages.alabaster;
-    #pygments = nixpkgs.python2Packages.pygments;
+    alabaster = nixpkgs.python2Packages.alabaster;
+    pygments = nixpkgs.python2Packages.pygments;
     #gfan = nixpkgs.gfan;
     #cvxopt = nixpkgs.python2Packages.cvxopt;
     #sympy = nixpkgs.python2Packages.sympy;
