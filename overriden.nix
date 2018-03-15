@@ -72,7 +72,7 @@ let
     #linbox = nixpkgs.linbox;
     #imagesize = nixpkgs.python2Packages.imagesize;
     ipykernel = nixpkgs.python2Packages.ipykernel;
-    #dateutil = nixpkgs.python2Packages.dateutil;
+    dateutil = nixpkgs.python2Packages.dateutil;
     #ecl = nixpkgs.ecl;
     #wcwidth = nixpkgs.python2Packages.wcwidth;
     #pari = nixpkgs.pari;
