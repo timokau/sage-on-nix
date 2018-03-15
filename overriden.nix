@@ -103,8 +103,8 @@ let
     #arb = nixpkgs.arb;
     #matplotlib = nixpkgs.python2Packages.matplotlib;
     #speaklater = nixpkgs.python2Packages.speaklater;
-    #libgap = nixpkgs.libgap;
-    #ppl = nixpkgs.ppl;
+    libgap = nixpkgs.libgap;
+    ppl = nixpkgs.ppl;
     #symmetrica = nixpkgs.symmetrica;
     #cycler = nixpkgs.python2Packages.cycler;
     #flask = nixpkgs.python2Packages.flask;
