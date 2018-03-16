@@ -124,7 +124,27 @@ let
     psutil = nixpkgs.python2Packages.psutil;
     #eclib = nixpkgs.eclib;
     pyparsing = nixpkgs.python2Packages.pyparsing;
-    #glpk = nixpkgs.glpk;
+    glpk = nixpkgs.glpk.overrideDerivation (attrs: rec {
+      version = "4.63";
+      name = "glpk-${version}";
+      src = nixpkgs.fetchurl {
+        url = "mirror://gnu/glpk/${name}.tar.gz";
+        sha256 = "1xp7nclmp8inp20968bvvfcwmz3mz03sbm0v3yjz8aqwlpqjfkci";
+      };
+      patches = (attrs.patches or []) ++ [
+        # TODO add a fetchDebianPatch?
+        # Alternatively patch sage with debians "dt-version-glpk-4.60-extra-hacky-fixes.patch"
+        # was rejected upstream, see  https://trac.sagemath.org/ticket/20710#comment:18
+        (nixpkgs.fetchpatch {
+          url = "https://git.sagemath.org/sage.git/plain/build/pkgs/glpk/patches/error_recovery.patch?id=07d6c37d18811e2b377a9689790a7c5e24da16ba";
+          sha256 = "0z99z9gd31apb6x5n5n26411qzx0ma3s6dnznc4x61x86bhq31qf";
+        })
+        (nixpkgs.fetchpatch {
+          url = "https://git.sagemath.org/sage.git/plain/build/pkgs/glpk/patches/glp_exact_verbosity.patch?id=07d6c37d18811e2b377a9689790a7c5e24da16ba";
+          sha256 = "15gm5i2alqla3m463i1qq6jx6c0ns6lip7njvbhp37pgxg4s9hx8";
+        })
+      ];
+    });
     cddlib = nixpkgs.cddlib;
     singular = nixpkgs.singular;
     #openblas = nixpkgs.openblas;

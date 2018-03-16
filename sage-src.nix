@@ -75,6 +75,16 @@ pkgs.stdenv.mkDerivation rec {
       sha256 = "0m8vr5v0lwq0d3iar3qc82wdsw81n0c0qqdifijqbrqiyqskchd1";
       stripLen = 1;
     })
+
+    # New glpk version has new warnings, filter those out until upstream sage has found a solution
+    (fetchpatch {
+      url = "https://sources.debian.org/data/main/s/sagemath/8.1-7/debian/patches/dt-version-glpk-4.65-ignore-warnings.patch";
+      sha256 = "0b9293v73wb4x13wv5zwyjgclc01zn16msccfzzi6znswklgvddp";
+      stripLen = 1;
+    })
+
+    # doctest checks for exact glpk version
+    ./patches/sagelib/glpk-update.patch
   ];
 
   buildInputs = [
