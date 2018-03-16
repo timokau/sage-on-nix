@@ -115,7 +115,7 @@ let
     requests = nixpkgs.python2Packages.requests;
     #typing = nixpkgs.python2Packages.typing;
     #sphinx = nixpkgs.python2Packages.sphinx;
-    #mpmath = nixpkgs.python2Packages.mpmath;
+    mpmath = nixpkgs.python2Packages.mpmath;
     #gap = nixpkgs.gap;
     #zope_interface = nixpkgs.python2Packages.zope_interface;
     #mpfr = nixpkgs.mpfr;
