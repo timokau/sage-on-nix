@@ -31,7 +31,7 @@ let
     # Does not work with networkx 2.x yet -- see https://trac.sagemath.org/ticket/24374
     # networkx = nixpkgs.python2Packages.networkx;
 
-    distutils = nixpkgs.python2Packages.distutils; 
+    distutils = nixpkgs.python2Packages.distutils;
     cython = nixpkgs.python2Packages.cython;
 
     r = nixpkgs.rWrapper.override {
@@ -71,7 +71,7 @@ let
     six = nixpkgs.python2Packages.six;
     fflas_ffpack = nixpkgs.fflas-ffpack;
     linbox = nixpkgs.linbox.override { withSage = true; };
-    #imagesize = nixpkgs.python2Packages.imagesize;
+    imagesize = nixpkgs.python2Packages.imagesize;
     ipykernel = nixpkgs.python2Packages.ipykernel;
     dateutil = nixpkgs.python2Packages.dateutil;
     #ecl = nixpkgs.ecl;
@@ -95,6 +95,7 @@ let
     #glpk = nixpkgs.glpk;
     #cddlib = nixpkgs.cddlib;
     #singular = nixpkgs.singular;
+    #openblas = nixpkgs.openblas;
     #ratpoints = nixpkgs.ratpoints;
     alabaster = nixpkgs.python2Packages.alabaster;
     pygments = nixpkgs.python2Packages.pygments;
