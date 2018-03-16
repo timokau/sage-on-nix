@@ -1,7 +1,8 @@
 { pkgs
 , fetchFromGitHub
+, fetchpatch
 , stdenv
-, python # TODO perl, bash (or patchShebangs individually for spkgs)
+, python
 }:
 pkgs.stdenv.mkDerivation rec {
   version = "8.1"; # TODO
@@ -37,6 +38,17 @@ pkgs.stdenv.mkDerivation rec {
     # and adding *significant* (~2s) overhead to python startup
     ./patches/sagelib/increase_timeout.patch
     ./patches/sagelib/doctests_optional.patch
+    # Update linbox, fixed in sage-8.2
+    # https://git.sagemath.org/sage.git/commit?id=dac963f5985bf6b9c40b1aad619946b5a1f917d7
+    (fetchpatch {
+      url = "https://git.sagemath.org/sage.git/patch/?id=dac963f5985bf6b9c40b1aad619946b5a1f917d7";
+      sha256 = "0m8s225p0i8cvj04n0wbk12az6193gf7hp0y3cbnhi47mg99d2xb";
+    })
+    # More for the  update
+    (fetchpatch {
+      url = "https://git.sagemath.org/sage.git/patch/?id=4c1474a6c04ddfab86c79b2ab6809ebfdfba3d49";
+      sha256 = "1nkhdrwqj9bidy57nh2rwhrb1aib8a9ra3rc613prci50883cl35";
+    })
   ];
 
   buildInputs = [

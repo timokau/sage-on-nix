@@ -33,6 +33,7 @@ pkgs.stdenv.mkDerivation rec {{
     chmod -R 777 src/spkg-scripts
 
     cp -r ${{sage-src}}/src/bin src-scripts
+    chmod -R 777 src-scripts
 
     export PATH="${{sage-src}}/build/bin":"$PWD/src-scripts":"$PATH"
     export UNAME="$(uname)"

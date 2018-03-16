@@ -28,7 +28,8 @@ let
     markupsafe = nixpkgs.python2Packages.markupsafe;
     pytz = nixpkgs.python2Packages.pytz;
     nauty = nixpkgs.nauty;
-    networkx = nixpkgs.python2Packages.networkx;
+    # Does not work with networkx 2.x yet -- see https://trac.sagemath.org/ticket/24374
+    # networkx = nixpkgs.python2Packages.networkx;
 
     distutils = nixpkgs.python2Packages.distutils; 
     cython = nixpkgs.python2Packages.cython;
@@ -66,10 +67,10 @@ let
     sage-src = newpkgs.callPackage ./sage-src.nix {};
 
     pickleshare = nixpkgs.python2Packages.pickleshare;
-    #givaro = nixpkgs.givaro;
+    givaro = nixpkgs.givaro;
     #six = nixpkgs.python2Packages.six;
-    #fflas_ffpack = nixpkgs.fflas-ffpack;
-    #linbox = nixpkgs.linbox;
+    fflas_ffpack = nixpkgs.fflas-ffpack;
+    linbox = nixpkgs.linbox.override { withSage = true; };
     #imagesize = nixpkgs.python2Packages.imagesize;
     ipykernel = nixpkgs.python2Packages.ipykernel;
     dateutil = nixpkgs.python2Packages.dateutil;
