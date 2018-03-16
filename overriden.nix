@@ -91,7 +91,7 @@ let
     });
     giac = nixpkgs.giac;
     pynac = nixpkgs.pynac;
-    #ipython = nixpkgs.python2Packages.ipython;
+    ipython = nixpkgs.python2Packages.ipython_5;
     pathlib = nixpkgs.python2Packages.pathlib;
     scipy = (nixpkgs.python2Packages.scipy.override { inherit numpy; }).overridePythonAttrs (attrs: rec {
       version = "0.19.1";
