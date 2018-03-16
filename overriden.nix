@@ -185,7 +185,7 @@ let
         })
       ];
     });
-    #cvxopt = nixpkgs.python2Packages.cvxopt;
+    cvxopt = nixpkgs.python2Packages.cvxopt.override { inherit glpk; };
     sympy = nixpkgs.python2Packages.sympy.overridePythonAttrs (attrs: rec {
       # see https://trac.sagemath.org/ticket/20204
       # re-evaluate once a sympy version with https://github.com/sympy/sympy/pull/12826
