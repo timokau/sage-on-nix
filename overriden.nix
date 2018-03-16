@@ -91,7 +91,7 @@ let
     #future = nixpkgs.python2Packages.future;
     #psutil = nixpkgs.python2Packages.psutil;
     #eclib = nixpkgs.eclib;
-    #pyparsing = nixpkgs.python2Packages.pyparsing;
+    pyparsing = nixpkgs.python2Packages.pyparsing;
     #glpk = nixpkgs.glpk;
     #cddlib = nixpkgs.cddlib;
     #singular = nixpkgs.singular;
