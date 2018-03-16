@@ -159,7 +159,13 @@ let
     ppl = nixpkgs.ppl;
     #symmetrica = nixpkgs.symmetrica;
     cycler = nixpkgs.python2Packages.cycler;
-    #flask = nixpkgs.python2Packages.flask;
+    flask = nixpkgs.python2Packages.flask.overridePythonAttrs (attrs: rec {
+      version = "0.10.1";
+      src = attrs.src.override {
+        inherit version;
+        sha256 = "0wrkavjdjndknhp8ya8j850jq7a1cli4g5a93mg8nh1xz2gq50sc";
+      };
+    });
     traitlets = nixpkgs.python2Packages.traitlets;
     pyzmq = nixpkgs.python2Packages.pyzmq;
     requests = nixpkgs.python2Packages.requests;
