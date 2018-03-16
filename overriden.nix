@@ -75,7 +75,7 @@ let
     ipykernel = nixpkgs.python2Packages.ipykernel;
     dateutil = nixpkgs.python2Packages.dateutil;
     #ecl = nixpkgs.ecl;
-    #wcwidth = nixpkgs.python2Packages.wcwidth;
+    wcwidth = nixpkgs.python2Packages.wcwidth;
     #pari = nixpkgs.pari;
     #giac = nixpkgs.giac;
     #ipython = nixpkgs.python2Packages.ipython;
