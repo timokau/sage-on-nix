@@ -281,7 +281,7 @@ stdenv.mkDerivation rec {
       export GAP_ROOT_DIR='${gap}/share/gap/build-dir'
       export THEBE_DIR='$\{thebe}/share/thebe'
 
-      export ECLDIR='${ecl}/lib/ecl/' # TODO necessary?
+      export ECLDIR='${ecl}/lib/ecl-${ecl.version}/'
       # needed for cython
       export CC='${gcc}/bin/gcc'
       export LDFLAGS='$NIX_TARGET_LDFLAGS -L${sagelib}/lib -L${sagelib}/lib -Wl,-rpath,${sagelib}/lib' # TODO sage paths needed?

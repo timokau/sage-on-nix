@@ -92,7 +92,8 @@ let
     imagesize = nixpkgs.python2Packages.imagesize;
     ipykernel = nixpkgs.python2Packages.ipykernel;
     dateutil = nixpkgs.python2Packages.dateutil;
-    #ecl = nixpkgs.ecl;
+    # 16.1.3 not working yet: https://trac.sagemath.org/ticket/22191
+    ecl = nixpkgs.ecl_16_1_2.override { threadSupport = false; };
     wcwidth = nixpkgs.python2Packages.wcwidth;
     pari = (nixpkgs.pari.override { withThread = false; }).overrideDerivation (attrs: rec {
       version = "2.10-1280-g88fb5b3";

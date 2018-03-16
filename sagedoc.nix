@@ -211,7 +211,7 @@ stdenv.mkDerivation rec {
   JMOL_DIR="${jmol}";
   PARI_DATA_DIR="${pari_data}/share/pari";
 
-  ECLDIR="${ecl}/lib/ecl/"; # TODO necessary?
+  ECLDIR="${ecl}/lib/ecl-${ecl.version}/";
 
   unpackPhase = "true";
 
