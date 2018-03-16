@@ -202,7 +202,11 @@ stdenv.mkDerivation rec {
 
   nativeBuildInputs = buildInputs; # TODO
 
-  installed_packages = stdenv.lib.concatStringsSep " " (map (pkg: pkg.sage-namestring or pkg.name) (buildInputs ++ sagelib.buildInputs));
+  input_names = (map (pkg: pkg.sage-namestring or pkg.pname or pkg.name) (buildInputs ++ sagelib.buildInputs));
+  # fix differences between spkg and sage names
+  # (could patch sage instead, but this is more lightweight and also works for packages depending on sage)
+  input_names_patched = (map (name: builtins.replaceStrings [ "zope.interface" ] [ "zope_interface" ] name) input_names);
+  installed_packages = stdenv.lib.concatStringsSep " " input_names_patched;
 
   configurePhase = ''
     # NOOP
