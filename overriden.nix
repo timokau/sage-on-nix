@@ -68,7 +68,7 @@ let
 
     pickleshare = nixpkgs.python2Packages.pickleshare;
     givaro = nixpkgs.givaro;
-    #six = nixpkgs.python2Packages.six;
+    six = nixpkgs.python2Packages.six;
     fflas_ffpack = nixpkgs.fflas-ffpack;
     linbox = nixpkgs.linbox.override { withSage = true; };
     #imagesize = nixpkgs.python2Packages.imagesize;
