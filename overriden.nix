@@ -93,7 +93,7 @@ let
     #eclib = nixpkgs.eclib;
     pyparsing = nixpkgs.python2Packages.pyparsing;
     #glpk = nixpkgs.glpk;
-    #cddlib = nixpkgs.cddlib;
+    cddlib = nixpkgs.cddlib;
     #singular = nixpkgs.singular;
     #openblas = nixpkgs.openblas;
     ratpoints = nixpkgs.ratpoints;
