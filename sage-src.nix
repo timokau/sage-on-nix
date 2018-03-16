@@ -68,7 +68,13 @@ pkgs.stdenv.mkDerivation rec {
     #   url = "https://git.archlinux.org/svntogit/community.git/plain/trunk/sagemath-singular-4.1.1.patch?h=packages/sagemath";
     #   sha256 = "1adz6lrpvywqk1aym8pfsvadly8r476a0isyqlpzyg9dpyn2mspa";
     # })
->>>>>>> d0f57a0... Use system singular
+
+    # Ignore pari stack warnings in doctests (upstream patches pari instead)
+    (fetchpatch {
+      url = "https://sources.debian.org/data/main/s/sagemath/8.1-7/debian/patches/u2-pari-stackwarn.patch";
+      sha256 = "0m8vr5v0lwq0d3iar3qc82wdsw81n0c0qqdifijqbrqiyqskchd1";
+      stripLen = 1;
+    })
   ];
 
   buildInputs = [

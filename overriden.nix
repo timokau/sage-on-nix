@@ -78,7 +78,16 @@ let
     dateutil = nixpkgs.python2Packages.dateutil;
     #ecl = nixpkgs.ecl;
     wcwidth = nixpkgs.python2Packages.wcwidth;
-    #pari = nixpkgs.pari;
+    pari = (nixpkgs.pari.override { withThread = false; }).overrideDerivation (attrs: rec {
+      version = "2.10-1280-g88fb5b3";
+      src = nixpkgs.fetchurl {
+        url = "ftp://ftp.fu-berlin.de/unix/misc/sage/spkg/upstream/pari/pari-${version}.tar.gz";
+        sha256 = "19gbsm8jqq3hraanbmsvzkbh88iwlqbckzbnga3y76r7k42akn7m";
+      };
+      configureFlags = attrs.configureFlags ++ [ # TODO necessary?
+        "--kernel=gmp"
+      ];
+    });
     giac = nixpkgs.giac;
     #ipython = nixpkgs.python2Packages.ipython;
     pathlib = nixpkgs.python2Packages.pathlib;
