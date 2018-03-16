@@ -81,7 +81,7 @@ let
     #ipython = nixpkgs.python2Packages.ipython;
     #pathlib = nixpkgs.python2Packages.pathlib;
     #scipy = nixpkgs.python2Packages.scipy;
-    #itsdangerous = nixpkgs.python2Packages.itsdangerous;
+    itsdangerous = nixpkgs.python2Packages.itsdangerous;
     enum34 = nixpkgs.python2Packages.enum34;
     werkzeug = nixpkgs.python2Packages.werkzeug;
     #tachyon = nixpkgs.tachyon;
