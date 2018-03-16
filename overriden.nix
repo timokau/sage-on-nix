@@ -116,7 +116,7 @@ let
     pyzmq = nixpkgs.python2Packages.pyzmq;
     requests = nixpkgs.python2Packages.requests;
     #typing = nixpkgs.python2Packages.typing;
-    #sphinx = nixpkgs.python2Packages.sphinx;
+    sphinx = nixpkgs.python2Packages.sphinx;
     mpmath = nixpkgs.python2Packages.mpmath;
     gap = nixpkgs.gap;
     zope_interface = nixpkgs.python2Packages.zope_interface;

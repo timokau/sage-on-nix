@@ -56,6 +56,10 @@ pkgs.stdenv.mkDerivation rec {
       url = "https://git.sagemath.org/sage.git/patch/?id=9141f652ae719f1db96f33eaa096ad5ab4e545c3";
       sha256 = "0yi2bxl58q2i1i261p9brpgynhf27nq8mh4fk8a25sdvixb36f2v";
     })
+
+    # sphinx 1.6 -> 1.7 upgrade (should be included in 8.2)
+    # this is https://git.sagemath.org/sage.git/patch?id=676a1d533bb97c7006651f353a26dd20ab001ae1 stripped of all build/pkgs patches, since those are not applicable to the sage 8.1 source
+    ./patches/sagelib/sphinx-1.7.patch
   ];
 
   buildInputs = [
