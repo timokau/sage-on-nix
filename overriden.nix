@@ -151,7 +151,17 @@ let
       ];
     });
     #cvxopt = nixpkgs.python2Packages.cvxopt;
-    #sympy = nixpkgs.python2Packages.sympy;
+    sympy = nixpkgs.python2Packages.sympy.overridePythonAttrs (attrs: rec {
+      # see https://trac.sagemath.org/ticket/20204
+      # re-evaluate once a sympy version with https://github.com/sympy/sympy/pull/12826
+      # has landed (presumably the next sympy version after 1.11)
+      patches = [
+        (nixpkgs.fetchpatch {
+        url = "https://git.sagemath.org/sage.git/plain/build/pkgs/sympy/patches/03_undeffun_sage.patch?id=07d6c37d18811e2b377a9689790a7c5e24da16ba";
+        sha256 = "1mh2va1rlgizgvx8yzqwgvbf5wvswarn511002b361mc8yy0bnhr";
+        })
+      ];
+    });
     #arb = nixpkgs.arb;
     #matplotlib = nixpkgs.python2Packages.matplotlib;
     speaklater = nixpkgs.python2Packages.speaklater;
