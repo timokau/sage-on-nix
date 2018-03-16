@@ -85,7 +85,7 @@ let
     enum34 = nixpkgs.python2Packages.enum34;
     werkzeug = nixpkgs.python2Packages.werkzeug;
     #tachyon = nixpkgs.tachyon;
-    #snowballstemmer = nixpkgs.python2Packages.snowballstemmer;
+    snowballstemmer = nixpkgs.python2Packages.snowballstemmer;
     #numpy = nixpkgs.python2Packages.numpy;
     #jinja2 = nixpkgs.python2Packages.jinja2;
     #future = nixpkgs.python2Packages.future;
