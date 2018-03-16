@@ -171,7 +171,7 @@ let
         sha256 = "0p0gq8gysg6z4jyjrl0bcl90cwpf4lmmpqblkc3vf36iqvwxk69i";
       };
     });
-    #matplotlib = nixpkgs.python2Packages.matplotlib;
+    matplotlib = nixpkgs.python2Packages.matplotlib.override { inherit numpy; };
     speaklater = nixpkgs.python2Packages.speaklater;
     libgap = nixpkgs.libgap;
     ppl = nixpkgs.ppl;
