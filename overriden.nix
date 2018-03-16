@@ -167,7 +167,27 @@ let
     speaklater = nixpkgs.python2Packages.speaklater;
     libgap = nixpkgs.libgap;
     ppl = nixpkgs.ppl;
-    #symmetrica = nixpkgs.symmetrica;
+    symmetrica = nixpkgs.symmetrica.overrideDerivation (attrs: {
+      patches = (attrs.patches or []) ++ [
+        # TODO figure out which patches are actually necessary
+        (nixpkgs.fetchpatch {
+          url = "https://git.sagemath.org/sage.git/plain/build/pkgs/symmetrica/patches/de.patch?id=07d6c37d18811e2b377a9689790a7c5e24da16ba";
+          sha256 = "0df0vqixcfpzny6dkhyj87h8aznz3xn3zfwwlj8pd10bpb90k6gb";
+        })
+        (nixpkgs.fetchpatch {
+          url = "https://git.sagemath.org/sage.git/plain/build/pkgs/symmetrica/patches/int32.patch?id=07d6c37d18811e2b377a9689790a7c5e24da16ba";
+          sha256 = "0p33c85ck4kd453z687ni4bdcqr1pqx2756j7aq11bf63vjz4cyz";
+        })
+        (nixpkgs.fetchpatch {
+          url = "https://git.sagemath.org/sage.git/plain/build/pkgs/symmetrica/patches/return_values.patch?id=07d6c37d18811e2b377a9689790a7c5e24da16ba";
+          sha256 = "0dmczkicwl50sivc07w3wm3jpfk78wm576dr25999jdj2ipsb7nk";
+        })
+        (nixpkgs.fetchpatch {
+          url = "https://git.sagemath.org/sage.git/plain/build/pkgs/symmetrica/patches/sort_sum_rename.patch?id=07d6c37d18811e2b377a9689790a7c5e24da16ba";
+          sha256 = "07lrdwl18nl3xmsasam8jnwjhyypz14259j21vjky023a6qq1lpk";
+        })
+      ];
+    });
     cycler = nixpkgs.python2Packages.cycler;
     flask = nixpkgs.python2Packages.flask.overridePythonAttrs (attrs: rec {
       version = "0.10.1";
