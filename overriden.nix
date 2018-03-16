@@ -131,7 +131,25 @@ let
     ratpoints = nixpkgs.ratpoints;
     alabaster = nixpkgs.python2Packages.alabaster;
     pygments = nixpkgs.python2Packages.pygments;
-    #gfan = nixpkgs.gfan;
+    # 0.6 introduces (I think mostly minor formatting) failures
+    gfan = nixpkgs.gfan.overrideDerivation (attrs: rec {
+      name = "gfan-${version}";
+      version = "0.5";
+      src = nixpkgs.fetchurl {
+        url = "http://home.math.au.dk/jensen/software/gfan/gfan${version}.tar.gz";
+        sha256 = "0adk9pia683wf6kn6h1i02b3801jz8zn67yf39pl57md7bqbrsma";
+      };
+      patches = [
+        (nixpkgs.fetchpatch {
+          url = "https://git.sagemath.org/sage.git/plain/build/pkgs/gfan/patches/gfan-0.5-gcc6.1-compat.patch?id=07d6c37d18811e2b377a9689790a7c5e24da16ba";
+          sha256 = "0iq432hqmj72p0m4alim7bm5g6di2drby55p7spi5375cc58fswg";
+        })
+        (nixpkgs.fetchpatch {
+          url = "https://git.sagemath.org/sage.git/plain/build/pkgs/gfan/patches/app_minkowski.cpp.patch?id=07d6c37d18811e2b377a9689790a7c5e24da16ba";
+          sha256 = "1m9hgqshb4v40np8l0lz5saq02g1bav3g5jrm2yrf3ffgf9z310r";
+        })
+      ];
+    });
     #cvxopt = nixpkgs.python2Packages.cvxopt;
     #sympy = nixpkgs.python2Packages.sympy;
     #arb = nixpkgs.arb;
