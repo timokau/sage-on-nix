@@ -87,7 +87,7 @@ let
     #tachyon = nixpkgs.tachyon;
     #snowballstemmer = nixpkgs.python2Packages.snowballstemmer;
     #numpy = nixpkgs.python2Packages.numpy;
-    #jinja2 = nixpkgs.python2Packages.jinja2;
+    jinja2 = nixpkgs.python2Packages.jinja2;
     #future = nixpkgs.python2Packages.future;
     #psutil = nixpkgs.python2Packages.psutil;
     #eclib = nixpkgs.eclib;
