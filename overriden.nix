@@ -108,7 +108,7 @@ let
     libgap = nixpkgs.libgap;
     ppl = nixpkgs.ppl;
     #symmetrica = nixpkgs.symmetrica;
-    #cycler = nixpkgs.python2Packages.cycler;
+    cycler = nixpkgs.python2Packages.cycler;
     #flask = nixpkgs.python2Packages.flask;
     #traitlets = nixpkgs.python2Packages.traitlets;
     pyzmq = nixpkgs.python2Packages.pyzmq;
