@@ -104,7 +104,7 @@ let
     #sympy = nixpkgs.python2Packages.sympy;
     #arb = nixpkgs.arb;
     #matplotlib = nixpkgs.python2Packages.matplotlib;
-    #speaklater = nixpkgs.python2Packages.speaklater;
+    speaklater = nixpkgs.python2Packages.speaklater;
     libgap = nixpkgs.libgap;
     ppl = nixpkgs.ppl;
     #symmetrica = nixpkgs.symmetrica;
