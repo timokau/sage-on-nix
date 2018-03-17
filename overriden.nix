@@ -118,7 +118,7 @@ let
     mpmath = nixpkgs.python2Packages.mpmath;
     #gap = nixpkgs.gap;
     #zope_interface = nixpkgs.python2Packages.zope_interface;
-    #mpfr = nixpkgs.mpfr;
+    mpfr = nixpkgs.mpfr;
   };
 in
   newpkgs // overrides
