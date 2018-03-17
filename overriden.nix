@@ -89,7 +89,7 @@ let
     #numpy = nixpkgs.python2Packages.numpy;
     jinja2 = nixpkgs.python2Packages.jinja2;
     future = nixpkgs.python2Packages.future;
-    #psutil = nixpkgs.python2Packages.psutil;
+    psutil = nixpkgs.python2Packages.psutil;
     #eclib = nixpkgs.eclib;
     #pyparsing = nixpkgs.python2Packages.pyparsing;
     #glpk = nixpkgs.glpk;
