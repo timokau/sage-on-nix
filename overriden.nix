@@ -115,7 +115,7 @@ let
     pyparsing = nixpkgs.python2Packages.pyparsing;
     #glpk = nixpkgs.glpk;
     cddlib = nixpkgs.cddlib;
-    #singular = nixpkgs.singular;
+    singular = nixpkgs.singular;
     #openblas = nixpkgs.openblas;
     ratpoints = nixpkgs.ratpoints;
     alabaster = nixpkgs.python2Packages.alabaster;

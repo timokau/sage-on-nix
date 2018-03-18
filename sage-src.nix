@@ -60,6 +60,15 @@ pkgs.stdenv.mkDerivation rec {
     # sphinx 1.6 -> 1.7 upgrade (should be included in 8.2)
     # this is https://git.sagemath.org/sage.git/patch?id=676a1d533bb97c7006651f353a26dd20ab001ae1 stripped of all build/pkgs patches, since those are not applicable to the sage 8.1 source
     ./patches/sagelib/sphinx-1.7.patch
+
+    # Update singular to 4.1.1 (not yet upstreamed, might not land in sage 8.2)
+    # See https://groups.google.com/forum/#!topic/sage-packaging/cS3v05Q0zso
+    # TODO
+    # (fetchpatch {
+    #   url = "https://git.archlinux.org/svntogit/community.git/plain/trunk/sagemath-singular-4.1.1.patch?h=packages/sagemath";
+    #   sha256 = "1adz6lrpvywqk1aym8pfsvadly8r476a0isyqlpzyg9dpyn2mspa";
+    # })
+>>>>>>> d0f57a0... Use system singular
   ];
 
   buildInputs = [
