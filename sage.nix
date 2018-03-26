@@ -268,8 +268,7 @@ stdenv.mkDerivation rec {
       export GRAPHS_DATA_DIR='${graphs}/share/graphs'
       export ELLCURVE_DATA_DIR='${elliptic_curves}/share/ellcurves' # TODO unify
       export POLYTOPE_DATA_DIR='${polytopes_db}/share/reflexive_polytopes'
-      export GAP_ROOT_DIR='${gap}/gap/latest'
-      export GAP_DIR='${gap}/gap/latest'
+      export GAP_ROOT_DIR='${gap}/share/gap/build-dir'
       export THEBE_DIR='$\{thebe}/share/thebe'
 
       export ECLDIR='${ecl}/lib/ecl/' # TODO necessary?
@@ -328,7 +327,7 @@ stdenv.mkDerivation rec {
     env -i \
       HOME="$sagehome" \
       SHELL="${stdenv.shell}" \
-      "$out/bin/sage" -t --nthreads "$NIX_BUILD_CORES" --timeout 0 --only-errors --exitfirst --long --all
+      "$out/bin/sage" -t --nthreads "$NIX_BUILD_CORES" --timeout 0 --exitfirst --verbose --all
   '';
   # TODO optionally enable sagedoc tests
 }

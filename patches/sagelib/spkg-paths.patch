@@ -385,7 +385,7 @@ index aa17d85..a9dc43b 100644
  WORKSPACE = gap_workspace_file()
  
 -GAP_BINARY = os.path.join(SAGE_LOCAL, 'bin', 'gap')
-+GAP_BINARY = os.path.join(GAP_ROOT_DIR, "..", "..", "gap")
++GAP_BINARY = os.path.join(GAP_ROOT_DIR, 'bin', 'gap.sh')
  
  first_try = True
  

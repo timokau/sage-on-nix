@@ -116,7 +116,7 @@ let
     #typing = nixpkgs.python2Packages.typing;
     #sphinx = nixpkgs.python2Packages.sphinx;
     mpmath = nixpkgs.python2Packages.mpmath;
-    #gap = nixpkgs.gap;
+    gap = nixpkgs.gap;
     #zope_interface = nixpkgs.python2Packages.zope_interface;
     mpfr = nixpkgs.mpfr;
   };
