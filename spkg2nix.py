@@ -244,10 +244,6 @@ def read_spkg(name, path):
 def parse_spkgs(spkgs_path):
     all_template = open('all-template.nix').read()
     spkgs = ''
-    try:
-        os.mkdir('spkgs')
-    except:
-        pass
     for spkg in os.listdir(spkgs_path):
         path = "{}/{}".format(spkgs_path, spkg)
         if read_type(path) == 'standard':

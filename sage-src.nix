@@ -38,23 +38,16 @@ pkgs.stdenv.mkDerivation rec {
     # and adding *significant* (~2s) overhead to python startup
     ./patches/sagelib/increase_timeout.patch
     ./patches/sagelib/doctests_optional.patch
-
     # Update linbox, fixed in sage-8.2
     # https://git.sagemath.org/sage.git/commit?id=dac963f5985bf6b9c40b1aad619946b5a1f917d7
     (fetchpatch {
       url = "https://git.sagemath.org/sage.git/patch/?id=dac963f5985bf6b9c40b1aad619946b5a1f917d7";
       sha256 = "0m8s225p0i8cvj04n0wbk12az6193gf7hp0y3cbnhi47mg99d2xb";
     })
-    # More for the linbox update
+    # More for the  update
     (fetchpatch {
       url = "https://git.sagemath.org/sage.git/patch/?id=4c1474a6c04ddfab86c79b2ab6809ebfdfba3d49";
       sha256 = "1nkhdrwqj9bidy57nh2rwhrb1aib8a9ra3rc613prci50883cl35";
-    })
-
-    # Patch the giac true symbol to be compatible with giac >= 1.2.3-57 (included in 8.2)
-    (fetchpatch {
-      url = "https://git.sagemath.org/sage.git/patch/?id=9141f652ae719f1db96f33eaa096ad5ab4e545c3";
-      sha256 = "0yi2bxl58q2i1i261p9brpgynhf27nq8mh4fk8a25sdvixb36f2v";
     })
   ];
 
