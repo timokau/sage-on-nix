@@ -77,7 +77,7 @@ let
     #ecl = nixpkgs.ecl;
     wcwidth = nixpkgs.python2Packages.wcwidth;
     #pari = nixpkgs.pari;
-    #giac = nixpkgs.giac;
+    giac = nixpkgs.giac;
     #ipython = nixpkgs.python2Packages.ipython;
     pathlib = nixpkgs.python2Packages.pathlib;
     #scipy = nixpkgs.python2Packages.scipy;
