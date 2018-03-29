@@ -2,7 +2,7 @@ let
   newpkgs = spkgs (newpkgs // overrides);
   spkgs = import ./all.nix;
   nixpkgs = import <nixpkgs> {};
-  overrides = {
+  overrides = rec {
     gcc = nixpkgs.gcc;
     gfortran = nixpkgs.gfortran6;
     pkgconf = nixpkgs.pkgconfig;
@@ -82,13 +82,32 @@ let
     giac = nixpkgs.giac;
     #ipython = nixpkgs.python2Packages.ipython;
     pathlib = nixpkgs.python2Packages.pathlib;
-    #scipy = nixpkgs.python2Packages.scipy;
+    scipy = (nixpkgs.python2Packages.scipy.override { inherit numpy; }).overridePythonAttrs (attrs: rec {
+      version = "0.19.1";
+      src = attrs.src.override {
+        inherit version;
+        sha256 = "1rl411bvla6q7qfdb47fpdnyjhfgzl6smpha33n9ar1klykjr6m1";
+      };
+    });
     itsdangerous = nixpkgs.python2Packages.itsdangerous;
     enum34 = nixpkgs.python2Packages.enum34;
     werkzeug = nixpkgs.python2Packages.werkzeug;
     tachyon = nixpkgs.tachyon;
     snowballstemmer = nixpkgs.python2Packages.snowballstemmer;
-    #numpy = nixpkgs.python2Packages.numpy;
+    numpy = nixpkgs.python2Packages.numpy.overridePythonAttrs (attrs: rec {
+      # Consider all PEP3141 numbers as scalars (merged upstream in 1.14.2)
+      patches = [
+        (nixpkgs.fetchpatch {
+        url = "https://git.sagemath.org/sage.git/plain/build/pkgs/numpy/patches/PEP_3141.patch?id=07d6c37d18811e2b377a9689790a7c5e24da16ba";
+        sha256 = "16df7x3av9m5in7pb4lfmh8a1s04ijgphjfw0slajpbzmf9lf8gm";
+        })
+      ];
+      version = "1.13.3";
+      src = attrs.src.override {
+        inherit version;
+        sha256 = "0l576ngjbpjdkyja6jd16znxyjshsn9ky1rscji4zg5smpaqdvin";
+      };
+    });
     jinja2 = nixpkgs.python2Packages.jinja2;
     future = nixpkgs.python2Packages.future;
     psutil = nixpkgs.python2Packages.psutil;
