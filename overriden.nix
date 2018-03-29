@@ -34,6 +34,7 @@ let
     distutils = nixpkgs.python2Packages.distutils;
     cython = nixpkgs.python2Packages.cython;
     readline = nixpkgs.readline;
+    libpng = nixpkgs.libpng;
 
     r = nixpkgs.rWrapper.override {
       packages = with nixpkgs.rPackages; [ # TODO add standard collection to nixpkgs (https://stat.ethz.ch/R-manual/R-devel/doc/html/packages.html)
