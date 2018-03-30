@@ -90,6 +90,7 @@ let
       ];
     });
     giac = nixpkgs.giac;
+    pynac = nixpkgs.pynac;
     #ipython = nixpkgs.python2Packages.ipython;
     pathlib = nixpkgs.python2Packages.pathlib;
     scipy = (nixpkgs.python2Packages.scipy.override { inherit numpy; }).overridePythonAttrs (attrs: rec {
