@@ -33,6 +33,7 @@ let
 
     distutils = nixpkgs.python2Packages.distutils;
     cython = nixpkgs.python2Packages.cython;
+    cysignals = nixpkgs.python2Packages.cysignals;
     readline = nixpkgs.readline;
     libpng = nixpkgs.libpng;
 
