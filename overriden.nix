@@ -150,6 +150,8 @@ let
     gap = nixpkgs.gap;
     zope_interface = nixpkgs.python2Packages.zope_interface;
     mpfr = nixpkgs.mpfr;
+    fplll = nixpkgs.fplll;
+    fpylll = nixpkgs.python2Packages.fpylll;
   };
 in
   newpkgs // overrides
