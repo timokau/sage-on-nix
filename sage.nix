@@ -331,7 +331,7 @@ stdenv.mkDerivation rec {
     env -i \
       HOME="$sagehome" \
       SHELL="${stdenv.shell}" \
-      "$out/bin/sage" -t --nthreads "$NIX_BUILD_CORES" --timeout 0 --only-errors --exitfirst --all
+      "$out/bin/sage" -t --nthreads "$NIX_BUILD_CORES" --timeout 0 --exitfirst --all
       # TODO
       #"$out/bin/sage" -t --nthreads "$NIX_BUILD_CORES" --timeout 0 --only-errors --exitfirst --long --all
   '';
