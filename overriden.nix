@@ -37,6 +37,7 @@ let
     cysignals = nixpkgs.python2Packages.cysignals;
     readline = nixpkgs.readline;
     libpng = nixpkgs.libpng;
+    m4rie = nixpkgs.m4rie;
 
     r = nixpkgs.rWrapper.override {
       packages = with nixpkgs.rPackages; [ # TODO add standard collection to nixpkgs (https://stat.ethz.ch/R-manual/R-devel/doc/html/packages.html)
