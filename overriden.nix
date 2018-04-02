@@ -78,6 +78,9 @@ let
     pexpect = nixpkgs.python2Packages.pexpect;
     ptyprocess = nixpkgs.python2Packages.ptyprocess;
 
+    openblas-blas-pc = newpkgs.callPackage ./openblas-pc.nix { name = "blas"; };
+    openblas-cblas-pc = newpkgs.callPackage ./openblas-pc.nix { name = "cblas"; };
+    openblas-lapack-pc = newpkgs.callPackage ./openblas-pc.nix { name = "lapack"; };
     sagelib = newpkgs.callPackage ./sagelib.nix {};
     sagedoc = newpkgs.callPackage ./sagedoc.nix {};
     sage = newpkgs.callPackage ./sage.nix { buildDoc = false; };
@@ -163,7 +166,7 @@ let
     });
     cddlib = nixpkgs.cddlib;
     singular = nixpkgs.singular;
-    #openblas = nixpkgs.openblas;
+    openblas = nixpkgs.openblasCompat;
     ratpoints = nixpkgs.ratpoints;
     alabaster = nixpkgs.python2Packages.alabaster;
     pygments = nixpkgs.python2Packages.pygments;

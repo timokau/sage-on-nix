@@ -19,6 +19,9 @@
 , wcwidth
 , simplegeneric
 , openblas
+, openblas-blas-pc
+, openblas-cblas-pc
+, openblas-lapack-pc
 , pkgconfig
 , psutil
 , future
@@ -123,6 +126,9 @@ stdenv.mkDerivation rec {
     wcwidth
     simplegeneric
     openblas
+    openblas-blas-pc
+    openblas-cblas-pc
+    openblas-lapack-pc
     pkgconfig
     psutil
     future

@@ -1,6 +1,9 @@
 {pkgs, sage-src, fetchurl, stdenv, perl, gfortran6, autoreconfHook, gettext, hevea
 , arb
 , openblas
+, openblas-blas-pc
+, openblas-cblas-pc
+, openblas-lapack-pc
 , brial
 , cephes
 , cliquer
@@ -65,6 +68,9 @@ pkgs.stdenv.mkDerivation rec {
   buildInputsWithoutPython = [ stdenv perl gfortran6 autoreconfHook gettext hevea
     arb
     openblas
+    openblas-blas-pc
+    openblas-cblas-pc
+    openblas-lapack-pc
     brial
     cephes
     cliquer
