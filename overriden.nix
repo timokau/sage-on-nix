@@ -5,6 +5,7 @@ let
   overrides = rec {
     gcc = nixpkgs.gcc;
     gfortran = nixpkgs.gfortran6;
+    cliquer = nixpkgs.cliquer;
     pkgconf = nixpkgs.pkgconfig;
     pkgconfig = nixpkgs.python2Packages.pkgconfig;
     python = nixpkgs.python2;
