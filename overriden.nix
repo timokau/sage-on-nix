@@ -162,7 +162,15 @@ let
         })
       ];
     });
-    #arb = nixpkgs.arb;
+    arb = nixpkgs.arb.overrideDerivation (attrs: rec {
+      version = "2.11.1";
+      src = nixpkgs.fetchFromGitHub {
+        owner = "fredrik-johansson";
+        repo = "${attrs.pname}";
+        rev = "${version}";
+        sha256 = "0p0gq8gysg6z4jyjrl0bcl90cwpf4lmmpqblkc3vf36iqvwxk69i";
+      };
+    });
     #matplotlib = nixpkgs.python2Packages.matplotlib;
     speaklater = nixpkgs.python2Packages.speaklater;
     libgap = nixpkgs.libgap;
