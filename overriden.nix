@@ -7,6 +7,7 @@ let
     gfortran = nixpkgs.gfortran6;
     pkgconf = nixpkgs.pkgconfig;
     pkgconfig = nixpkgs.python2Packages.pkgconfig;
+    m4ri = nixpkgs.m4ri;
     python = nixpkgs.python2;
     python2 = nixpkgs.python2;
     python3 = nixpkgs.python3;
