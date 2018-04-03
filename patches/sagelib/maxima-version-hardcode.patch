@@ -1,0 +1,22 @@
+diff --git a/src/sage/interfaces/maxima_abstract.py b/src/sage/interfaces/maxima_abstract.py
+index 961c20aaac..8ac5492bc4 100644
+--- a/src/sage/interfaces/maxima_abstract.py
++++ b/src/sage/interfaces/maxima_abstract.py
+@@ -433,7 +433,7 @@ class MaximaAbstract(ExtraTabCompletion, Interface):
+         EXAMPLES::
+ 
+             sage: maxima.version()
+-            '5.39.0'
++            '5...'
+         """
+         return maxima_version()
+ 
+@@ -2193,7 +2193,7 @@ def maxima_version():
+ 
+         sage: from sage.interfaces.maxima_abstract import maxima_version
+         sage: maxima_version()
+-        '5.39.0'
++        '5...'
+     """
+     return os.popen('maxima --version').read().split()[-1]
+ 

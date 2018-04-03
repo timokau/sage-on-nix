@@ -28,6 +28,9 @@ let
     ntl = nixpkgs.ntl;
     iml = nixpkgs.iml;
     mpfi = nixpkgs.mpfi;
+    maxima = nixpkgs.maxima-ecl.override {
+      inherit ecl;
+    };
     zlib = nixpkgs.zlib;
     sqlite = nixpkgs.sqlite;
     docutils = nixpkgs.python2Packages.docutils;
