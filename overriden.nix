@@ -21,6 +21,7 @@ let
     iml = nixpkgs.iml;
     mpfi = nixpkgs.mpfi;
     zlib = nixpkgs.zlib;
+    sqlite = nixpkgs.sqlite;
     docutils = nixpkgs.python2Packages.docutils;
     simplegeneric = nixpkgs.python2Packages.simplegeneric;
     gc = nixpkgs.boehmgc;
