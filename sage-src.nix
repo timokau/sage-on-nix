@@ -25,7 +25,6 @@ pkgs.stdenv.mkDerivation rec {
     # Tests in nix unnecessary behaviour
     ./patches/sagelib/disable-refusing-doctests-test.patch
     ./patches/sagelib/remove-python-workarounds.patch
-    ./patches/sagelib/doctest-silence-cache-warning.patch
     ./patches/sagelib/python3-syntax-warning-lenient.patch
     ./patches/sagelib/remove-sage-started.patch
     ./patches/sagelib/qepcad-config-optional.patch
@@ -83,6 +82,20 @@ pkgs.stdenv.mkDerivation rec {
     })
 
     ./patches/sagelib/zero_division_error_formatting.patch
+
+    # update matplotlib to 2.1 (included in 8.2)
+    # unfortunately this can't be fetched as one patch, since there are rebases and merges included
+    (fetchpatch {
+      url = "https://sources.debian.org/data/main/s/sagemath/8.1-7/debian/patches/u0-version-matplotlib-2.1.0.patch";
+      sha256 = "1a08zhwbms3pwl6sildp57llhz6qhs09p6iwcrpq07708j0g3g7n";
+      stripLen = 1;
+    })
+
+    # fix speed regression with matplotlib update (included in 8.2)
+    (fetchpatch {
+      url = "https://git.sagemath.org/sage.git/patch/?h=4d17a73d3e0b7f7151acc4e29146c3992f3ac43c";
+      sha256 = "0nx68axixjkqqib5grmgarx6rfva1zpkyiilnciv1lnvwb3b7rka";
+    })
   ];
 
   buildInputs = [
