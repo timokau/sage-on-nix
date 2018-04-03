@@ -499,7 +499,7 @@ index 3912b8c..326c8d8 100644
              True
          """
 -        src = os.path.join(SAGE_LOCAL, 'share', 'threejs')
-+        src = os.path.join(os.environ.get('THREEJS_DIR', ''), 'share', 'threejs')
++        src = os.environ.get('THREEJS_DIR', '')
          dst = os.path.join(self.nbextensions_dir, 'threejs')
          self.symlink(src, dst)
  

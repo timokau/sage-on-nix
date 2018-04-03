@@ -113,6 +113,13 @@ pkgs.stdenv.mkDerivation rec {
 
     # doctest checks for exact glpk version
     ./patches/sagelib/glpk-update.patch
+
+    # threejs paths
+    (fetchpatch {
+      url = "https://sources.debian.org/data/main/s/sagemath/8.1-7/debian/patches/d0-threejs-offline-paths.patch";
+      sha256 = "1qpfv678cs152sfp1jrafk0lkdd0jd0mp0n23dsz98yhvh1kfikz";
+      stripLen = 1;
+    })
   ];
 
   buildInputs = [

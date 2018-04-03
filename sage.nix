@@ -205,7 +205,13 @@ stdenv.mkDerivation rec {
   input_names = (map (pkg: pkg.sage-namestring or pkg.pname or pkg.name) (buildInputs ++ sagelib.buildInputs));
   # fix differences between spkg and sage names
   # (could patch sage instead, but this is more lightweight and also works for packages depending on sage)
-  input_names_patched = (map (name: builtins.replaceStrings [ "zope.interface" ] [ "zope_interface" ] name) input_names);
+  input_names_patched = (map (name: builtins.replaceStrings [
+    "zope.interface"
+    "node-three-${threejs.version}"
+  ] [
+    "zope_interface"
+    "threejs"
+  ] name) input_names);
   installed_packages = stdenv.lib.concatStringsSep " " input_names_patched;
 
   configurePhase = ''
@@ -310,7 +316,7 @@ stdenv.mkDerivation rec {
       export SLOANE_DIR="$\{sloane}"
       export STEIN_WATKINS_DIR="$\{stein_watkins}"
       export SYMBOLIC_DATA_DIR="$\{symbolic_data}"
-      export THREEJS_DIR="${threejs}"
+      export THREEJS_DIR="${threejs}/lib/node_modules/three"
       export CYSIGNALS_INCLUDE="${cysignals}/lib/python2.7/site-packages"
 
       # for find_library
