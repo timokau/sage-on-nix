@@ -75,6 +75,14 @@ pkgs.stdenv.mkDerivation rec {
       sha256 = "0m8vr5v0lwq0d3iar3qc82wdsw81n0c0qqdifijqbrqiyqskchd1";
       stripLen = 1;
     })
+
+    # Adapt to new ipython (5.5) prompt -- included in 8.2
+    (fetchpatch {
+      url = "https://git.sagemath.org/sage.git/patch/?id=9c8ee44821b82c0d861990ad37bfcb28521e4238";
+      sha256 = "0vxdyavwndk1y3g30nm1kfrxahppf86b49fwdrn6ra9c4zik58yg";
+    })
+
+    ./patches/sagelib/zero_division_error_formatting.patch
   ];
 
   buildInputs = [

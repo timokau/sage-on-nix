@@ -1,0 +1,26 @@
+Taken from debians "fix-trivia-test-cases" patch
+
+--- a/src/sage/repl/interpreter.py
++++ b/src/sage/repl/interpreter.py
+@@ -75,8 +75,8 @@
+     sage: from sage.repl.interpreter import get_test_shell
+     sage: shell = get_test_shell()
+     sage: shell.run_cell('1/0')
+-    ---------------------------------------------------------------------------
+-    ZeroDivisionError                         Traceback (most recent call last)
++    ...
++    ZeroDivisionError...Traceback (most recent call last)
+     <ipython-input-...> in <module>()
+     ----> 1 Integer(1)/Integer(0)
+     <BLANKLINE>
+@@ -356,8 +356,8 @@
+             sage: from sage.repl.interpreter import get_test_shell
+             sage: shell = get_test_shell()
+             sage: rc = shell.run_cell('1/0')
+-            ---------------------------------------------------------------------------
+-            ZeroDivisionError                         Traceback (most recent call last)
++            ...
++            ZeroDivisionError...Traceback (most recent call last)
+             ...
+             ZeroDivisionError: rational division by zero
+             sage: rc is None
