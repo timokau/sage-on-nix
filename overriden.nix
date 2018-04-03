@@ -122,6 +122,7 @@ let
         sha256 = "0l576ngjbpjdkyja6jd16znxyjshsn9ky1rscji4zg5smpaqdvin";
       };
     });
+    gsl = nixpkgs.gsl;
     jinja2 = nixpkgs.python2Packages.jinja2;
     future = nixpkgs.python2Packages.future;
     psutil = nixpkgs.python2Packages.psutil;
