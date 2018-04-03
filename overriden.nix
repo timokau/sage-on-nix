@@ -13,6 +13,7 @@ let
     python = nixpkgs.python2;
     python2 = nixpkgs.python2;
     python3 = nixpkgs.python3;
+    boost_cropped = nixpkgs.boost;
     flint = nixpkgs.flint.override { withBlas = false; };
     setuptools = nixpkgs.python2Packages.setuptools;
     pip = nixpkgs.python2Packages.pip;

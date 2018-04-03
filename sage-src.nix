@@ -96,6 +96,13 @@ pkgs.stdenv.mkDerivation rec {
       url = "https://git.sagemath.org/sage.git/patch/?h=4d17a73d3e0b7f7151acc4e29146c3992f3ac43c";
       sha256 = "0nx68axixjkqqib5grmgarx6rfva1zpkyiilnciv1lnvwb3b7rka";
     })
+
+    # Adapt hashes to new boost version
+    (fetchpatch {
+      url = "https://sources.debian.org/data/main/s/sagemath/8.1-7/debian/patches/u1-version-pbori-boost1.62-hashes.patch";
+      sha256 = "02hkvlf6djzfsf2nrazra5vfwvc4s8qmlaqfywzkcpnavj6s9ng8";
+      stripLen = 1;
+    })
   ];
 
   buildInputs = [
