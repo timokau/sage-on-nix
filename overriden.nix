@@ -29,8 +29,14 @@ let
     markupsafe = nixpkgs.python2Packages.markupsafe;
     pytz = nixpkgs.python2Packages.pytz;
     nauty = nixpkgs.nauty;
-    # Does not work with networkx 2.x yet -- see https://trac.sagemath.org/ticket/24374
-    # networkx = nixpkgs.python2Packages.networkx;
+    networkx = nixpkgs.python2Packages.networkx.overridePythonAttrs (attrs: rec {
+      # Does not work with networkx 2.x yet -- see https://trac.sagemath.org/ticket/24374
+      version = "1.11";
+      src = attrs.src.override {
+        inherit version;
+        sha256 = "03kplp3z0c7bff8w1qziqqzqz8s5an55j6sfd6dlgdz6bx6i9q5k";
+      };
+    });
 
     distutils = nixpkgs.python2Packages.distutils;
     cython = nixpkgs.python2Packages.cython;
