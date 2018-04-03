@@ -20,6 +20,8 @@ let
     setuptools = nixpkgs.python2Packages.setuptools;
     pip = nixpkgs.python2Packages.pip;
     libgd = nixpkgs.gd; # TODO check why sages gd doesn't provide Png functionality
+    brial = nixpkgs.brial;
+    buildPythonPackage = nixpkgs.python2Packages.buildPythonPackage;
     pillow = nixpkgs.python2Packages.pillow;
     rpy2 = nixpkgs.python2Packages.rpy2;
     ntl = nixpkgs.ntl;
