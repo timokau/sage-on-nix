@@ -38,6 +38,7 @@ let
     rpy2 = nixpkgs.python2Packages.rpy2;
     ntl = nixpkgs.ntl;
     iml = nixpkgs.iml;
+    mpc = nixpkgs.libmpc;
     mpfi = nixpkgs.mpfi;
     maxima = nixpkgs.maxima-ecl.override {
       inherit ecl;
