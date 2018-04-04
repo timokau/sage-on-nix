@@ -103,7 +103,18 @@ let
     sagenb = newpkgs.callPackage ./sagenb.nix {};
     sagedoc = newpkgs.callPackage ./sagedoc.nix {};
     sage = newpkgs.callPackage ./sage.nix { buildDoc = false; };
-    pari_data = newpkgs.callPackage ./pari_data.nix {};
+    combinatorial_designs = nixpkgs.combinatorial_designs;
+    conway_polynomials = nixpkgs.conway_polynomials;
+    elliptic_curves = nixpkgs.elliptic_curves;
+    graphs = nixpkgs.graphs;
+    pari_data = nixpkgs.symlinkJoin {
+      name = "pari_data";
+      paths = [
+        nixpkgs.pari-galdata
+        nixpkgs.pari-seadata-small
+      ];
+    };
+    polytopes_db = nixpkgs.polytopes_db;
     sage-src = newpkgs.callPackage ./sage-src.nix {};
 
     pickleshare = nixpkgs.python2Packages.pickleshare;
