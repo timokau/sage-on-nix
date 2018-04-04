@@ -13,6 +13,7 @@ let
     m4ri = nixpkgs.m4ri;
     python = nixpkgs.python2;
     threejs = nixpkgs.nodePackages_8_x.three;
+    mathjax = nixpkgs.nodePackages_8_x.mathjax;
     pathlib2 = nixpkgs.python2Packages.pathlib2;
     python2 = nixpkgs.python2;
     python3 = nixpkgs.python3;

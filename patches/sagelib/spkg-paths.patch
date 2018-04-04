@@ -481,7 +481,7 @@ index 3912b8c..326c8d8 100644
              True
          """
 -        src = os.path.join(SAGE_LOCAL, 'share', 'mathjax')
-+        src = os.path.join(os.environ.get('MATHJAX_DIR', ''), 'share', 'mathjax')
++        src = os.environ.get('MATHJAX_DIR', '')
          dst = os.path.join(self.nbextensions_dir, 'mathjax')
          self.symlink(src, dst)
  

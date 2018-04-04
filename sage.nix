@@ -314,7 +314,7 @@ stdenv.mkDerivation rec {
       export KHOEL_DIR="$\{khoel}"
       export LIE_DIR="$\{lie}"
       export M4RI_DIR="$\{m4ri}"
-      export MATHJAX_DIR="${mathjax}"
+      export MATHJAX_DIR="${mathjax}/lib/node_modules/mathjax"
       export MATRIX_GF2E_DENSE_DIR="$\{matrix_gf2e_dense}"
       export MATRIX_MOD2_DENSE_DIR="$\{matrix_mod2_dense}"
       export ODLYZKO_DIR="$\{odlyzko}"
