@@ -7,7 +7,6 @@
 , openblas-cblas-pc
 , openblas-lapack-pc
 , brial
-, cephes
 , cliquer
 , cypari
 , cysignals
@@ -101,7 +100,6 @@ pkgs.stdenv.mkDerivation rec {
     openblas-lapack-pc
     brial
     pybrial
-    cephes
     cliquer
     cypari
     cysignals
