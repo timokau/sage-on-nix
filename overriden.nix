@@ -22,6 +22,15 @@ let
     pip = nixpkgs.python2Packages.pip;
     libgd = nixpkgs.gd; # TODO check why sages gd doesn't provide Png functionality
     brial = nixpkgs.brial;
+    palp = nixpkgs.symlinkJoin {
+      name = "palp";
+      paths = [
+        (nixpkgs.palp.override { dimensions = 4; doSymlink = false; })
+        (nixpkgs.palp.override { dimensions = 5; doSymlink = false; })
+        (nixpkgs.palp.override { dimensions = 6; doSymlink = true; })
+        (nixpkgs.palp.override { dimensions = 11; doSymlink = false; })
+      ];
+    };
     buildPythonPackage = nixpkgs.python2Packages.buildPythonPackage;
     pillow = nixpkgs.python2Packages.pillow;
     rpy2 = nixpkgs.python2Packages.rpy2;
