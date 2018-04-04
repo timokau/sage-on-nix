@@ -6,6 +6,7 @@ let
     gcc = nixpkgs.gcc;
     gfortran = nixpkgs.gfortran6;
     cliquer = nixpkgs.cliquer;
+    babel = nixpkgs.python2Packages.Babel;
     backports_shutil_get_terminal_size = nixpkgs.python2Packages.backports_shutil_get_terminal_size;
     pkgconf = nixpkgs.pkgconfig;
     pkgconfig = nixpkgs.python2Packages.pkgconfig;
