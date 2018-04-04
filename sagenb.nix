@@ -1,5 +1,6 @@
 # Has a cyclic dependency with sage (not expressed here) and is not useful outside of sage
 { stdenv
+, fetchpatch
 , python
 , buildPythonPackage
 , fetchFromGitHub
@@ -55,6 +56,12 @@ buildPythonPackage rec {
 
   patches = [
     ./patches/sagenb/sphinx-1.7.patch
+
+    # Update to newer flask-babel
+    (fetchpatch {
+      url = "https://patch-diff.githubusercontent.com/raw/sagemath/sagenb/pull/438.patch";
+      sha256 = "17830pzxis5dwakywcar0qcc07m90gmx4614n51i34sbjxbnrclz";
+    })
   ];
 
   # let sagenb use mathjax

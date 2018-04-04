@@ -268,7 +268,21 @@ let
       ];
     });
     cycler = nixpkgs.python2Packages.cycler;
+    python_openid = nixpkgs.python2Packages.python-openid;
     flask = nixpkgs.python2Packages.flask;
+    flask_autoindex = nixpkgs.python2Packages.flask-autoindex;
+    flask_babel = nixpkgs.python2Packages.flask-babel.overridePythonAttrs (attrs: rec {
+      # for sagenb, no upstream solution yet https://github.com/sagemath/sagenb/issues/437
+      version = "0.9";
+      src = attrs.src.override {
+        inherit version;
+        sha256 = "0k7vk4k54y55ma0nx2k5s0phfqbriwslhy5shh3b0d046q7ibzaa";
+      };
+      doCheck = false;
+    });
+    flask_oldsessions = nixpkgs.python2Packages.flask-oldsessions;
+    flask_openid = nixpkgs.python2Packages.flask-openid;
+    flask_silk = nixpkgs.python2Packages.flask-silk;
     traitlets = nixpkgs.python2Packages.traitlets;
     pyzmq = nixpkgs.python2Packages.pyzmq;
     requests = nixpkgs.python2Packages.requests;

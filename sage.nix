@@ -159,27 +159,15 @@ stdenv.mkDerivation rec {
     sagenb
     docutils
     jupyter_client
-    flask
     werkzeug
     typing
     pyzmq
     zope_interface
-    itsdangerous # flask
     babel
-    flask_babel
-    flask_autoindex
-    flask_openid
-    flask_silk
-    pytz # babel
-    speaklater # babel
-    tornado # ipykernel
-    imagesize # sphinx
-    requests # sphinx
     palp
     r
     giac
     alabaster
-    flask_oldsessions
     threejs
     tachyon
     jmol
@@ -203,7 +191,6 @@ stdenv.mkDerivation rec {
 
   buildInputs = buildInputsWithoutPython ++ [
     (python3.withPackages (ps: with ps; buildInputsWithoutPython ))
-    # (python2.withPackages (ps: with ps; buildInputsWithoutPython ))
     python2
   ];
 
