@@ -19,6 +19,7 @@ let
     ipywidgets = nixpkgs.python2Packages.ipywidgets;
     python3 = nixpkgs.python3;
     boost_cropped = nixpkgs.boost;
+    zn_poly = nixpkgs.zn_poly;
     flint = nixpkgs.flint.override { withBlas = false; };
     setuptools = nixpkgs.python2Packages.setuptools;
     pip = nixpkgs.python2Packages.pip;

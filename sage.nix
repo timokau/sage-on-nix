@@ -52,18 +52,11 @@
 , sagenb
 , docutils
 , jupyter_client
-, flask
-, flask_babel
-, flask_oldsessions
-, flask_autoindex
-, flask_openid
-, flask_silk
 , werkzeug # for notebook
 , typing
 , pyzmq
 , zope_interface # for twisted
 , itsdangerous # flask
-, babel # sphinx
 , pytz
 , speaklater # sagenb
 , tornado
@@ -103,11 +96,25 @@
 , mathjax
 , buildDoc ? true
 }:
-stdenv.mkDerivation rec {
-  version = "8.1"; # TODO
-  name = "sage-${version}";
 
-  src = sage-src;
+let
+  # replace all "-" but the last one (which seperates version from name) by "_"
+  # for example palp-4d-1.0 -> palp_4d-1.0
+  # if "pname" is detected, use that (to avoid python...- prefixes)
+  # otherwise, deconstruct the "name" attribute
+  pkg_to_namestring = pkg: if (builtins.hasAttr "pname" pkg) then (python_to_namestring pkg) else (name_to_namestring pkg.name);
+  name_to_namestring = name: let
+    parts = stdenv.lib.splitString "-" name;
+    version = stdenv.lib.last parts;
+    orig_pkgname = stdenv.lib.init parts;
+    pkgname = stdenv.lib.concatStringsSep "_" orig_pkgname;
+    namestring = pkgname + "-" + version;
+  in namestring;
+  python_to_namestring = pkg: let
+    pkgname = stdenv.lib.replaceStrings ["-"] ["_"] pkg.pname;
+    version = pkg.version;
+    namestring = pkgname + "-" + version;
+  in namestring;
 
   buildInputsWithoutPython = [
     sagelib
@@ -163,7 +170,6 @@ stdenv.mkDerivation rec {
     typing
     pyzmq
     zope_interface
-    babel
     palp
     r
     giac
@@ -194,19 +200,27 @@ stdenv.mkDerivation rec {
     python2
   ];
 
-  nativeBuildInputs = buildInputs; # TODO
-
-  input_names = (map (pkg: pkg.sage-namestring or pkg.pname or pkg.name) (buildInputs ++ sagelib.buildInputs));
+  input_names = (map (pkg: pkg.sage-namestring or (pkg_to_namestring pkg)) (buildInputs ++ sagelib.buildInputs));
   # fix differences between spkg and sage names
   # (could patch sage instead, but this is more lightweight and also works for packages depending on sage)
   input_names_patched = (map (name: builtins.replaceStrings [
-    "zope.interface"
-    "node-three-${threejs.version}"
+    "zope.interface-${zope_interface.version}"
+    "node_three-${threejs.version}"
   ] [
-    "zope_interface"
-    "threejs"
+    "zope_interface-${zope_interface.version}"
+    "threejs-${threejs.version}"
   ] name) input_names);
   installed_packages = stdenv.lib.concatStringsSep " " input_names_patched;
+in
+stdenv.mkDerivation rec {
+  version = "8.1"; # TODO
+  name = "sage-${version}";
+
+  inherit buildInputs;
+
+  src = sage-src;
+
+  nativeBuildInputs = buildInputs; # TODO
 
   configurePhase = ''
     # NOOP
@@ -230,7 +244,7 @@ stdenv.mkDerivation rec {
   buildPhase = ''
     mkdir -p $out/var/lib/sage/installed
 
-    for pkg in $installed_packages; do
+    for pkg in ${installed_packages}; do
       touch "$out/var/lib/sage/installed/$pkg"
     done
 

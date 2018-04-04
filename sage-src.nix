@@ -141,6 +141,8 @@ pkgs.stdenv.mkDerivation rec {
       url = "https://git.sagemath.org/sage.git/patch/?id=e1c1fa74803213b4d596a83edd198d66ff02211b";
       sha256 = "0p5qvr2m1ai3kl34dlwpqasmdz8aqawmaq590czasg236abz5k90";
     })
+
+    ./patches/sagelib/zn_poly_version.patch
   ];
 
   buildInputs = [

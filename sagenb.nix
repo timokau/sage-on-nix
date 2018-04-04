@@ -11,12 +11,6 @@
 , flask_openid
 , flask_autoindex
 , flask_babel
-, python_openid
-, babel
-, speaklater
-, flask_silk
-, future
-, pytz
 }:
 
 buildPythonPackage rec {
@@ -37,12 +31,6 @@ buildPythonPackage rec {
     flask_openid
     flask_autoindex
     flask_babel
-    python_openid # FIXME propagated by flask_openid
-    babel # FIXME propagated by flask_babel
-    speaklater # FIXME propagated by flask_babel
-    flask_silk # FIXME propagated by flask_autoindex
-    future # FIXME propagated by flask_autoindex
-    pytz # FIXME propagated by Babel
   ];
 
   # tests depend on sage
