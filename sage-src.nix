@@ -127,20 +127,20 @@ pkgs.stdenv.mkDerivation rec {
     # Maxima version 5.41.0 breaks some doctests (the new results are still valid)
     ./patches/sagelib/maxima-5.41.0-doctests.patch
 
-    # # update to ipywidgets 7 (https://trac.sagemath.org/ticket/23177, sage-8.2)
-    # # the first patch is not part of that update, but otherwise the following patches don't apply
-    # (fetchpatch {
-    #   url = "https://git.sagemath.org/sage.git/patch/?id=7a0d5ab956fc38a775069521c2f3c6b51187611f";
-    #   sha256 = "0437mf3ca2g4n735ng1r80db8yggxd8bspk3ckflwrqgpj9dnyfb";
-    # })
-    # (fetchpatch {
-    #   url = "https://git.sagemath.org/sage.git/patch/?id=e64c034e0ae46dc08ff444bb8a6b85430d2b1c26";
-    #   sha256 = "0f4j8n2gmfqsy1b9fg89qsl86sp4s0wc4dhi5ymlc613w097x9kb";
-    # })
-    # (fetchpatch {
-    #   url = "https://git.sagemath.org/sage.git/patch/?id=e1c1fa74803213b4d596a83edd198d66ff02211b";
-    #   sha256 = "0p5qvr2m1ai3kl34dlwpqasmdz8aqawmaq590czasg236abz5k90";
-    # })
+    # update to ipywidgets 7 (https://trac.sagemath.org/ticket/23177, sage-8.2)
+    # the first patch is not part of that update, but otherwise the following patches don't apply
+    (fetchpatch {
+      url = "https://git.sagemath.org/sage.git/patch/?id=7a0d5ab956fc38a775069521c2f3c6b51187611f";
+      sha256 = "0437mf3ca2g4n735ng1r80db8yggxd8bspk3ckflwrqgpj9dnyfb";
+    })
+    (fetchpatch {
+      url = "https://git.sagemath.org/sage.git/patch/?id=e64c034e0ae46dc08ff444bb8a6b85430d2b1c26";
+      sha256 = "0f4j8n2gmfqsy1b9fg89qsl86sp4s0wc4dhi5ymlc613w097x9kb";
+    })
+    (fetchpatch {
+      url = "https://git.sagemath.org/sage.git/patch/?id=e1c1fa74803213b4d596a83edd198d66ff02211b";
+      sha256 = "0p5qvr2m1ai3kl34dlwpqasmdz8aqawmaq590czasg236abz5k90";
+    })
   ];
 
   buildInputs = [

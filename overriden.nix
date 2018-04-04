@@ -16,6 +16,7 @@ let
     mathjax = nixpkgs.nodePackages_8_x.mathjax;
     pathlib2 = nixpkgs.python2Packages.pathlib2;
     python2 = nixpkgs.python2;
+    ipywidgets = nixpkgs.python2Packages.ipywidgets;
     python3 = nixpkgs.python3;
     boost_cropped = nixpkgs.boost;
     flint = nixpkgs.flint.override { withBlas = false; };
