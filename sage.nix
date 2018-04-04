@@ -1,6 +1,7 @@
 { pkgs
 , stdenv
 , makeWrapper
+, fetchpatch
 , sage-src
 , sagelib
 , sagedoc
