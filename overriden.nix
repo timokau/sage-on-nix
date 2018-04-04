@@ -99,6 +99,7 @@ let
     openblas-cblas-pc = newpkgs.callPackage ./openblas-pc.nix { name = "cblas"; };
     openblas-lapack-pc = newpkgs.callPackage ./openblas-pc.nix { name = "lapack"; };
     sagelib = newpkgs.callPackage ./sagelib.nix {};
+    sagenb = newpkgs.callPackage ./sagenb.nix {};
     sagedoc = newpkgs.callPackage ./sagedoc.nix {};
     sage = newpkgs.callPackage ./sage.nix { buildDoc = false; };
     pari_data = newpkgs.callPackage ./pari_data.nix {};
