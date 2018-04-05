@@ -1,38 +1,86 @@
 let
-  newpkgs = spkgs (newpkgs // overrides);
-  spkgs = import ./all.nix;
   nixpkgs = import <nixpkgs> {};
-  overrides = rec {
-    gcc = nixpkgs.gcc;
-    gfortran = nixpkgs.gfortran6;
-    cliquer = nixpkgs.cliquer;
-    cypari2 = nixpkgs.python2Packages.cypari2.override { inherit pari; };
-    Babel = nixpkgs.python2Packages.Babel;
-    backports_shutil_get_terminal_size = nixpkgs.python2Packages.backports_shutil_get_terminal_size;
-    sympow = nixpkgs.sympow;
-    pkgconfig = nixpkgs.python2Packages.pkgconfig;
-    lcalc = nixpkgs.lcalc;
-    m4ri = nixpkgs.m4ri;
-    python = nixpkgs.python;
-    three = nixpkgs.nodePackages_8_x.three;
-    lrcalc = nixpkgs.lrcalc;
-    mathjax = nixpkgs.nodePackages_8_x.mathjax;
-    pathlib2 = nixpkgs.python2Packages.pathlib2;
-    prompt_toolkit = nixpkgs.python2Packages.prompt_toolkit;
-    python2 = nixpkgs.python2;
-    planarity = nixpkgs.planarity;
-    ipywidgets = nixpkgs.python2Packages.ipywidgets;
-    python3 = nixpkgs.python3;
-    boost = nixpkgs.boost;
-    zn_poly = nixpkgs.zn_poly;
+in
+  rec {
+    openblas-blas-pc = nixpkgs.callPackage ./openblas-pc.nix { name = "blas"; };
+    openblas-cblas-pc = nixpkgs.callPackage ./openblas-pc.nix { name = "cblas"; };
+    openblas-lapack-pc = nixpkgs.callPackage ./openblas-pc.nix { name = "lapack"; };
+    sagelib = nixpkgs.python2.pkgs.callPackage ./sagelib.nix {
+      inherit flint ecl pari glpk numpy;
+      inherit sage-src openblas-blas-pc openblas-cblas-pc openblas-lapack-pc;
+      pynac = nixpkgs.pynac; # not the python package
+      linbox = nixpkgs.linbox.override { withSage = true; };
+      cypari2 = nixpkgs.python2Packages.cypari2.override { inherit pari; };
+      eclib = nixpkgs.eclib.override { inherit pari; };
+      arb = nixpkgs.arb.overrideDerivation (attrs: rec {
+        version = "2.11.1";
+        src = nixpkgs.fetchFromGitHub {
+          owner = "fredrik-johansson";
+          repo = "${attrs.pname}";
+          rev = "${version}";
+          sha256 = "0p0gq8gysg6z4jyjrl0bcl90cwpf4lmmpqblkc3vf36iqvwxk69i";
+        };
+      });
+      symmetrica = nixpkgs.symmetrica.overrideDerivation (attrs: {
+        patches = (attrs.patches or []) ++ [
+        # TODO figure out which patches are actually necessary
+        (nixpkgs.fetchpatch {
+          url = "https://git.sagemath.org/sage.git/plain/build/pkgs/symmetrica/patches/de.patch?id=07d6c37d18811e2b377a9689790a7c5e24da16ba";
+          sha256 = "0df0vqixcfpzny6dkhyj87h8aznz3xn3zfwwlj8pd10bpb90k6gb";
+        })
+        (nixpkgs.fetchpatch {
+          url = "https://git.sagemath.org/sage.git/plain/build/pkgs/symmetrica/patches/int32.patch?id=07d6c37d18811e2b377a9689790a7c5e24da16ba";
+          sha256 = "0p33c85ck4kd453z687ni4bdcqr1pqx2756j7aq11bf63vjz4cyz";
+        })
+        (nixpkgs.fetchpatch {
+          url = "https://git.sagemath.org/sage.git/plain/build/pkgs/symmetrica/patches/return_values.patch?id=07d6c37d18811e2b377a9689790a7c5e24da16ba";
+          sha256 = "0dmczkicwl50sivc07w3wm3jpfk78wm576dr25999jdj2ipsb7nk";
+        })
+        (nixpkgs.fetchpatch {
+          url = "https://git.sagemath.org/sage.git/plain/build/pkgs/symmetrica/patches/sort_sum_rename.patch?id=07d6c37d18811e2b377a9689790a7c5e24da16ba";
+          sha256 = "07lrdwl18nl3xmsasam8jnwjhyypz14259j21vjky023a6qq1lpk";
+        })
+      ];
+    });
+    };
+    sagenb = nixpkgs.python2.pkgs.callPackage ./sagenb.nix {
+      inherit flask-babel;
+      mathjax = nixpkgs.nodePackages_8_x.mathjax;
+    };
+    sagedoc = nixpkgs.python2.pkgs.callPackage ./sagedoc.nix {
+      inherit flint palp networkx pari_data ecl pari scipy glpk cvxopt sympy matplotlib flask-babel gfan maxima-ecl;
+      inherit sage-src sagenb sagelib openblas-blas-pc openblas-cblas-pc openblas-lapack-pc;
+      three = nixpkgs.nodePackages_8_x.three;
+    };
+    sage = nixpkgs.python.pkgs.callPackage ./sage.nix {
+      buildDoc = false;
+      inherit networkx pari_data ecl pari scipy glpk gfan cvxopt sympy matplotlib palp maxima-ecl;
+      inherit sage-src sagelib sagedoc sagenb openblas-blas-pc openblas-cblas-pc openblas-lapack-pc;
+      three = nixpkgs.nodePackages_8_x.three;
+      mathjax = nixpkgs.nodePackages_8_x.mathjax;
+      r = nixpkgs.rWrapper.override {
+        packages = with nixpkgs.rPackages; [ # TODO add standard collection to nixpkgs (https://stat.ethz.ch/R-manual/R-devel/doc/html/packages.html)
+          boot
+          class
+          cluster
+          codetools
+          foreign
+          KernSmooth
+          lattice
+          MASS
+          Matrix
+          mgcv
+          nlme
+          nnet
+          rpart
+          spatial
+          survival
+        ];
+      };
+    };
+    sage-src = nixpkgs.callPackage ./sage-src.nix {};
+
     flint = nixpkgs.flint.override { withBlas = false; };
-    rubiks = nixpkgs.rubiks;
-    flintqs = nixpkgs.flintqs;
-    setuptools = nixpkgs.python2Packages.setuptools;
-    pip = nixpkgs.python2Packages.pip;
-    rankwidth = nixpkgs.rankwidth;
-    gd = nixpkgs.gd; # TODO check why sages gd doesn't provide Png functionality
-    brial = nixpkgs.brial;
     palp = nixpkgs.symlinkJoin {
       name = "palp";
       paths = [
@@ -42,28 +90,7 @@ let
         (nixpkgs.palp.override { dimensions = 11; doSymlink = false; })
       ];
     };
-    buildPythonPackage = nixpkgs.python2Packages.buildPythonPackage;
-    pillow = nixpkgs.python2Packages.pillow;
-    rpy2 = nixpkgs.python2Packages.rpy2;
-    ntl = nixpkgs.ntl;
-    iml = nixpkgs.iml;
-    libmpc = nixpkgs.libmpc;
-    mpfi = nixpkgs.mpfi;
-    maxima-ecl = nixpkgs.maxima-ecl.override {
-      inherit ecl;
-    };
-    zlib = nixpkgs.zlib;
-    sqlite = nixpkgs.sqlite;
-    jmol = nixpkgs.jmol;
-    docutils = nixpkgs.python2Packages.docutils;
-    simplegeneric = nixpkgs.python2Packages.simplegeneric;
-    boehmgc = nixpkgs.boehmgc;
-    ipython_genutils = nixpkgs.python2Packages.ipython_genutils;
-    tornado = nixpkgs.python2Packages.tornado;
-    decorator = nixpkgs.python2Packages.decorator;
-    markupsafe = nixpkgs.python2Packages.markupsafe;
-    pytz = nixpkgs.python2Packages.pytz;
-    nauty = nixpkgs.nauty;
+    maxima-ecl = nixpkgs.maxima-ecl.override { inherit ecl; };
     networkx = nixpkgs.python2Packages.networkx.overridePythonAttrs (attrs: rec {
       # Does not work with networkx 2.x yet -- see https://trac.sagemath.org/ticket/24374
       version = "1.11";
@@ -72,50 +99,6 @@ let
         sha256 = "03kplp3z0c7bff8w1qziqqzqz8s5an55j6sfd6dlgdz6bx6i9q5k";
       };
     });
-    distutils = nixpkgs.python2Packages.distutils;
-    cython = nixpkgs.python2Packages.cython;
-    cysignals = nixpkgs.python2Packages.cysignals;
-    readline = nixpkgs.readline;
-    libpng = nixpkgs.libpng;
-    m4rie = nixpkgs.m4rie;
-    r = nixpkgs.rWrapper.override {
-      packages = with nixpkgs.rPackages; [ # TODO add standard collection to nixpkgs (https://stat.ethz.ch/R-manual/R-devel/doc/html/packages.html)
-        boot
-        class
-        cluster
-        codetools
-        foreign
-        KernSmooth
-        lattice
-        MASS
-        Matrix
-        mgcv
-        nlme
-        nnet
-        rpart
-        spatial
-        survival
-      ];
-    };
-    ecm = nixpkgs.ecm;
-    jupyter_client = nixpkgs.python2Packages.jupyter_client;
-    jupyter_core = nixpkgs.python2Packages.jupyter_core;
-    twisted = nixpkgs.python2Packages.twisted; # with service-identity
-    service-identity = nixpkgs.python2Packages.service-identity;
-    pexpect = nixpkgs.python2Packages.pexpect;
-    ptyprocess = nixpkgs.python2Packages.ptyprocess;
-
-    openblas-blas-pc = newpkgs.callPackage ./openblas-pc.nix { name = "blas"; };
-    openblas-cblas-pc = newpkgs.callPackage ./openblas-pc.nix { name = "cblas"; };
-    openblas-lapack-pc = newpkgs.callPackage ./openblas-pc.nix { name = "lapack"; };
-    sagelib = newpkgs.callPackage ./sagelib.nix {};
-    sagenb = newpkgs.callPackage ./sagenb.nix {};
-    sagedoc = newpkgs.callPackage ./sagedoc.nix {};
-    sage = newpkgs.callPackage ./sage.nix { buildDoc = false; };
-    combinatorial_designs = nixpkgs.combinatorial_designs;
-    conway_polynomials = nixpkgs.conway_polynomials;
-    elliptic_curves = nixpkgs.elliptic_curves;
-    graphs = nixpkgs.graphs;
     pari_data = nixpkgs.symlinkJoin {
       name = "pari_data";
       paths = [
@@ -123,19 +106,8 @@ let
         nixpkgs.pari-seadata-small
       ];
     };
-    polytopes_db = nixpkgs.polytopes_db;
-    sage-src = newpkgs.callPackage ./sage-src.nix {};
-    pickleshare = nixpkgs.python2Packages.pickleshare;
-    givaro = nixpkgs.givaro;
-    six = nixpkgs.python2Packages.six;
-    fflas-ffpack = nixpkgs.fflas-ffpack;
-    linbox = nixpkgs.linbox.override { withSage = true; };
-    imagesize = nixpkgs.python2Packages.imagesize;
-    ipykernel = nixpkgs.python2Packages.ipykernel;
-    dateutil = nixpkgs.python2Packages.dateutil;
     # 16.1.3 not working yet: https://trac.sagemath.org/ticket/22191
     ecl = nixpkgs.ecl_16_1_2.override { threadSupport = false; };
-    wcwidth = nixpkgs.python2Packages.wcwidth;
     pari = (nixpkgs.pari.override { withThread = false; }).overrideDerivation (attrs: rec {
       version = "2.10-1280-g88fb5b3";
       src = nixpkgs.fetchurl {
@@ -146,22 +118,6 @@ let
         "--kernel=gmp"
       ];
     });
-    giac = nixpkgs.giac;
-    pynac = nixpkgs.pynac;
-    ipython_5 = nixpkgs.python2Packages.ipython_5;
-    pathlib = nixpkgs.python2Packages.pathlib;
-    scipy = (nixpkgs.python2Packages.scipy.override { inherit numpy; }).overridePythonAttrs (attrs: rec {
-      version = "0.19.1";
-      src = attrs.src.override {
-        inherit version;
-        sha256 = "1rl411bvla6q7qfdb47fpdnyjhfgzl6smpha33n9ar1klykjr6m1";
-      };
-    });
-    itsdangerous = nixpkgs.python2Packages.itsdangerous;
-    enum34 = nixpkgs.python2Packages.enum34;
-    werkzeug = nixpkgs.python2Packages.werkzeug;
-    tachyon = nixpkgs.tachyon;
-    snowballstemmer = nixpkgs.python2Packages.snowballstemmer;
     numpy = nixpkgs.python2Packages.numpy.overridePythonAttrs (attrs: rec {
       # Consider all PEP3141 numbers as scalars (merged upstream in 1.14.2)
       patches = [
@@ -176,12 +132,13 @@ let
         sha256 = "0l576ngjbpjdkyja6jd16znxyjshsn9ky1rscji4zg5smpaqdvin";
       };
     });
-    gsl = nixpkgs.gsl;
-    jinja2 = nixpkgs.python2Packages.jinja2;
-    future = nixpkgs.python2Packages.future;
-    psutil = nixpkgs.python2Packages.psutil;
-    eclib = nixpkgs.eclib.override { inherit pari; };
-    pyparsing = nixpkgs.python2Packages.pyparsing;
+    scipy = (nixpkgs.python2Packages.scipy.override { inherit numpy; }).overridePythonAttrs (attrs: rec {
+      version = "0.19.1";
+      src = attrs.src.override {
+        inherit version;
+        sha256 = "1rl411bvla6q7qfdb47fpdnyjhfgzl6smpha33n9ar1klykjr6m1";
+      };
+    });
     glpk = nixpkgs.glpk.overrideDerivation (attrs: rec {
       version = "4.63";
       name = "glpk-${version}";
@@ -203,12 +160,6 @@ let
         })
       ];
     });
-    cddlib = nixpkgs.cddlib;
-    singular = nixpkgs.singular;
-    openblasCompat = nixpkgs.openblasCompat;
-    ratpoints = nixpkgs.ratpoints;
-    alabaster = nixpkgs.python2Packages.alabaster;
-    pygments = nixpkgs.python2Packages.pygments;
     # 0.6 introduces (I think mostly minor formatting) failures
     gfan = nixpkgs.gfan.overrideDerivation (attrs: rec {
       name = "gfan-${version}";
@@ -240,44 +191,7 @@ let
         })
       ];
     });
-    arb = nixpkgs.arb.overrideDerivation (attrs: rec {
-      version = "2.11.1";
-      src = nixpkgs.fetchFromGitHub {
-        owner = "fredrik-johansson";
-        repo = "${attrs.pname}";
-        rev = "${version}";
-        sha256 = "0p0gq8gysg6z4jyjrl0bcl90cwpf4lmmpqblkc3vf36iqvwxk69i";
-      };
-    });
     matplotlib = nixpkgs.python2Packages.matplotlib.override { inherit numpy; };
-    speaklater = nixpkgs.python2Packages.speaklater;
-    libgap = nixpkgs.libgap;
-    ppl = nixpkgs.ppl;
-    symmetrica = nixpkgs.symmetrica.overrideDerivation (attrs: {
-      patches = (attrs.patches or []) ++ [
-        # TODO figure out which patches are actually necessary
-        (nixpkgs.fetchpatch {
-          url = "https://git.sagemath.org/sage.git/plain/build/pkgs/symmetrica/patches/de.patch?id=07d6c37d18811e2b377a9689790a7c5e24da16ba";
-          sha256 = "0df0vqixcfpzny6dkhyj87h8aznz3xn3zfwwlj8pd10bpb90k6gb";
-        })
-        (nixpkgs.fetchpatch {
-          url = "https://git.sagemath.org/sage.git/plain/build/pkgs/symmetrica/patches/int32.patch?id=07d6c37d18811e2b377a9689790a7c5e24da16ba";
-          sha256 = "0p33c85ck4kd453z687ni4bdcqr1pqx2756j7aq11bf63vjz4cyz";
-        })
-        (nixpkgs.fetchpatch {
-          url = "https://git.sagemath.org/sage.git/plain/build/pkgs/symmetrica/patches/return_values.patch?id=07d6c37d18811e2b377a9689790a7c5e24da16ba";
-          sha256 = "0dmczkicwl50sivc07w3wm3jpfk78wm576dr25999jdj2ipsb7nk";
-        })
-        (nixpkgs.fetchpatch {
-          url = "https://git.sagemath.org/sage.git/plain/build/pkgs/symmetrica/patches/sort_sum_rename.patch?id=07d6c37d18811e2b377a9689790a7c5e24da16ba";
-          sha256 = "07lrdwl18nl3xmsasam8jnwjhyypz14259j21vjky023a6qq1lpk";
-        })
-      ];
-    });
-    cycler = nixpkgs.python2Packages.cycler;
-    python-openid = nixpkgs.python2Packages.python-openid;
-    flask = nixpkgs.python2Packages.flask;
-    flask-autoindex = nixpkgs.python2Packages.flask-autoindex;
     flask-babel = nixpkgs.python2Packages.flask-babel.overridePythonAttrs (attrs: rec {
       # for sagenb, no upstream solution yet https://github.com/sagemath/sagenb/issues/437
       version = "0.9";
@@ -287,20 +201,4 @@ let
       };
       doCheck = false;
     });
-    flask-oldsessions = nixpkgs.python2Packages.flask-oldsessions;
-    flask-openid = nixpkgs.python2Packages.flask-openid;
-    flask-silk = nixpkgs.python2Packages.flask-silk;
-    traitlets = nixpkgs.python2Packages.traitlets;
-    pyzmq = nixpkgs.python2Packages.pyzmq;
-    requests = nixpkgs.python2Packages.requests;
-    typing = nixpkgs.python2Packages.typing;
-    sphinx = nixpkgs.python2Packages.sphinx;
-    mpmath = nixpkgs.python2Packages.mpmath;
-    gap = nixpkgs.gap;
-    zope_interface = nixpkgs.python2Packages.zope_interface;
-    mpfr = nixpkgs.mpfr;
-    fplll = nixpkgs.fplll;
-    fpylll = nixpkgs.python2Packages.fpylll;
-  };
-in
-  newpkgs // overrides
+  }
