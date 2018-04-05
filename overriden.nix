@@ -30,6 +30,7 @@ let
     flintqs = nixpkgs.flintqs;
     setuptools = nixpkgs.python2Packages.setuptools;
     pip = nixpkgs.python2Packages.pip;
+    rw = nixpkgs.rankwidth;
     libgd = nixpkgs.gd; # TODO check why sages gd doesn't provide Png functionality
     brial = nixpkgs.brial;
     palp = nixpkgs.symlinkJoin {
