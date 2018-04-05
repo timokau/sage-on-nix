@@ -6,6 +6,7 @@ let
     gcc = nixpkgs.gcc;
     gfortran = nixpkgs.gfortran6;
     cliquer = nixpkgs.cliquer;
+    cypari = nixpkgs.python2Packages.cypari2.override { inherit pari; };
     babel = nixpkgs.python2Packages.Babel;
     backports_shutil_get_terminal_size = nixpkgs.python2Packages.backports_shutil_get_terminal_size;
     pkgconf = nixpkgs.pkgconfig;
