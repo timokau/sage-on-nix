@@ -21,6 +21,7 @@ let
     boost_cropped = nixpkgs.boost;
     zn_poly = nixpkgs.zn_poly;
     flint = nixpkgs.flint.override { withBlas = false; };
+    flintqs = nixpkgs.flintqs;
     setuptools = nixpkgs.python2Packages.setuptools;
     pip = nixpkgs.python2Packages.pip;
     libgd = nixpkgs.gd; # TODO check why sages gd doesn't provide Png functionality
