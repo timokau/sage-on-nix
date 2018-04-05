@@ -6,16 +6,15 @@ let
     gcc = nixpkgs.gcc;
     gfortran = nixpkgs.gfortran6;
     cliquer = nixpkgs.cliquer;
-    cypari = nixpkgs.python2Packages.cypari2.override { inherit pari; };
-    babel = nixpkgs.python2Packages.Babel;
+    cypari2 = nixpkgs.python2Packages.cypari2.override { inherit pari; };
+    Babel = nixpkgs.python2Packages.Babel;
     backports_shutil_get_terminal_size = nixpkgs.python2Packages.backports_shutil_get_terminal_size;
     sympow = nixpkgs.sympow;
-    pkgconf = nixpkgs.pkgconfig;
     pkgconfig = nixpkgs.python2Packages.pkgconfig;
     lcalc = nixpkgs.lcalc;
     m4ri = nixpkgs.m4ri;
-    python = nixpkgs.python2;
-    threejs = nixpkgs.nodePackages_8_x.three;
+    python = nixpkgs.python;
+    three = nixpkgs.nodePackages_8_x.three;
     lrcalc = nixpkgs.lrcalc;
     mathjax = nixpkgs.nodePackages_8_x.mathjax;
     pathlib2 = nixpkgs.python2Packages.pathlib2;
@@ -24,15 +23,15 @@ let
     planarity = nixpkgs.planarity;
     ipywidgets = nixpkgs.python2Packages.ipywidgets;
     python3 = nixpkgs.python3;
-    boost_cropped = nixpkgs.boost;
+    boost = nixpkgs.boost;
     zn_poly = nixpkgs.zn_poly;
     flint = nixpkgs.flint.override { withBlas = false; };
     rubiks = nixpkgs.rubiks;
     flintqs = nixpkgs.flintqs;
     setuptools = nixpkgs.python2Packages.setuptools;
     pip = nixpkgs.python2Packages.pip;
-    rw = nixpkgs.rankwidth;
-    libgd = nixpkgs.gd; # TODO check why sages gd doesn't provide Png functionality
+    rankwidth = nixpkgs.rankwidth;
+    gd = nixpkgs.gd; # TODO check why sages gd doesn't provide Png functionality
     brial = nixpkgs.brial;
     palp = nixpkgs.symlinkJoin {
       name = "palp";
@@ -48,9 +47,9 @@ let
     rpy2 = nixpkgs.python2Packages.rpy2;
     ntl = nixpkgs.ntl;
     iml = nixpkgs.iml;
-    mpc = nixpkgs.libmpc;
+    libmpc = nixpkgs.libmpc;
     mpfi = nixpkgs.mpfi;
-    maxima = nixpkgs.maxima-ecl.override {
+    maxima-ecl = nixpkgs.maxima-ecl.override {
       inherit ecl;
     };
     zlib = nixpkgs.zlib;
@@ -58,7 +57,7 @@ let
     jmol = nixpkgs.jmol;
     docutils = nixpkgs.python2Packages.docutils;
     simplegeneric = nixpkgs.python2Packages.simplegeneric;
-    gc = nixpkgs.boehmgc;
+    boehmgc = nixpkgs.boehmgc;
     ipython_genutils = nixpkgs.python2Packages.ipython_genutils;
     tornado = nixpkgs.python2Packages.tornado;
     decorator = nixpkgs.python2Packages.decorator;
@@ -73,14 +72,12 @@ let
         sha256 = "03kplp3z0c7bff8w1qziqqzqz8s5an55j6sfd6dlgdz6bx6i9q5k";
       };
     });
-
     distutils = nixpkgs.python2Packages.distutils;
     cython = nixpkgs.python2Packages.cython;
     cysignals = nixpkgs.python2Packages.cysignals;
     readline = nixpkgs.readline;
     libpng = nixpkgs.libpng;
     m4rie = nixpkgs.m4rie;
-
     r = nixpkgs.rWrapper.override {
       packages = with nixpkgs.rPackages; [ # TODO add standard collection to nixpkgs (https://stat.ethz.ch/R-manual/R-devel/doc/html/packages.html)
         boot
@@ -128,11 +125,10 @@ let
     };
     polytopes_db = nixpkgs.polytopes_db;
     sage-src = newpkgs.callPackage ./sage-src.nix {};
-
     pickleshare = nixpkgs.python2Packages.pickleshare;
     givaro = nixpkgs.givaro;
     six = nixpkgs.python2Packages.six;
-    fflas_ffpack = nixpkgs.fflas-ffpack;
+    fflas-ffpack = nixpkgs.fflas-ffpack;
     linbox = nixpkgs.linbox.override { withSage = true; };
     imagesize = nixpkgs.python2Packages.imagesize;
     ipykernel = nixpkgs.python2Packages.ipykernel;
@@ -152,7 +148,7 @@ let
     });
     giac = nixpkgs.giac;
     pynac = nixpkgs.pynac;
-    ipython = nixpkgs.python2Packages.ipython_5;
+    ipython_5 = nixpkgs.python2Packages.ipython_5;
     pathlib = nixpkgs.python2Packages.pathlib;
     scipy = (nixpkgs.python2Packages.scipy.override { inherit numpy; }).overridePythonAttrs (attrs: rec {
       version = "0.19.1";
@@ -209,7 +205,7 @@ let
     });
     cddlib = nixpkgs.cddlib;
     singular = nixpkgs.singular;
-    openblas = nixpkgs.openblasCompat;
+    openblasCompat = nixpkgs.openblasCompat;
     ratpoints = nixpkgs.ratpoints;
     alabaster = nixpkgs.python2Packages.alabaster;
     pygments = nixpkgs.python2Packages.pygments;
@@ -279,10 +275,10 @@ let
       ];
     });
     cycler = nixpkgs.python2Packages.cycler;
-    python_openid = nixpkgs.python2Packages.python-openid;
+    python-openid = nixpkgs.python2Packages.python-openid;
     flask = nixpkgs.python2Packages.flask;
-    flask_autoindex = nixpkgs.python2Packages.flask-autoindex;
-    flask_babel = nixpkgs.python2Packages.flask-babel.overridePythonAttrs (attrs: rec {
+    flask-autoindex = nixpkgs.python2Packages.flask-autoindex;
+    flask-babel = nixpkgs.python2Packages.flask-babel.overridePythonAttrs (attrs: rec {
       # for sagenb, no upstream solution yet https://github.com/sagemath/sagenb/issues/437
       version = "0.9";
       src = attrs.src.override {
@@ -291,9 +287,9 @@ let
       };
       doCheck = false;
     });
-    flask_oldsessions = nixpkgs.python2Packages.flask-oldsessions;
-    flask_openid = nixpkgs.python2Packages.flask-openid;
-    flask_silk = nixpkgs.python2Packages.flask-silk;
+    flask-oldsessions = nixpkgs.python2Packages.flask-oldsessions;
+    flask-openid = nixpkgs.python2Packages.flask-openid;
+    flask-silk = nixpkgs.python2Packages.flask-silk;
     traitlets = nixpkgs.python2Packages.traitlets;
     pyzmq = nixpkgs.python2Packages.pyzmq;
     requests = nixpkgs.python2Packages.requests;

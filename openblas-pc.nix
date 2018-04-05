@@ -1,5 +1,5 @@
 { stdenv
-, openblas
+, openblasCompat
 , writeTextFile
 , name
 }:
@@ -9,10 +9,10 @@ writeTextFile {
   destination = "/lib/pkgconfig/${name}.pc";
   text = ''
     Name: ${name}
-    Version: ${openblas.version}
+    Version: ${openblasCompat.version}
 
     Description: ${name} for SageMath, provided by the OpenBLAS package.
-    Cflags: -I${openblas}/include
-    Libs: -L${openblas}/lib -lopenblas
+    Cflags: -I${openblasCompat}/include
+    Libs: -L${openblasCompat}/lib -lopenblas
   '';
 }

@@ -2,20 +2,20 @@
 , buildPythonPackage
 , fetchFromGitHub
 , arb
-, openblas
+, openblasCompat
 , openblas-blas-pc
 , openblas-cblas-pc
 , openblas-lapack-pc
 , brial
 , cliquer
-, cypari
+, cypari2
 , cysignals
 , cython
 , ecl
 , eclib
 , ecm
 , flint
-, libgd
+, gd
 , givaro
 , glpk
 , gsl
@@ -29,7 +29,7 @@
 , linbox
 , m4ri
 , m4rie
-, mpc
+, libmpc
 , mpfi
 , mpfr
 , mpir
@@ -45,16 +45,16 @@
 , python3
 , ratpoints
 , readline
-, rw
+, rankwidth
 , six
 , symmetrica
 , zn_poly
 , zlib
-, fflas_ffpack
+, fflas-ffpack
 , markupsafe
 , gmp
-, boost_cropped
-, gc
+, boost
+, boehmgc
 , singular
 }:
 # TODO autoreconf -vi
@@ -94,21 +94,21 @@ pkgs.stdenv.mkDerivation rec {
 
   buildInputsWithoutPython = [ stdenv perl gfortran6 autoreconfHook gettext hevea
     arb
-    openblas
+    openblasCompat
     openblas-blas-pc
     openblas-cblas-pc
     openblas-lapack-pc
     brial
     pybrial
     cliquer
-    cypari
+    cypari2
     cysignals
     cython
     ecl
     eclib
     ecm
     flint
-    libgd
+    gd
     givaro
     glpk
     gsl
@@ -122,7 +122,7 @@ pkgs.stdenv.mkDerivation rec {
     linbox
     m4ri
     m4rie
-    mpc
+    libmpc
     mpfi
     mpfr
     mpir
@@ -136,16 +136,16 @@ pkgs.stdenv.mkDerivation rec {
     pynac
     ratpoints
     readline
-    rw
+    rankwidth
     six
     symmetrica
     zn_poly
     zlib
-    fflas_ffpack
+    fflas-ffpack
     markupsafe
     gmp
-    boost_cropped
-    gc
+    boost
+    boehmgc
     singular
   ];
 

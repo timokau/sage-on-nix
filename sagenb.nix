@@ -7,10 +7,10 @@
 , mathjax
 , twisted
 , flask
-, flask_oldsessions
-, flask_openid
-, flask_autoindex
-, flask_babel
+, flask-oldsessions
+, flask-openid
+, flask-autoindex
+, flask-babel
 }:
 
 buildPythonPackage rec {
@@ -27,10 +27,10 @@ buildPythonPackage rec {
   propagatedBuildInputs = [
     twisted
     flask
-    flask_oldsessions
-    flask_openid
-    flask_autoindex
-    flask_babel
+    flask-oldsessions
+    flask-openid
+    flask-autoindex
+    flask-babel
   ];
 
   # tests depend on sage

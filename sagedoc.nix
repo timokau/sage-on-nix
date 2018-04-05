@@ -3,7 +3,7 @@
 , sage-src
 , sagelib
 , pygments
-, ipython
+, ipython_5
 , traitlets
 , enum34
 , ipython_genutils
@@ -16,7 +16,7 @@
 , prompt_toolkit
 , wcwidth
 , simplegeneric
-, openblas
+, openblasCompat
 , openblas-blas-pc
 , openblas-cblas-pc
 , openblas-lapack-pc
@@ -49,17 +49,17 @@
 , docutils
 , jupyter_client
 , flask
-, flask_babel
-, flask_oldsessions
-, flask_autoindex
-, flask_openid
-, flask_silk
+, flask-babel
+, flask-oldsessions
+, flask-autoindex
+, flask-openid
+, flask-silk
 , werkzeug # for notebook
 , typing
 , pyzmq
 , zope_interface # for twisted
 , itsdangerous # flask
-, babel # sphinx
+, Babel # sphinx
 , pytz
 , speaklater # sagenb
 , tornado
@@ -72,12 +72,12 @@
 , polytopes_db
 , combinatorial_designs
 , alabaster
-, threejs
+, three
 , tachyon
 , jmol
 , jdk
 , elliptic_curves
-, maxima
+, maxima-ecl
 , cddlib
 , glpk
 , pari
@@ -102,7 +102,7 @@ stdenv.mkDerivation rec {
   buildInputsWithoutPython = [
     sagelib
     pygments
-    ipython
+    ipython_5
     traitlets
     enum34
     ipython_genutils
@@ -115,7 +115,7 @@ stdenv.mkDerivation rec {
     prompt_toolkit
     wcwidth
     simplegeneric
-    openblas
+    openblasCompat
     openblas-blas-pc
     openblas-cblas-pc
     openblas-lapack-pc
@@ -153,11 +153,11 @@ stdenv.mkDerivation rec {
     pyzmq
     zope_interface
     itsdangerous # flask
-    babel
-    flask_babel
-    flask_autoindex
-    flask_openid
-    flask_silk
+    Babel
+    flask-babel
+    flask-autoindex
+    flask-openid
+    flask-silk
     pytz # babel
     speaklater # babel
     tornado # ipykernel
@@ -167,8 +167,8 @@ stdenv.mkDerivation rec {
     R
     giac
     alabaster
-    flask_oldsessions
-    threejs
+    flask-oldsessions
+    three
     tachyon
     jmol
     jdk
@@ -179,7 +179,7 @@ stdenv.mkDerivation rec {
     sympow
     gfan
     sqlite
-    maxima
+    maxima-ecl
     rubiks
     snowballstemmer # needed for doc build
     flint
@@ -205,8 +205,8 @@ stdenv.mkDerivation rec {
   SINGULARPATH="${singular}/share/singular";
   SINGULAR_SO="${singular}/lib/libSingular.so";
   SINGULAR_EXECUTABLE="${singular}/bin/Singular";
-  MAXIMA_FAS="${maxima}/lib/maxima/${maxima.version}/binary-ecl/maxima.fas";
-  MAXIMA_PREFIX="${maxima}";
+  MAXIMA_FAS="${maxima-ecl}/lib/maxima/${maxima-ecl.version}/binary-ecl/maxima.fas";
+  MAXIMA_PREFIX="${maxima-ecl}";
   CONWAY_POLYNOMIALS_DATA_DIR="${conway_polynomials}/share/conway_polynomials";
   GRAPHS_DATA_DIR="${graphs}/share/graphs";
   ELLCURVE_DATA_DIR="${elliptic_curves}/share/ellcurves";

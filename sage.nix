@@ -6,7 +6,7 @@
 , sagelib
 , sagedoc
 , pygments
-, ipython
+, ipython_5
 , traitlets
 , enum34
 , ipython_genutils
@@ -19,7 +19,7 @@
 , prompt_toolkit
 , wcwidth
 , simplegeneric
-, openblas
+, openblasCompat
 , openblas-blas-pc
 , openblas-cblas-pc
 , openblas-lapack-pc
@@ -69,12 +69,12 @@
 , polytopes_db
 , combinatorial_designs
 , alabaster
-, threejs
+, three
 , tachyon
 , jmol
 , jdk
 , elliptic_curves
-, maxima
+, maxima-ecl
 , cddlib
 , glpk
 , pari
@@ -90,7 +90,7 @@
 , nauty
 , less
 , ppl
-, python_openid
+, python-openid
 , flintqs
 , cysignals
 , mathjax
@@ -120,7 +120,7 @@ let
     sagelib
     makeWrapper
     pygments
-    ipython
+    ipython_5
     traitlets
     enum34
     ipython_genutils
@@ -133,7 +133,7 @@ let
     prompt_toolkit
     wcwidth
     simplegeneric
-    openblas
+    openblasCompat
     openblas-blas-pc
     openblas-cblas-pc
     openblas-lapack-pc
@@ -174,7 +174,7 @@ let
     r
     giac
     alabaster
-    threejs
+    three
     tachyon
     jmol
     jdk
@@ -185,12 +185,12 @@ let
     sympow
     gfan
     sqlite
-    maxima
+    maxima-ecl
     rubiks
     snowballstemmer # needed for doc build
     nauty
     less
-    python_openid
+    python-openid
     flintqs
     cysignals
   ];
@@ -205,10 +205,10 @@ let
   # (could patch sage instead, but this is more lightweight and also works for packages depending on sage)
   input_names_patched = (map (name: builtins.replaceStrings [
     "zope.interface-${zope_interface.version}"
-    "node_three-${threejs.version}"
+    "node_three-${three.version}"
   ] [
     "zope_interface-${zope_interface.version}"
-    "threejs-${threejs.version}"
+    "threejs-${three.version}"
   ] name) input_names);
   installed_packages = stdenv.lib.concatStringsSep " " input_names_patched;
 in
@@ -280,8 +280,8 @@ stdenv.mkDerivation rec {
       export SINGULARPATH='${singular}/share/singular'
       export SINGULAR_SO='${singular}/lib/libSingular.so'
       export SINGULAR_EXECUTABLE='${singular}/bin/Singular'
-      export MAXIMA_FAS='${maxima}/lib/maxima/${maxima.version}/binary-ecl/maxima.fas'
-      export MAXIMA_PREFIX="${maxima}"
+      export MAXIMA_FAS='${maxima-ecl}/lib/maxima/${maxima-ecl.version}/binary-ecl/maxima.fas'
+      export MAXIMA_PREFIX="${maxima-ecl}"
       export CONWAY_POLYNOMIALS_DATA_DIR='${conway_polynomials}/share/conway_polynomials'
       export GRAPHS_DATA_DIR='${graphs}/share/graphs'
       export ELLCURVE_DATA_DIR='${elliptic_curves}/share/ellcurves' # TODO unify
@@ -324,7 +324,7 @@ stdenv.mkDerivation rec {
       export SLOANE_DIR="$\{sloane}"
       export STEIN_WATKINS_DIR="$\{stein_watkins}"
       export SYMBOLIC_DATA_DIR="$\{symbolic_data}"
-      export THREEJS_DIR="${threejs}/lib/node_modules/three"
+      export THREEJS_DIR="${three}/lib/node_modules/three"
       export CYSIGNALS_INCLUDE="${cysignals}/lib/python2.7/site-packages"
 
       # for find_library
