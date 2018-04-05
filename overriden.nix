@@ -18,6 +18,7 @@ let
     lrcalc = nixpkgs.lrcalc;
     mathjax = nixpkgs.nodePackages_8_x.mathjax;
     pathlib2 = nixpkgs.python2Packages.pathlib2;
+    prompt_toolkit = nixpkgs.python2Packages.prompt_toolkit;
     python2 = nixpkgs.python2;
     planarity = nixpkgs.planarity;
     ipywidgets = nixpkgs.python2Packages.ipywidgets;
