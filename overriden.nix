@@ -9,6 +9,7 @@ let
     cypari = nixpkgs.python2Packages.cypari2.override { inherit pari; };
     babel = nixpkgs.python2Packages.Babel;
     backports_shutil_get_terminal_size = nixpkgs.python2Packages.backports_shutil_get_terminal_size;
+    sympow = nixpkgs.sympow;
     pkgconf = nixpkgs.pkgconfig;
     pkgconfig = nixpkgs.python2Packages.pkgconfig;
     lcalc = nixpkgs.lcalc;
