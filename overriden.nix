@@ -11,6 +11,7 @@ let
     backports_shutil_get_terminal_size = nixpkgs.python2Packages.backports_shutil_get_terminal_size;
     pkgconf = nixpkgs.pkgconfig;
     pkgconfig = nixpkgs.python2Packages.pkgconfig;
+    lcalc = nixpkgs.lcalc;
     m4ri = nixpkgs.m4ri;
     python = nixpkgs.python2;
     threejs = nixpkgs.nodePackages_8_x.three;
