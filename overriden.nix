@@ -26,6 +26,7 @@ let
     boost_cropped = nixpkgs.boost;
     zn_poly = nixpkgs.zn_poly;
     flint = nixpkgs.flint.override { withBlas = false; };
+    rubiks = nixpkgs.rubiks;
     flintqs = nixpkgs.flintqs;
     setuptools = nixpkgs.python2Packages.setuptools;
     pip = nixpkgs.python2Packages.pip;
