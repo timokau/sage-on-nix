@@ -47,6 +47,7 @@ let
     };
     zlib = nixpkgs.zlib;
     sqlite = nixpkgs.sqlite;
+    jmol = nixpkgs.jmol;
     docutils = nixpkgs.python2Packages.docutils;
     simplegeneric = nixpkgs.python2Packages.simplegeneric;
     gc = nixpkgs.boehmgc;
