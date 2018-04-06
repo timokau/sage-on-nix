@@ -24,6 +24,7 @@
 , openblas-cblas-pc
 , openblas-lapack-pc
 , pkgconfig
+, pkg-config
 , psutil
 , future
 , singular
@@ -89,11 +90,21 @@
 , snowballstemmer
 , nauty
 , less
+, pip
 , ppl
 , python-openid
 , flintqs
 , cysignals
 , mathjax
+, lcalc
+, eclib
+, gsl
+, ntl
+, ecm
+, zlib
+, gfortran6
+, flint
+, pynac
 , buildDoc ? true
 }:
 
@@ -116,9 +127,9 @@ let
     namestring = pkgname + "-" + version;
   in namestring;
 
-  buildInputsWithoutPython = [
+  pythonRuntimeDeps = [
     sagelib
-    makeWrapper
+    sagenb
     pygments
     ipython_5
     traitlets
@@ -133,28 +144,18 @@ let
     prompt_toolkit
     wcwidth
     simplegeneric
-    openblasCompat
-    openblas-blas-pc
-    openblas-cblas-pc
-    openblas-lapack-pc
-    pkgconfig
     psutil
     future
-    singular
     sympy
+    pkgconfig
     mpmath
     fpylll
-    libgap
-    gap
     matplotlib
     scipy
     pyparsing
     cycler
     networkx
     dateutil
-    conway_polynomials
-    graphs
-    ecl
     pillow
     twisted
     service-identity
@@ -163,17 +164,37 @@ let
     ipywidgets
     rpy2
     sphinx
-    sagenb
     docutils
     jupyter_client
     werkzeug
     typing
     pyzmq
     zope_interface
+    alabaster
+    snowballstemmer # needed for doc build
+    python-openid
+    cysignals
+  ];
+
+  buildInputs = [
+    # !order is important! (python2 should show up first in PATH)
+    pythonEnv
+    python3
+    makeWrapper
+    openblasCompat
+    openblas-blas-pc
+    openblas-cblas-pc
+    openblas-lapack-pc
+    singular
+    libgap
+    gap
+    pkg-config
+    conway_polynomials
+    graphs
+    ecl
     palp
     r
     giac
-    alabaster
     three
     tachyon
     jmol
@@ -187,20 +208,30 @@ let
     sqlite
     maxima-ecl
     rubiks
-    snowballstemmer # needed for doc build
     nauty
     less
-    python-openid
     flintqs
-    cysignals
+    lcalc
+    pip
+    eclib
+    gsl
+    ntl
+    ecm
+    zlib
+    gfortran6 # TODO 6?
+    ppl
+    flint
+    # listed explicitly in addition to being propagated by sagelib so that it shows up in CFLAGS
+    # FIXME set cflags explicitly
+    pynac
   ];
 
-  buildInputs = buildInputsWithoutPython ++ [
-    (python3.withPackages (ps: with ps; buildInputsWithoutPython ))
-    python2
-  ];
+  pythonEnv = python2.buildEnv.override {
+    extraLibs = pythonRuntimeDeps;
+    ignoreCollisions = true;
+  };
 
-  input_names = (map (pkg: pkg.sage-namestring or (pkg_to_namestring pkg)) (buildInputs ++ sagelib.buildInputs));
+  input_names = (map (pkg: pkg.sage-namestring or (pkg_to_namestring pkg)) (stdenv.lib.unique (buildInputs ++ pythonRuntimeDeps ++ sagelib.buildInputs ++ sagelib.propagatedBuildInputs)));
   # fix differences between spkg and sage names
   # (could patch sage instead, but this is more lightweight and also works for packages depending on sage)
   input_names_patched = (map (name: builtins.replaceStrings [
@@ -211,12 +242,13 @@ let
     "threejs-${three.version}"
   ] name) input_names);
   installed_packages = stdenv.lib.concatStringsSep " " input_names_patched;
+  runtimePath = "$out/bin:${stdenv.lib.makeBinPath (buildInputs ++ stdenv.initialPath)}"; # FIXME
 in
 stdenv.mkDerivation rec {
   version = "8.1"; # TODO
   name = "sage-${version}";
 
-  inherit buildInputs;
+  inherit buildInputs pythonEnv; # FIXME
 
   src = sage-src;
 
@@ -249,23 +281,24 @@ stdenv.mkDerivation rec {
     done
 
     cp -r src/bin $out/bin
+    cp -r build/bin $out/build-bin
     # TODO ugly hack to have python2 and python3 mix
     # Better to use python.withPackages instead
-    makeWrapper "${python3}/bin/python3" "$out/bin/python3" --set PYTHONPATH ""
+    makeWrapper "${python3}/bin/python3" "$out/bin/python3" --unset PYTHONHOME
     mv $out/bin/sage-env{,-orig}
     touch $out/bin/sage-arch-env
     echo """
-      export PYTHONPATH='$PYTHONPATH'
       export PKG_CONFIG_PATH='$PKG_CONFIG_PATH' # TODO needed for tests, truly needed at runtime?
       export SAGE_ROOT='${SAGE_ROOT}'
       export SAGE_LOCAL='${SAGE_LOCAL}'
       export SAGE_SHARE='${SAGE_SHARE}'
       export SAGE_SCRIPTS_DIR='${placeholder "out"}/bin'
-      export PATH='$out/bin:$PATH'
+      export PATH='$out/bin:$out/build-bin:$PATH' # TODO prefix
 
       . "$out/bin/sage-env-orig"
 
-      export SAGE_LOGS="$TMP/sage-logs"
+      export PATH='$out/bin:$out/build-bin:$PATH' # reset path changed in sage-env-orig
+      export SAGE_LOGS=\"\''${TMP:-/tmp}/sage-logs\"
       export SAGE_DOC='${SAGE_DOC}'
       export SAGE_DOC_SRC='${SAGE_DOC_SRC}'
 
@@ -334,6 +367,8 @@ stdenv.mkDerivation rec {
     substituteInPlace $out/bin/sage-env-orig \
         --replace '[ ! -f "$SAGE_SCRIPTS_DIR/sage-env-config" ]' 'false' \
         --replace '. "$SAGE_SCRIPTS_DIR/sage-env-config"' '# Nothing'
+
+    patchShebangs "$out" # done here in addition to fixup for the tests
   '';
 
   doCheck = true;
@@ -345,6 +380,7 @@ stdenv.mkDerivation rec {
     env -i \
       HOME="$sagehome" \
       SHELL="${stdenv.shell}" \
+      TMP="$TMP" \
       "$out/bin/sage" -t --nthreads "$NIX_BUILD_CORES" --timeout 0 --exitfirst --all
       # TODO
       #"$out/bin/sage" -t --nthreads "$NIX_BUILD_CORES" --timeout 0 --only-errors --exitfirst --long --all

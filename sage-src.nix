@@ -2,7 +2,6 @@
 , fetchFromGitHub
 , fetchpatch
 , stdenv
-, python
 }:
 pkgs.stdenv.mkDerivation rec {
   version = "8.1"; # TODO
@@ -143,10 +142,6 @@ pkgs.stdenv.mkDerivation rec {
     })
 
     ./patches/sagelib/zn_poly_version.patch
-  ];
-
-  buildInputs = [
-    python # for shebang patching
   ];
 
   configurePhase = "true";

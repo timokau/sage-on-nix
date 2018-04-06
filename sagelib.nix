@@ -60,7 +60,8 @@
 # TODO autoreconf -vi
 # TODO configure --prefix=...
 # TODO --optimize
-pkgs.stdenv.mkDerivation rec {
+buildPythonPackage rec {
+  format = "other";
   version = "8.1"; # TODO
   name = "sagelib-${version}";
 
@@ -92,18 +93,35 @@ pkgs.stdenv.mkDerivation rec {
       };
   };
 
-  buildInputsWithoutPython = [ stdenv perl gfortran6 autoreconfHook gettext hevea
+  pythonRuntimeDeps = [
+    pybrial
+    cypari2
+    cysignals
+    cython
+    jinja2
+    jupyter_core
+    numpy
+    pip
+    pkgconfig
+    pynac
+    six
+    markupsafe
+    boost
+  ];
+
+  otherDeps = [ # not needed for build
+    perl
+    gfortran6
+    autoreconfHook
+    gettext
+    hevea
     arb
     openblasCompat
     openblas-blas-pc
     openblas-cblas-pc
     openblas-lapack-pc
     brial
-    pybrial
     cliquer
-    cypari2
-    cysignals
-    cython
     ecl
     eclib
     ecm
@@ -113,8 +131,6 @@ pkgs.stdenv.mkDerivation rec {
     glpk
     gsl
     iml
-    jinja2
-    jupyter_core
     lcalc
     lrcalc
     libgap
@@ -127,35 +143,22 @@ pkgs.stdenv.mkDerivation rec {
     mpfr
     mpir
     ntl
-    numpy
     pari
-    pip
-    pkgconfig
     planarity
     ppl
-    pynac
     ratpoints
     readline
     rankwidth
-    six
     symmetrica
     zn_poly
     zlib
     fflas-ffpack
-    markupsafe
     gmp
-    boost
     boehmgc
     singular
   ];
 
-  # TODO
-  buildInputs = buildInputsWithoutPython ++ [
-    (python3.withPackages (ps: with ps; buildInputsWithoutPython ))
-    (python2.withPackages (ps: with ps; buildInputsWithoutPython ))
-  ];
-  propagatedBuildInputs = buildInputsWithoutPython;
-  nativeBuildInputs = buildInputs; # TODO figure out why this is necessary (for openblas and gfortran)
+  propagatedBuildInputs = pythonRuntimeDeps ++ otherDeps; # FIXME
 
 
   # environment variables for the build

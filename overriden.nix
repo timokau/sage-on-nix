@@ -6,12 +6,11 @@ in
     openblas-cblas-pc = nixpkgs.callPackage ./openblas-pc.nix { name = "cblas"; };
     openblas-lapack-pc = nixpkgs.callPackage ./openblas-pc.nix { name = "lapack"; };
     sagelib = nixpkgs.python2.pkgs.callPackage ./sagelib.nix {
-      inherit flint ecl pari glpk numpy;
+      inherit flint ecl pari glpk numpy eclib;
       inherit sage-src openblas-blas-pc openblas-cblas-pc openblas-lapack-pc;
       pynac = nixpkgs.pynac; # not the python package
       linbox = nixpkgs.linbox.override { withSage = true; };
       cypari2 = nixpkgs.python2Packages.cypari2.override { inherit pari; };
-      eclib = nixpkgs.eclib.override { inherit pari; };
       arb = nixpkgs.arb.overrideDerivation (attrs: rec {
         version = "2.11.1";
         src = nixpkgs.fetchFromGitHub {
@@ -54,10 +53,12 @@ in
     };
     sage = nixpkgs.python.pkgs.callPackage ./sage.nix {
       buildDoc = false;
-      inherit networkx pari_data ecl pari scipy glpk gfan cvxopt sympy matplotlib palp maxima-ecl;
+      inherit networkx pari_data ecl pari scipy glpk gfan cvxopt sympy matplotlib palp maxima-ecl eclib;
       inherit sage-src sagelib sagedoc sagenb openblas-blas-pc openblas-cblas-pc openblas-lapack-pc;
+      pynac = nixpkgs.pynac; # not the python package
       three = nixpkgs.nodePackages_8_x.three;
       mathjax = nixpkgs.nodePackages_8_x.mathjax;
+      pkg-config = nixpkgs.pkgconfig; # not to confuse with pythonPackages.pkgconfig
       r = nixpkgs.rWrapper.override {
         packages = with nixpkgs.rPackages; [ # TODO add standard collection to nixpkgs (https://stat.ethz.ch/R-manual/R-devel/doc/html/packages.html)
           boot
@@ -80,6 +81,7 @@ in
     };
     sage-src = nixpkgs.callPackage ./sage-src.nix {};
 
+    eclib = nixpkgs.eclib.override { inherit pari; };
     flint = nixpkgs.flint.override { withBlas = false; };
     palp = nixpkgs.symlinkJoin {
       name = "palp";
