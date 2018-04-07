@@ -5,7 +5,7 @@
 }:
 
 writeTextFile {
-  name = "openblas-${name}-pc";
+  name = "openblas-${name}-pc-${openblasCompat.version}";
   destination = "/lib/pkgconfig/${name}.pc";
   text = ''
     Name: ${name}

@@ -84,7 +84,7 @@ in
     eclib = nixpkgs.eclib.override { inherit pari; };
     flint = nixpkgs.flint.override { withBlas = false; };
     palp = nixpkgs.symlinkJoin {
-      name = "palp";
+      name = "palp-${nixpkgs.palp.version}";
       paths = [
         (nixpkgs.palp.override { dimensions = 4; doSymlink = false; })
         (nixpkgs.palp.override { dimensions = 5; doSymlink = false; })

@@ -36,7 +36,6 @@
 , ntl
 , numpy
 , pari
-, pip
 , pkgconfig
 , planarity
 , ppl
@@ -56,6 +55,7 @@
 , boost
 , boehmgc
 , singular
+, pip
 }:
 # TODO autoreconf -vi
 # TODO configure --prefix=...
@@ -101,15 +101,14 @@ buildPythonPackage rec {
     jinja2
     jupyter_core
     numpy
-    pip
     pkgconfig
-    pynac
     six
     markupsafe
     boost
   ];
 
   otherDeps = [ # not needed for build
+    pynac
     perl
     gfortran6
     autoreconfHook
@@ -156,6 +155,7 @@ buildPythonPackage rec {
     gmp
     boehmgc
     singular
+    pip
   ];
 
   propagatedBuildInputs = pythonRuntimeDeps ++ otherDeps; # FIXME

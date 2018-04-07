@@ -1,50 +1,38 @@
 { pkgs
 , stdenv
+, lib
 , makeWrapper
 , fetchpatch
 , sage-src
 , sagelib
 , sagedoc
 , pygments
-, ipython_5
+, ipython
 , traitlets
-, enum34
-, ipython_genutils
-, decorator
+, cysignals
 , pexpect
 , ptyprocess
-, backports_shutil_get_terminal_size
-, pathlib2
-, pickleshare
-, prompt_toolkit
-, wcwidth
-, simplegeneric
 , openblasCompat
 , openblas-blas-pc
 , openblas-cblas-pc
 , openblas-lapack-pc
-, pkgconfig
 , pkg-config
 , psutil
 , future
 , singular
 , sympy
-, mpmath # TODO propagated by sympy
 , fpylll
 , libgap
 , gap
 , matplotlib
 , scipy
 , pyparsing
-, cycler
 , networkx
-, dateutil # TODO propagated by matplotlib
 , conway_polynomials
 , graphs
 , ecl
-, pillow
 , twisted
-, service-identity # for twisted
+, service-identity
 , cvxopt
 , ipykernel
 , ipywidgets
@@ -52,14 +40,8 @@
 , sphinx
 , sagenb
 , docutils
-, jupyter_client
-, werkzeug # for notebook
 , typing
-, pyzmq
-, zope_interface # for twisted
-, itsdangerous # flask
 , pytz
-, speaklater # sagenb
 , tornado
 , imagesize
 , requests
@@ -69,7 +51,6 @@
 , giac
 , polytopes_db
 , combinatorial_designs
-, alabaster
 , three
 , tachyon
 , jmol
@@ -87,14 +68,10 @@
 , python3
 , python2
 , rubiks
-, snowballstemmer
 , nauty
 , less
-, pip
 , ppl
-, python-openid
 , flintqs
-, cysignals
 , mathjax
 , lcalc
 , eclib
@@ -102,84 +79,47 @@
 , ntl
 , ecm
 , zlib
-, gfortran6
+, gfortran
 , flint
+, pillow
 , pynac
 , buildDoc ? true
 }:
 
 let
-  # replace all "-" but the last one (which seperates version from name) by "_"
-  # for example palp-4d-1.0 -> palp_4d-1.0
-  # if "pname" is detected, use that (to avoid python...- prefixes)
-  # otherwise, deconstruct the "name" attribute
-  pkg_to_namestring = pkg: if (builtins.hasAttr "pname" pkg) then (python_to_namestring pkg) else (name_to_namestring pkg.name);
-  name_to_namestring = name: let
-    parts = stdenv.lib.splitString "-" name;
-    version = stdenv.lib.last parts;
-    orig_pkgname = stdenv.lib.init parts;
-    pkgname = stdenv.lib.concatStringsSep "_" orig_pkgname;
-    namestring = pkgname + "-" + version;
-  in namestring;
-  python_to_namestring = pkg: let
-    pkgname = stdenv.lib.replaceStrings ["-"] ["_"] pkg.pname;
-    version = pkg.version;
-    namestring = pkgname + "-" + version;
-  in namestring;
-
   pythonRuntimeDeps = [
     sagelib
     sagenb
+    service-identity
     pygments
-    ipython_5
+    ipython
     traitlets
-    enum34
-    ipython_genutils
-    decorator
     pexpect
     ptyprocess
-    backports_shutil_get_terminal_size
-    pathlib2
-    pickleshare
-    prompt_toolkit
-    wcwidth
-    simplegeneric
     psutil
     future
     sympy
-    pkgconfig
-    mpmath
     fpylll
     matplotlib
     scipy
     pyparsing
-    cycler
     networkx
-    dateutil
-    pillow
     twisted
-    service-identity
     cvxopt
     ipykernel
     ipywidgets
     rpy2
     sphinx
     docutils
-    jupyter_client
-    werkzeug
     typing
-    pyzmq
-    zope_interface
-    alabaster
-    snowballstemmer # needed for doc build
-    python-openid
-    cysignals
+    pillow
   ];
 
   buildInputs = [
     # !order is important! (python2 should show up first in PATH)
     pythonEnv
     python3
+    pynac # FIXME why necessary?
     makeWrapper
     openblasCompat
     openblas-blas-pc
@@ -212,13 +152,12 @@ let
     less
     flintqs
     lcalc
-    pip
     eclib
     gsl
     ntl
     ecm
     zlib
-    gfortran6 # TODO 6?
+    gfortran
     ppl
     flint
     # listed explicitly in addition to being propagated by sagelib so that it shows up in CFLAGS
@@ -231,18 +170,46 @@ let
     ignoreCollisions = true;
   };
 
-  input_names = (map (pkg: pkg.sage-namestring or (pkg_to_namestring pkg)) (stdenv.lib.unique (buildInputs ++ pythonRuntimeDeps ++ sagelib.buildInputs ++ sagelib.propagatedBuildInputs)));
+
+  # remove python prefix, replace "-" in the name by "_", apply patch_names
+  # python2.7-some-pkg-1.0 -> some_pkg-1.0
+  pkg_to_spkg_name = pkg: patch_names: let
+    parts = lib.splitString "-" pkg.name;
+    # remove python2.7-
+    stripped_parts = if (builtins.head parts) == python2.libPrefix then builtins.tail parts else parts;
+    version = lib.last stripped_parts;
+    orig_pkgname = lib.init stripped_parts;
+    pkgname = patch_names (lib.concatStringsSep "_" orig_pkgname);
+  in pkgname + "-" + version;
+
+
+  # return the names of all dependencies in the transitive closure
+  transitiveClosure = dep:
+  if isNull dep then
+    # propagatedBuildInputs might contain null
+    # (although that might be considered a programming error in the derivation)
+    []
+  else
+    [ dep ] ++ (
+      if builtins.hasAttr "propagatedBuildInputs" dep then
+        lib.unique (builtins.concatLists (map transitiveClosure dep.propagatedBuildInputs))
+      else
+      []
+    );
+
+  allInputs = lib.remove null (buildInputs ++ pythonRuntimeDeps);
+  transitiveDeps = lib.unique (builtins.concatLists (map transitiveClosure allInputs ));
   # fix differences between spkg and sage names
   # (could patch sage instead, but this is more lightweight and also works for packages depending on sage)
-  input_names_patched = (map (name: builtins.replaceStrings [
-    "zope.interface-${zope_interface.version}"
-    "node_three-${three.version}"
+  patch_names = builtins.replaceStrings [
+    "zope.interface"
+    "node_three"
   ] [
-    "zope_interface-${zope_interface.version}"
-    "threejs-${three.version}"
-  ] name) input_names);
-  installed_packages = stdenv.lib.concatStringsSep " " input_names_patched;
-  runtimePath = "$out/bin:${stdenv.lib.makeBinPath (buildInputs ++ stdenv.initialPath)}"; # FIXME
+    "zope_interface"
+    "threejs"
+  ];
+  # spkg names (this_is_a_package-version) of all transitive deps
+  input_names = map (dep: pkg_to_spkg_name dep patch_names) transitiveDeps;
 in
 stdenv.mkDerivation rec {
   version = "8.1"; # TODO
@@ -276,7 +243,7 @@ stdenv.mkDerivation rec {
   buildPhase = ''
     mkdir -p $out/var/lib/sage/installed
 
-    for pkg in ${installed_packages}; do
+    for pkg in ${lib.concatStringsSep " " input_names}; do
       touch "$out/var/lib/sage/installed/$pkg"
     done
 
@@ -361,7 +328,7 @@ stdenv.mkDerivation rec {
       export CYSIGNALS_INCLUDE="${cysignals}/lib/python2.7/site-packages"
 
       # for find_library
-      export DYLD_LIBRARY_PATH="${stdenv.lib.makeLibraryPath [stdenv.cc.libc singular]}:\$DYLD_LIBRARY_PATH"
+      export DYLD_LIBRARY_PATH="${lib.makeLibraryPath [stdenv.cc.libc singular]}:\$DYLD_LIBRARY_PATH"
     """ >> $out/bin/sage-env
 
     substituteInPlace $out/bin/sage-env-orig \
