@@ -54,7 +54,6 @@
 , three
 , tachyon
 , jmol
-, jdk
 , elliptic_curves
 , maxima-ecl
 , cddlib
@@ -138,7 +137,6 @@ let
     three
     tachyon
     jmol
-    jdk
     cddlib
     glpk
     pari

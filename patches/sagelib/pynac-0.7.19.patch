@@ -1,0 +1,343 @@
+diff --git a/build/pkgs/pynac/checksums.ini b/build/pkgs/pynac/checksums.ini
+index 0fd2a656ad..2a3e6dd9e5 100644
+--- a/build/pkgs/pynac/checksums.ini
++++ b/build/pkgs/pynac/checksums.ini
+@@ -1,4 +1,4 @@
+ tarball=pynac-VERSION.tar.bz2
+-sha1=6884e38508746afc3bb35ed544a2b6605b7d1c13
+-md5=ce413448e8adbda7239a59f326128341
+-cksum=1898847628
++sha1=234ab054d2a43ddcbabb1a98448514af67787549
++md5=ddab38c7631ce94bc4c7f0a13a49dd48
++cksum=1284696174
+diff --git a/build/pkgs/pynac/package-version.txt b/build/pkgs/pynac/package-version.txt
+index 1da1a62642..03b43521ab 100644
+--- a/build/pkgs/pynac/package-version.txt
++++ b/build/pkgs/pynac/package-version.txt
+@@ -1 +1 @@
+-0.7.16.p0
++0.7.19
+diff --git a/build/pkgs/pynac/patches/memleak.patch b/build/pkgs/pynac/patches/memleak.patch
+deleted file mode 100644
+index a02ce84c65..0000000000
+--- a/build/pkgs/pynac/patches/memleak.patch
++++ /dev/null
+@@ -1,68 +0,0 @@
+-diff --git a/ginac/numeric.cpp b/ginac/numeric.cpp
+-index c92dffa..0e1352c 100644
+---- a/ginac/numeric.cpp
+-+++ b/ginac/numeric.cpp
+-@@ -1969,7 +1969,6 @@ numeric & operator+=(numeric & lh, const numeric & rh)
+-                         }
+-                         lh.hash = (long)PyObject_Hash(lh.v._pyobject);
+-                         Py_DECREF(p);
+--                        Py_INCREF(lh.v._pyobject);
+-                         return lh;
+-                         }
+-                 default:
+-@@ -2049,7 +2048,6 @@ numeric & operator-=(numeric & lh, const numeric & rh)
+-                         }
+-                         lh.hash = (long)PyObject_Hash(lh.v._pyobject);
+-                         Py_DECREF(p);
+--                        Py_INCREF(lh.v._pyobject);
+-                         return lh;
+-                         }
+-                 default:
+-@@ -2131,7 +2129,6 @@ numeric & operator*=(numeric & lh, const numeric & rh)
+-                         }
+-                         lh.hash = (long)PyObject_Hash(lh.v._pyobject);
+-                         Py_DECREF(p);
+--                        Py_INCREF(lh.v._pyobject);
+-                         return lh;
+-                         }
+-                 default:
+-@@ -2265,7 +2262,6 @@ numeric & operator/=(numeric & lh, const numeric & rh)
+-                                         }
+-                                         lh.hash = (long)PyObject_Hash(lh.v._pyobject);
+-                                         Py_DECREF(p);
+--                                        Py_INCREF(lh.v._pyobject);
+-                                         return lh;
+-                                 } else if (PyLong_Check(rh.v._pyobject)) {
+-                                         PyObject* d = py_funcs.py_integer_from_python_obj(rh.v._pyobject);
+-@@ -2277,7 +2273,6 @@ numeric & operator/=(numeric & lh, const numeric & rh)
+-                                         lh.hash = (long)PyObject_Hash(lh.v._pyobject);
+-                                         Py_DECREF(d);
+-                                         Py_DECREF(p);
+--                                        Py_INCREF(lh.v._pyobject);
+-                                         return lh;
+-                                 }
+-                         } else if (PyLong_Check(p)) {
+-@@ -2290,7 +2285,6 @@ numeric & operator/=(numeric & lh, const numeric & rh)
+-                                 lh.hash = (long)PyObject_Hash(lh.v._pyobject);
+-                                 Py_DECREF(n);
+-                                 Py_DECREF(p);
+--                                Py_INCREF(lh.v._pyobject);
+-                                 return lh;
+-                         }
+-                         }
+-@@ -2306,7 +2300,6 @@ numeric & operator/=(numeric & lh, const numeric & rh)
+-                                 lh.hash = (long)PyObject_Hash(lh.v._pyobject);
+-                                 Py_DECREF(n);
+-                                 Py_DECREF(p);
+--                                Py_INCREF(lh.v._pyobject);
+-                                 return lh;
+-                         }
+-                         }
+-@@ -2318,7 +2311,6 @@ numeric & operator/=(numeric & lh, const numeric & rh)
+-                         }
+-                         lh.hash = (long)PyObject_Hash(lh.v._pyobject);
+-                         Py_DECREF(p);
+--                        Py_INCREF(lh.v._pyobject);
+-                         return lh;
+-                         }
+-                 default:
+diff --git a/src/sage/calculus/calculus.py b/src/sage/calculus/calculus.py
+index 4c48c841a0..c6fc3b5f37 100644
+--- a/src/sage/calculus/calculus.py
++++ b/src/sage/calculus/calculus.py
+@@ -231,7 +231,7 @@ Another example::
+     sage: f(x=3)
+     arcsinh(1)
+     sage: f.derivative(x)
+-    1/3/sqrt(1/9*x^2 + 1)
++    1/sqrt(x^2 + 9)
+ 
+ We compute the length of the parabola from 0 to 2::
+ 
+diff --git a/src/sage/functions/log.py b/src/sage/functions/log.py
+index 81dff4e925..d8f03768af 100644
+--- a/src/sage/functions/log.py
++++ b/src/sage/functions/log.py
+@@ -507,17 +507,17 @@ class Function_polylog(GinacFunction):
+ 
+             sage: BF = RealBallField(100)
+             sage: polylog(2, BF(1/3))
+-            [0.36621322997706348761674629766 +/- 4.51e-30]
++            [0.36621322997706348761674629766... +/- ...]
+             sage: polylog(2, BF(4/3))
+-            nan
++            [2.27001825336107090380391448586 +/- 5.64e-30] + [-0.90377988538400159956755721265 +/- 8.39e-30]*I
+             sage: parent(_)
+-            Real ball field with 100 bits precision
++            Complex ball field with 100 bits of precision
+             sage: polylog(2, CBF(1/3))
+-            [0.366213229977063 +/- 5.85e-16]
++            [0.366213229977063 +/- ...]
+             sage: parent(_)
+             Complex ball field with 53 bits precision
+             sage: polylog(2, CBF(1))
+-            [1.644934066848226 +/- 6.59e-16]
++            [1.644934066848226 +/- ...]
+             sage: parent(_)
+             Complex ball field with 53 bits precision
+         """
+diff --git a/src/sage/functions/trig.py b/src/sage/functions/trig.py
+index e7e7a311cd..1f2926d6c9 100644
+--- a/src/sage/functions/trig.py
++++ b/src/sage/functions/trig.py
+@@ -529,13 +529,8 @@ class Function_arcsin(GinacFunction):
+             arcsin
+             sage: asin(complex(1,1))
+             (0.6662394324925152+1.0612750619050357j)
+-
+-        Check that :trac:`22823` is fixed::
+-
+-            sage: bool(asin(SR(2.1)) == NaN)
+-            True
+-            sage: asin(SR(2.1)).is_real()
+-            False
++            sage: asin(SR(2.1))
++            1.57079632679490 - 1.37285914424258*I
+         """
+         GinacFunction.__init__(self, 'arcsin', latex_name=r"\arcsin",
+                 conversions=dict(maxima='asin', sympy='asin', fricas="asin", giac="asin"))
+@@ -595,13 +590,8 @@ class Function_arccos(GinacFunction):
+             arccos
+             sage: acos(complex(1,1))
+             (0.9045568943023814-1.0612750619050357j)
+-
+-        Check that :trac:`22823` is fixed::
+-
+-            sage: bool(acos(SR(2.1)) == NaN)
+-            True
+-            sage: acos(SR(2.1)).is_real()
+-            False
++            sage: acos(SR(2.1))
++            1.37285914424258*I
+         """
+         GinacFunction.__init__(self, 'arccos', latex_name=r"\arccos",
+                 conversions=dict(maxima='acos', sympy='acos', fricas='acos', giac='acos'))
+@@ -807,7 +797,7 @@ class Function_arcsec(GinacFunction):
+             sage: arcsec(2).n(100)
+             1.0471975511965977461542144611
+             sage: arcsec(1/2).n(100)
+-            NaN
++            1.3169578969248167086250463473*I
+             sage: RDF(arcsec(2))  # abs tol 1e-15
+             1.0471975511965976
+             sage: arcsec(1 + I)
+@@ -958,7 +948,9 @@ class Function_arctan2(GinacFunction):
+             sage: atan2(0,0,hold=True)
+             arctan2(0, 0)
+             sage: atan2(0,0,hold=True).n()
+-            NaN
++            Traceback (most recent call last):
++            ...
++            RuntimeError: atan2(): division by zero
+ 
+         Check if :trac:`10062` is fixed, this was caused by
+         ``(I*I).is_positive()`` returning ``True``::
+diff --git a/src/sage/geometry/hyperbolic_space/hyperbolic_geodesic.py b/src/sage/geometry/hyperbolic_space/hyperbolic_geodesic.py
+index 1ea867ad45..f5321f2205 100644
+--- a/src/sage/geometry/hyperbolic_space/hyperbolic_geodesic.py
++++ b/src/sage/geometry/hyperbolic_space/hyperbolic_geodesic.py
+@@ -1422,8 +1422,10 @@ class HyperbolicGeodesicUHP(HyperbolicGeodesic):
+         expressions do not generate runtime errors. ::
+ 
+             sage: g=HyperbolicPlane().UHP().get_geodesic(-1+I,1+I)
+-            sage: g.midpoint()
+-            Point in UHP 1/2*(sqrt(2)*e^(1/2*arccosh(3)) - sqrt(2) + (I - 1)*e^(1/2*arccosh(3)) + I - 1)/((1/4*I - 1/4)*sqrt(2)*e^(1/2*arccosh(3)) - (1/4*I - 1/4)*sqrt(2) + 1/2*e^(1/2*arccosh(3)) + 1/2)
++            sage: point = g.midpoint(); point
++            Point in UHP -1/2*(sqrt(2)*...
++            sage: QQbar(point.coordinates()).radical_expression()
++            I*sqrt(2)
+ 
+         Check that floating points remain floating points
+         in :meth:`midpoint` ::
+diff --git a/src/sage/libs/pynac/pynac.pyx b/src/sage/libs/pynac/pynac.pyx
+index f303184634..5723a6a252 100644
+--- a/src/sage/libs/pynac/pynac.pyx
++++ b/src/sage/libs/pynac/pynac.pyx
+@@ -1814,7 +1814,7 @@ cdef py_atan2(x, y):
+         sage: atan2(CC(I), CC(I+1))
+         0.553574358897045 + 0.402359478108525*I
+         sage: atan2(CBF(I), CBF(I+1))
+-        [0.55357435889705 +/- 5.58e-15] + [0.402359478108525 +/- 7.11e-16]*I
++        [0.55357435889705 +/- ...] + [0.402359478108525 +/- ...]*I
+ 
+     Check that :trac:`23776` is fixed and RDF input gives real output::
+ 
+diff --git a/src/sage/matrix/matrix_symbolic_dense.pyx b/src/sage/matrix/matrix_symbolic_dense.pyx
+index 3e1fe40f77..3f53e83271 100644
+--- a/src/sage/matrix/matrix_symbolic_dense.pyx
++++ b/src/sage/matrix/matrix_symbolic_dense.pyx
+@@ -200,7 +200,7 @@ cdef class Matrix_symbolic_dense(Matrix_generic_dense):
+             sage: eval, [evec], mult = es[0]
+             sage: delta = eval*evec - evec*A
+             sage: abs(abs(delta)) < 1e-10
+-            sqrt(9/25*((2*sqrt(6) - 3)*(sqrt(6) - 2) + 7*sqrt(6) - 18)^2 + 9/25*((sqrt(6) - 2)*(sqrt(6) - 4) + 6*sqrt(6) - 14)^2) < (1.00000000000000e-10)
++            3/5*sqrt(((2*sqrt(6) - 3)*(sqrt(6) - 2) + 7*sqrt(6) - 18)^2 + ((sqrt(6) - 2)*(sqrt(6) - 4) + 6*sqrt(6) - 14)^2) < (1.00000000000000e-10)
+             sage: abs(abs(delta)).n() < 1e-10
+             True
+ 
+diff --git a/src/sage/modules/matrix_morphism.py b/src/sage/modules/matrix_morphism.py
+index e56ef0dce7..b8b974eb44 100644
+--- a/src/sage/modules/matrix_morphism.py
++++ b/src/sage/modules/matrix_morphism.py
+@@ -200,9 +200,9 @@ class MatrixMorphism_abstract(sage.categories.morphism.Morphism):
+             sage: f((1, 0))
+             Traceback (most recent call last):
+             ...
+-            TypeError: Unable to coerce entries (=[1.00000000000000*I, 0.000000000000000]) to coefficients in Real Field with 53 bits of precision
++            TypeError: Unable to coerce entries (=[1.00000000000000*I, 0]) to coefficients in Real Field with 53 bits of precision
+             sage: f((1, 0), coerce=False)
+-            (1.00000000000000*I, 0.000000000000000)
++            (1.00000000000000*I, 0)
+ 
+         """
+         if self.domain().is_ambient():
+diff --git a/src/sage/plot/plot.py b/src/sage/plot/plot.py
+index aa82eda004..14d12cc6e6 100644
+--- a/src/sage/plot/plot.py
++++ b/src/sage/plot/plot.py
+@@ -2055,7 +2055,7 @@ def _plot(funcs, xrange, parametric=False,
+     plot properly (:trac:`13246`)::
+ 
+         sage: parametric_plot((x, arcsec(x)), (x, -2, 2))
+-        Graphics object consisting of 1 graphics primitive
++        Graphics object consisting of 2 graphics primitives
+ 
+     """
+     from sage.plot.colors import Color
+diff --git a/src/sage/repl/display/formatter.py b/src/sage/repl/display/formatter.py
+index 8ce2e839d7..948207c95e 100644
+--- a/src/sage/repl/display/formatter.py
++++ b/src/sage/repl/display/formatter.py
+@@ -25,11 +25,11 @@ generally, all sage expression as an ASCII art object::
+     sage: shell = get_test_shell()
+     sage: shell.run_cell('%display ascii_art')
+     sage: shell.run_cell('integral(x^2/pi^x, x)')
+-     / 2    2                      \  -x*log(pi)
+-    -\x *log (pi) + 2*x*log(pi) + 2/*e
+-    ---------------------------------------------
+-                         3
+-                      log (pi)
++       -x / 2    2                      \ 
++    -pi  *\x *log (pi) + 2*x*log(pi) + 2/ 
++    --------------------------------------
++                     3                   
++                   log (pi)               
+     sage: shell.run_cell("i = var('i')")
+     sage: shell.run_cell('sum(i*x^i, i, 0, 10)')
+         10      9      8      7      6      5      4      3      2
+diff --git a/src/sage/stats/basic_stats.py b/src/sage/stats/basic_stats.py
+index 16a268a02c..5fd244e93b 100644
+--- a/src/sage/stats/basic_stats.py
++++ b/src/sage/stats/basic_stats.py
+@@ -183,7 +183,7 @@ def std(v, bias=False):
+         sage: std([])
+         NaN
+         sage: std([I, sqrt(2), 3/5])
+-        sqrt(1/450*(10*sqrt(2) - 5*I - 3)^2 + 1/450*(5*sqrt(2) - 10*I + 3)^2 + 1/450*(5*sqrt(2) + 5*I - 6)^2)
++        1/15*sqrt(1/2)*sqrt((10*sqrt(2) - 5*I - 3)^2 + (5*sqrt(2) - 10*I + 3)^2 + (5*sqrt(2) + 5*I - 6)^2)
+         sage: std([RIF(1.0103, 1.0103), RIF(2)])
+         0.6998235813403261?
+         sage: import numpy
+diff --git a/src/sage/symbolic/expression.pyx b/src/sage/symbolic/expression.pyx
+index f289481663..444f9e258f 100644
+--- a/src/sage/symbolic/expression.pyx
++++ b/src/sage/symbolic/expression.pyx
+@@ -4947,7 +4947,7 @@ cdef class Expression(CommutativeRingElement):
+             a^3 + b^3 + (x + y)^3
+ 
+             sage: t.subs(w0 == w0^2)
+-            (x^2 + y^2)^18 + a^16 + b^16
++            a^8 + b^8 + (x^2 + y^2)^6
+ 
+             sage: t.subs(a == b, b == c)
+             (x + y)^3 + b^2 + c^2
+@@ -8222,9 +8222,13 @@ cdef class Expression(CommutativeRingElement):
+             sage: SR(I).arctan2(1)
+             arctan2(I, 1)
+             sage: SR(CDF(0,1)).arctan2(1)
+-            NaN + +infinity*I
+-            sage: SR(1).arctan2(CDF(0,1))   # known bug
+-            0.7853981633974484 - 19.012501686914433*I
++            Traceback (most recent call last):
++            ...
++            ValueError: power::eval(): division by zero
++            sage: SR(1).arctan2(CDF(0,1))
++            Traceback (most recent call last):
++            ...
++            ValueError: power::eval(): division by zero
+ 
+             sage: arctan2(0,oo)
+             0
+@@ -8486,7 +8490,7 @@ cdef class Expression(CommutativeRingElement):
+             1/2*I*pi
+             sage: SR(1/2).arccosh()
+             arccosh(1/2)
+-            sage: SR(CDF(1/2)).arccosh()  # rel tol 1e-15
++            sage: SR(CDF(1/2)).arccosh() # abs tol 1e-15
+             1.0471975511965976*I
+             sage: maxima('acosh(0.5)')
+             1.04719755119659...*%i
+@@ -11515,7 +11519,7 @@ cdef class Expression(CommutativeRingElement):
+             sage: a.solve(t)
+             []
+             sage: b = a.canonicalize_radical(); b
+-            -23040.0*(-2.0*e^(1800*t) + 25.0*e^(900*t) - 32.0)*e^(-2400*t)
++            (46080.0*e^(1800*t) - 576000.0*e^(900*t) + 737280.0)*e^(-2400*t)
+             sage: b.solve(t)
+             []
+             sage: b.solve(t, to_poly_solve=True)

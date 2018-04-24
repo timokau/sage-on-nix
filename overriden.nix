@@ -7,8 +7,7 @@ in
     openblas-lapack-pc = nixpkgs.callPackage ./openblas-pc.nix { name = "lapack"; };
     sagelib = nixpkgs.python2.pkgs.callPackage ./sagelib.nix {
       inherit flint ecl pari glpk numpy eclib;
-      inherit sage-src openblas-blas-pc openblas-cblas-pc openblas-lapack-pc;
-      pynac = nixpkgs.pynac; # not the python package
+      inherit sage-src openblas-blas-pc openblas-cblas-pc openblas-lapack-pc pynac singular;
       linbox = nixpkgs.linbox.override { withSage = true; };
       cypari2 = nixpkgs.python2Packages.cypari2.override { inherit pari; };
       arb = nixpkgs.arb.overrideDerivation (attrs: rec {
@@ -48,14 +47,15 @@ in
     };
     sagedoc = nixpkgs.python2.pkgs.callPackage ./sagedoc.nix {
       inherit flint palp networkx pari_data ecl pari scipy glpk cvxopt sympy matplotlib flask-babel gfan maxima-ecl;
-      inherit sage-src sagenb sagelib openblas-blas-pc openblas-cblas-pc openblas-lapack-pc;
+      inherit sage-src sagenb sagelib openblas-blas-pc openblas-cblas-pc openblas-lapack-pc singular;
+      gap = nixpkgs.gap-libgap-compatible;
       three = nixpkgs.nodePackages_8_x.three;
     };
     sage = nixpkgs.python.pkgs.callPackage ./sage.nix {
       buildDoc = false;
       inherit networkx pari_data ecl pari scipy glpk gfan cvxopt sympy matplotlib palp maxima-ecl eclib;
-      inherit sage-src sagelib sagedoc sagenb openblas-blas-pc openblas-cblas-pc openblas-lapack-pc;
-      pynac = nixpkgs.pynac; # not the python package
+      inherit sage-src sagelib sagedoc sagenb openblas-blas-pc openblas-cblas-pc openblas-lapack-pc pynac singular;
+      gap = nixpkgs.gap-libgap-compatible;
       three = nixpkgs.nodePackages_8_x.three;
       mathjax = nixpkgs.nodePackages_8_x.mathjax;
       pkg-config = nixpkgs.pkgconfig; # not to confuse with pythonPackages.pkgconfig
@@ -81,6 +81,26 @@ in
     };
     sage-src = nixpkgs.callPackage ./sage-src.nix {};
 
+    # update causes issues
+    # https://groups.google.com/forum/#!topic/sage-packaging/cS3v05Q0zso
+    # https://trac.sagemath.org/ticket/24735
+    singular = nixpkgs.singular.overrideAttrs (oldAttrs: {
+      name = "singular-4.1.0p3";
+      src = nixpkgs.fetchurl {
+        url = "http://www.mathematik.uni-kl.de/ftp/pub/Math/Singular/SOURCES/4-1-0/singular-4.1.0p3.tar.gz";
+        sha256 = "105zs3zk46b1cps403ap9423rl48824ap5gyrdgmg8fma34680a4";
+      };
+    });
+    # *not* to confuse with the python package "pynac"
+    pynac = (nixpkgs.pynac.override { inherit singular; }).overrideAttrs (oldAttrs: {
+      name = "pynac-0.7.12";
+      src = nixpkgs.fetchFromGitHub {
+        owner = "pynac";
+        repo = "pynac";
+        rev = "pynac-0.7.12";
+        sha256 = "1qvpzkwlw2d55k452yqyzj15xi2qkma8nr2z0y702l5y6zcnhyv8";
+      };
+    });
     eclib = nixpkgs.eclib.override { inherit pari; };
     flint = nixpkgs.flint.override { withBlas = false; };
     palp = nixpkgs.symlinkJoin {
@@ -110,6 +130,7 @@ in
     };
     # 16.1.3 not working yet: https://trac.sagemath.org/ticket/22191
     ecl = nixpkgs.ecl_16_1_2.override { threadSupport = false; };
+    # FIXME
     pari = (nixpkgs.pari.override { withThread = false; }).overrideDerivation (attrs: rec {
       version = "2.10-1280-g88fb5b3";
       src = nixpkgs.fetchurl {

@@ -142,6 +142,17 @@ pkgs.stdenv.mkDerivation rec {
     })
 
     ./patches/sagelib/zn_poly_version.patch
+
+    # update cddlib from 0.94g to 0.94h
+    (fetchpatch {
+      url = "https://sources.debian.org/data/main/s/sagemath/8.1-7/debian/patches/u2-version-cddlib-094h.patch";
+      sha256 = "0fmw7pzbaxs2dshky6iw9pr8i23p9ih2y2lw661qypdrxh5xw03k";
+      stripLen = 1;
+    })
+
+    # This didn't work in cddlib < 0.94g, worked in 0.94g but doesn't work again in >0.94g
+    # https://trac.sagemath.org/ticket/14479
+    ./patches/sagelib/revert-269c1e1551285.patch
   ];
 
   configurePhase = "true";

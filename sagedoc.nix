@@ -75,7 +75,6 @@
 , three
 , tachyon
 , jmol
-, jdk
 , elliptic_curves
 , maxima-ecl
 , cddlib
@@ -171,7 +170,6 @@ stdenv.mkDerivation rec {
     three
     tachyon
     jmol
-    jdk
     cddlib
     glpk
     pari
